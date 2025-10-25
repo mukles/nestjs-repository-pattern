@@ -2,6 +2,7 @@ import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { Student } from 'src/student/entities/student.entity';
+import { Teacher } from 'src/teacher/entities/teacher.entity';
 import { EntityManager } from 'typeorm';
 import { IDataService } from '../interfaces/dataservice.interface';
 import { IGenericRepository } from '../interfaces/repository.interface';
@@ -12,14 +13,23 @@ export class GenericDataService
   implements IDataService, OnApplicationBootstrap
 {
   students: IGenericRepository<Student>;
+  teachers: IGenericRepository<Teacher>;
 
   constructor(
     @InjectEntityManager() private readonly entityManager: EntityManager,
     @InjectRepository(Student)
     private readonly studentRepository: IGenericRepository<Student>,
+    @InjectRepository(Teacher)
+    private readonly teacherRepository: IGenericRepository<Teacher>,
   ) {}
 
   onApplicationBootstrap() {
+    this.teachers = new GenericRepository<Teacher>(
+      Teacher,
+      this.entityManager,
+      this.studentRepository.queryRunner!,
+    );
+
     this.students = new GenericRepository<Student>(
       Student,
       this.entityManager,
