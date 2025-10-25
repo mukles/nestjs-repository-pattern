@@ -2,30 +2,42 @@ import { Injectable } from '@nestjs/common';
 import { IDataService } from 'src/repositories/interfaces/dataservice.interface';
 import { CreateTeacherDto } from './dto/create-teacher.dto';
 import { UpdateTeacherDto } from './dto/update-teacher.dto';
+import { Teacher } from './entities/teacher.entity';
 
 @Injectable()
 export class TeacherService {
   constructor(private readonly dataService: IDataService) {}
 
-  create(createTeacherDto: CreateTeacherDto) {
-    return this.dataService.teachers.create(createTeacherDto);
+  async create(createTeacherDto: CreateTeacherDto): Promise<Teacher> {
+    const teacher = this.dataService.teachers.create(createTeacherDto);
+    return await this.dataService.teachers.save(teacher);
   }
 
-  findAll() {
-    return this.dataService.teachers.find();
-  }
-
-  findOne(id: number) {
-    return this.dataService.teachers.findBy({
-      id: id,
+  async findAll(): Promise<Teacher[]> {
+    return await this.dataService.teachers.find({
+      relations: ['courses'],
     });
   }
 
-  update(id: number, updateTeacherDto: UpdateTeacherDto) {
-    return this.dataService.teachers.update(id, updateTeacherDto);
+  async findOne(id: number): Promise<Teacher | null> {
+    return await this.dataService.teachers.findOne({
+      where: { id },
+      relations: ['courses'],
+    });
   }
 
-  remove(id: number) {
-    return this.dataService.teachers.delete(id);
+  async findOneWithCourses(id: number): Promise<Teacher | null> {
+    return await this.dataService.teachers.findOne({
+      where: { id },
+      relations: ['courses'],
+    });
+  }
+
+  async update(id: number, updateTeacherDto: UpdateTeacherDto): Promise<void> {
+    await this.dataService.teachers.update(id, updateTeacherDto);
+  }
+
+  async remove(id: number): Promise<void> {
+    await this.dataService.teachers.delete(id);
   }
 }

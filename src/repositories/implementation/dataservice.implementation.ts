@@ -1,6 +1,7 @@
 import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
+import { Course } from 'src/course/entities/course.entity';
 import { Student } from 'src/student/entities/student.entity';
 import { Teacher } from 'src/teacher/entities/teacher.entity';
 import { EntityManager } from 'typeorm';
@@ -14,6 +15,7 @@ export class GenericDataService
 {
   students: IGenericRepository<Student>;
   teachers: IGenericRepository<Teacher>;
+  courses: IGenericRepository<Course>;
 
   constructor(
     @InjectEntityManager() private readonly entityManager: EntityManager,
@@ -21,6 +23,8 @@ export class GenericDataService
     private readonly studentRepository: IGenericRepository<Student>,
     @InjectRepository(Teacher)
     private readonly teacherRepository: IGenericRepository<Teacher>,
+    @InjectRepository(Course)
+    private readonly courseRepository: IGenericRepository<Course>,
   ) {}
 
   onApplicationBootstrap() {
@@ -32,6 +36,12 @@ export class GenericDataService
 
     this.students = new GenericRepository<Student>(
       Student,
+      this.entityManager,
+      this.studentRepository.queryRunner!,
+    );
+
+    this.courses = new GenericRepository<Course>(
+      Course,
       this.entityManager,
       this.studentRepository.queryRunner!,
     );

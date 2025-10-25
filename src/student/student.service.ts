@@ -32,15 +32,9 @@ export class StudentService {
 
       console.log('Student data before saving:', student);
 
-      // Try both save and insert methods
       console.log('Attempting to save with .save() method...');
       const savedStudent = await this.dataService.students.save(student);
       console.log('Student saved with .save():', savedStudent);
-
-      // Also try insert method as alternative
-      console.log('Attempting alternative with .insert() method...');
-      const insertResult = await this.dataService.students.insert(student);
-      console.log('Insert result:', insertResult);
 
       const allStudents = await this.dataService.students.find();
       console.log('Total students in database:', allStudents.length);
