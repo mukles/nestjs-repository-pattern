@@ -1,33 +1,138 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { CreateStudentDto } from './dto/create-student.dto';
-import { UpdateStudentDto } from './dto/update-student.dto';
-import type { StudentRepository } from './repositories/student.repository.interface';
-import { STUDENT_REPOSITORY_TOKEN } from './repositories/student.repository.interface';
+import { Injectable } from '@nestjs/common';
+import { IDataService } from 'src/repositories/interfaces/dataservice.interface';
+import { Student } from './entities/student.entity';
 
 @Injectable()
 export class StudentService {
-  constructor(
-    @Inject(STUDENT_REPOSITORY_TOKEN)
-    private readonly studentRepository: StudentRepository,
-  ) {}
+  constructor(private readonly dataService: IDataService) {}
 
-  create(createStudentDto: CreateStudentDto) {
-    return 'This action adds a new student';
+  async findAllStudents(): Promise<Student[]> {
+    return await this.dataService.students.find();
   }
 
-  findAll() {
-    return `This action returns all student`;
+  async createStudent(): Promise<{ message: string; student: Student }> {
+    try {
+      console.log('Creating new student with dummy data...');
+      console.log('DataService:', this.dataService);
+      console.log('Students repository:', this.dataService.students);
+      console.log(
+        'Repository methods available:',
+        Object.getOwnPropertyNames(
+          Object.getPrototypeOf(this.dataService.students),
+        ),
+      );
+
+      const student = new Student();
+      student.firstName = 'John';
+      student.lastName = 'Doe';
+      student.email = `john.doe.${Date.now()}@example.com`; // Make email unique
+      student.dateOfBirth = new Date('1995-05-15');
+      student.password = 'password123';
+      student.gender = 'male';
+
+      console.log('Student data before saving:', student);
+
+      // Try both save and insert methods
+      console.log('Attempting to save with .save() method...');
+      const savedStudent = await this.dataService.students.save(student);
+      console.log('Student saved with .save():', savedStudent);
+
+      // Also try insert method as alternative
+      console.log('Attempting alternative with .insert() method...');
+      const insertResult = await this.dataService.students.insert(student);
+      console.log('Insert result:', insertResult);
+
+      const allStudents = await this.dataService.students.find();
+      console.log('Total students in database:', allStudents.length);
+      console.log('All students:', allStudents);
+
+      return {
+        message: 'Student created successfully',
+        student: savedStudent,
+      };
+    } catch (error) {
+      console.error('Error creating student:', error);
+      console.error('Error stack:', error.stack);
+      throw error;
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} student`;
+  async createMultipleStudents(): Promise<{
+    message: string;
+    students: Student[];
+  }> {
+    try {
+      console.log('Creating multiple students with dummy data...');
+
+      const studentsData = [
+        {
+          firstName: 'Alice',
+          lastName: 'Smith',
+          email: `alice.smith.${Date.now()}@example.com`,
+          dateOfBirth: new Date('1996-03-20'),
+          password: 'alice123',
+          gender: 'female' as const,
+        },
+        {
+          firstName: 'Bob',
+          lastName: 'Johnson',
+          email: `bob.johnson.${Date.now() + 1}@example.com`,
+          dateOfBirth: new Date('1994-08-10'),
+          password: 'bob123',
+          gender: 'male' as const,
+        },
+        {
+          firstName: 'Charlie',
+          lastName: 'Brown',
+          email: `charlie.brown.${Date.now() + 2}@example.com`,
+          dateOfBirth: new Date('1997-12-05'),
+          password: 'charlie123',
+          gender: 'male' as const,
+        },
+      ];
+
+      const students: Student[] = [];
+
+      for (const studentData of studentsData) {
+        const student = new Student();
+        Object.assign(student, studentData);
+        const savedStudent = await this.dataService.students.save(student);
+        students.push(savedStudent);
+        console.log(
+          'Created student:',
+          savedStudent.firstName,
+          savedStudent.lastName,
+        );
+      }
+
+      const allStudents = await this.dataService.students.find();
+      console.log(
+        'Total students in database after bulk creation:',
+        allStudents.length,
+      );
+
+      return {
+        message: `Successfully created ${students.length} students`,
+        students,
+      };
+    } catch (error) {
+      console.error('Error creating multiple students:', error);
+      throw error;
+    }
   }
 
-  update(id: number, updateStudentDto: UpdateStudentDto) {
-    return `This action updates a #${id} student`;
-  }
+  async getStudentsCount(): Promise<{ count: number; students: Student[] }> {
+    try {
+      const students = await this.dataService.students.find();
+      console.log('Retrieved students from database:', students.length);
 
-  remove(id: number) {
-    return `This action removes a #${id} student`;
+      return {
+        count: students.length,
+        students,
+      };
+    } catch (error) {
+      console.error('Error fetching students:', error);
+      throw error;
+    }
   }
 }

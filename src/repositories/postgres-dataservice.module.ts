@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Student } from 'src/student/entities/student.entity';
 import { GenericDataService } from './implementation/dataservice.implementation';
@@ -9,13 +9,17 @@ import { IDataService } from './interfaces/dataservice.interface';
   imports: [
     TypeOrmModule.forFeature([Student]),
     TypeOrmModule.forRootAsync({
-      useFactory: (config: ConfigService) => ({
-        type: 'postgres',
-        url: config.get<string>('DATABASE_URL'),
-        entities: [Student],
-        synchronize: true,
-      }),
-      imports: [ConfigService],
+      useFactory: (config: ConfigService) => {
+        const databaseUrl = config.get<string>('DATABASE_URL');
+        return {
+          type: 'postgres',
+          url: databaseUrl,
+          entities: [Student],
+          synchronize: true,
+          logging: true, // Enable SQL logging
+        };
+      },
+      imports: [ConfigModule],
       inject: [ConfigService],
     }),
   ],

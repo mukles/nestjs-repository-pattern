@@ -1,5 +1,5 @@
 import { Global, Module } from '@nestjs/common';
-import { PostgresDataServiceModule } from './postgress-dataservice.module';
+import { PostgresDataServiceModule } from './postgres-dataservice.module';
 
 @Global()
 @Module({

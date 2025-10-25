@@ -10,7 +10,7 @@ import {
 @Entity('students')
 export class Student extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @Column({
     type: 'varchar',

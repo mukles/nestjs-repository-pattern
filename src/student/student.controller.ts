@@ -1,34 +1,55 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { StudentService } from './student.service';
-import { CreateStudentDto } from './dto/create-student.dto';
-import { UpdateStudentDto } from './dto/update-student.dto';
 
 @Controller('student')
 export class StudentController {
   constructor(private readonly studentService: StudentService) {}
 
-  @Post()
-  create(@Body() createStudentDto: CreateStudentDto) {
-    return this.studentService.create(createStudentDto);
-  }
-
   @Get()
-  findAll() {
-    return this.studentService.findAll();
+  async findAll() {
+    return await this.studentService.findAllStudents();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.studentService.findOne(+id);
+  @Get('create')
+  async create() {
+    return await this.studentService.createStudent();
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateStudentDto: UpdateStudentDto) {
-    return this.studentService.update(+id, updateStudentDto);
+  @Get('create-multiple')
+  async createMultiple() {
+    return await this.studentService.createMultipleStudents();
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.studentService.remove(+id);
+  @Get('count')
+  async getCount() {
+    return await this.studentService.getStudentsCount();
+  }
+
+  @Get('test-database')
+  async testDatabase() {
+    try {
+      // First, get current count
+      const initialCount = await this.studentService.getStudentsCount();
+
+      // Create a test student
+      const createResult = await this.studentService.createStudent();
+
+      // Get count after creation
+      const finalCount = await this.studentService.getStudentsCount();
+
+      return {
+        message: 'Database test completed',
+        initialCount: initialCount.count,
+        finalCount: finalCount.count,
+        studentCreated: createResult.student,
+        databaseWorking: finalCount.count > initialCount.count,
+      };
+    } catch (error) {
+      return {
+        message: 'Database test failed',
+        error: error.message,
+        databaseWorking: false,
+      };
+    }
   }
 }
