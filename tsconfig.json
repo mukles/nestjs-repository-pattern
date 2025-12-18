@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
     "module": "nodenext",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "moduleResolution": "nodenext",
     "resolvePackageJsonExports": true,
     "esModuleInterop": true,
