@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { IDataService } from 'src/repositories/interfaces/dataservice.interface';
+
 import { Student } from './entities/student.entity';
 
 @Injectable()
@@ -17,9 +18,7 @@ export class StudentService {
       console.log('Students repository:', this.dataService.students);
       console.log(
         'Repository methods available:',
-        Object.getOwnPropertyNames(
-          Object.getPrototypeOf(this.dataService.students),
-        ),
+        Object.getOwnPropertyNames(Object.getPrototypeOf(this.dataService.students)),
       );
 
       const student = new Student();
@@ -98,18 +97,11 @@ export class StudentService {
         Object.assign(student, studentData);
         const savedStudent = await this.dataService.students.save(student);
         students.push(savedStudent);
-        console.log(
-          'Created student:',
-          savedStudent.firstName,
-          savedStudent.lastName,
-        );
+        console.log('Created student:', savedStudent.firstName, savedStudent.lastName);
       }
 
       const allStudents = await this.dataService.students.find();
-      console.log(
-        'Total students in database after bulk creation:',
-        allStudents.length,
-      );
+      console.log('Total students in database after bulk creation:', allStudents.length);
 
       return {
         message: `Successfully created ${students.length} students`,

@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Student } from 'src/student/entities/student.entity';
 import { Teacher } from 'src/teacher/entities/teacher.entity';
+
 import { GenericDataService } from './implementation/dataservice.implementation';
 import { IDataService } from './interfaces/dataservice.interface';
 
