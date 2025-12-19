@@ -1,11 +1,25 @@
+import { Enrollment } from 'src/enrollment/entities/enrollment.entity';
 import {
   BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+
+export enum StudentStatus {
+  ACTIVE = 'active',
+  BANNED = 'banned',
+  SUSPENDED = 'suspended',
+}
+
+export enum Gender {
+  MALE = 'male',
+  FEMALE = 'female',
+  OTHERS = 'others',
+}
 
 @Entity('students')
 export class Student extends BaseEntity {
@@ -36,17 +50,21 @@ export class Student extends BaseEntity {
   })
   dateOfBirth: Date;
 
-  @Column({
-    type: 'varchar',
-    length: 100,
-  })
-  password: string;
+  @OneToMany(() => Enrollment, (enrollment) => enrollment.student)
+  enrollments: Enrollment[];
 
   @Column({
     type: 'enum',
-    enum: ['male', 'female', 'others'],
+    enum: Gender,
   })
-  gender: 'male' | 'female' | 'others';
+  gender: Gender;
+
+  @Column({
+    type: 'enum',
+    enum: StudentStatus,
+    default: StudentStatus.ACTIVE,
+  })
+  status: StudentStatus;
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;

@@ -1,13 +1,17 @@
+import { Enrollment } from 'src/enrollment/entities/enrollment.entity';
 import { Teacher } from 'src/teacher/entities/teacher.entity';
 import {
   BaseEntity,
   Column,
   CreateDateColumn,
+  Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
+@Entity('courses')
 export class Course extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -32,6 +36,9 @@ export class Course extends BaseEntity {
 
   @ManyToOne(() => Teacher, (teacher) => teacher.courses, { nullable: false })
   teacher: Teacher;
+
+  @OneToMany(() => Enrollment, (enrollment) => enrollment, { nullable: false })
+  enrollments: Enrollment[];
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
