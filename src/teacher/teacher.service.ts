@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { IDataService } from 'src/repositories/interfaces/dataservice.interface';
+import { IDataService } from '../repositories/interfaces/dataservice.interface';
 
 import { CreateTeacherDto } from './dto/create-teacher.dto';
 import { UpdateTeacherDto } from './dto/update-teacher.dto';

@@ -18,10 +18,11 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "migration:create": "npx typeorm migration:create src/database/migrations/",
-    "migration:generate": "npx ts-node -P ./tsconfig.json -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:generate -d src/repositories/postgres-dataservice.module.ts src/database/migrations/",
-    "migration:run": "npx ts-node -P ./tsconfig.json -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d src/repositories/postgres-dataservice.module.ts",
-    "migration:revert": "npx ts-node -P ./tsconfig.json -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:revert -d src/repositories/postgres-dataservice.module.ts"
+    "typeorm": "ts-node ./node_modules/typeorm/cli",
+    "migration:create": "typeorm migration:create ./src/migrations/${MIGRATION_NAME}",
+    "migration:generate": "npm run typeorm -- migration:generate -d ./typeorm.config.ts",
+    "migration:run": "npm run typeorm migration:run -- -d ./typeorm.config.ts",
+    "migration:revert": "npm run typeorm migration:revert -- -d ./typeorm.config.ts"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -32,6 +33,7 @@
     "@nestjs/typeorm": "^11.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
+    "dotenv": "^17.2.3",
     "pg": "^8.16.3",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",

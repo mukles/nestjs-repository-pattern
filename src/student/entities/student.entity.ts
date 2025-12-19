@@ -1,4 +1,4 @@
-import { Enrollment } from 'src/enrollment/entities/enrollment.entity';
+import { Enrollment } from '../../enrollment/entities/enrollment.entity';
 import {
   BaseEntity,
   Column,

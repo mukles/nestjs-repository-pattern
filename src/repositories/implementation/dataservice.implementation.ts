@@ -1,8 +1,9 @@
 import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
-import { Course } from 'src/course/entities/course.entity';
-import { Student } from 'src/student/entities/student.entity';
-import { Teacher } from 'src/teacher/entities/teacher.entity';
+import { Course } from '../../course/entities/course.entity';
+import { Student } from '../../student/entities/student.entity';
+import { Teacher } from '../../teacher/entities/teacher.entity';
+import { Enrollment } from '../../enrollment/entities/enrollment.entity';
 import { EntityManager } from 'typeorm';
 
 import { IDataService } from '../interfaces/dataservice.interface';
@@ -14,6 +15,7 @@ export class GenericDataService implements IDataService, OnApplicationBootstrap 
   students: IGenericRepository<Student>;
   teachers: IGenericRepository<Teacher>;
   courses: IGenericRepository<Course>;
+  enrollments: IGenericRepository<Enrollment>;
 
   constructor(
     @InjectEntityManager() private readonly entityManager: EntityManager,
@@ -21,9 +23,11 @@ export class GenericDataService implements IDataService, OnApplicationBootstrap 
     private readonly studentRepository: IGenericRepository<Student>,
     @InjectRepository(Teacher)
     private readonly teacherRepository: IGenericRepository<Teacher>,
-  ) {
-    void Promise.resolve();
-  }
+    @InjectRepository(Course)
+    private readonly courseRepository: IGenericRepository<Course>,
+    @InjectRepository(Enrollment)
+    private readonly enrollmentRepository: IGenericRepository<Enrollment>,
+  ) {}
 
   onApplicationBootstrap() {
     this.teachers = new GenericRepository<Teacher>(
@@ -41,7 +45,12 @@ export class GenericDataService implements IDataService, OnApplicationBootstrap 
     this.courses = new GenericRepository<Course>(
       Course,
       this.entityManager,
-      this.studentRepository.queryRunner!,
+      this.courseRepository.queryRunner!,
+    );
+    this.enrollments = new GenericRepository<Enrollment>(
+      Enrollment,
+      this.entityManager,
+      this.enrollmentRepository.queryRunner!,
     );
   }
 }

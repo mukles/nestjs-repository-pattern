@@ -1,5 +1,5 @@
-import { Enrollment } from 'src/enrollment/entities/enrollment.entity';
-import { Teacher } from 'src/teacher/entities/teacher.entity';
+import { Enrollment } from '../../enrollment/entities/enrollment.entity';
+import { Teacher } from '../../teacher/entities/teacher.entity';
 import {
   BaseEntity,
   Column,
