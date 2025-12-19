@@ -1,8 +1,10 @@
+import { Course } from 'src/course/entities/course.entity';
 import {
   BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -47,6 +49,9 @@ export class Teacher extends BaseEntity {
     enum: ['male', 'female', 'others'],
   })
   gender: 'male' | 'female' | 'others';
+
+  @OneToMany(() => Course, (course) => course.teacher)
+  courses: Course[];
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
