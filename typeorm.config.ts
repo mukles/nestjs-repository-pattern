@@ -15,7 +15,7 @@ export const AppDataSource = new DataSource({
   url: configService.get<string>('DATABASE_URL'),
   entities: [Student, Teacher, Course, Enrollment],
   logging: true,
-  migrations: ['src/database/migrations/*.ts'],
+  migrations: ['src/migrations/*.ts'],
   migrationsRun: true,
   synchronize: configService.get<boolean>('SYNCHRONIZE', false),
 });
