@@ -19,13 +19,13 @@ export class GenericDataService implements IDataService, OnApplicationBootstrap 
     private readonly studentRepository: IGenericRepository<Student>,
     @InjectRepository(Teacher)
     private readonly teacherRepository: IGenericRepository<Teacher>,
-  ) {}
+  ) { }
 
   onApplicationBootstrap() {
     this.teachers = new GenericRepository<Teacher>(
       Teacher,
       this.entityManager,
-      this.studentRepository.queryRunner!,
+      this.teacherRepository.queryRunner!,
     );
 
     this.students = new GenericRepository<Student>(
