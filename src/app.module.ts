@@ -6,6 +6,8 @@ import { DataServiceModule } from './repositories/dataservice.module';
 import { StudentModule } from './student/student.module';
 import { TeacherModule } from './teacher/teacher.module';
 import { CourseModule } from './course/course.module';
+import { AppService } from './app.service';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -16,7 +18,7 @@ import { CourseModule } from './course/course.module';
     EnrollmentModule,
     CourseModule,
   ],
-  controllers: [],
-  providers: [],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
