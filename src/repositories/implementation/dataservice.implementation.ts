@@ -19,7 +19,9 @@ export class GenericDataService implements IDataService, OnApplicationBootstrap 
     private readonly studentRepository: IGenericRepository<Student>,
     @InjectRepository(Teacher)
     private readonly teacherRepository: IGenericRepository<Teacher>,
-  ) { }
+  ) {
+    void Promise.resolve();
+  }
 
   onApplicationBootstrap() {
     this.teachers = new GenericRepository<Teacher>(
