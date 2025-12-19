@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { EnrollmentModule } from './enrollment/enrollment.module';
 import { DataServiceModule } from './repositories/dataservice.module';
 import { StudentModule } from './student/student.module';
 import { TeacherModule } from './teacher/teacher.module';
@@ -13,8 +12,9 @@ import { TeacherModule } from './teacher/teacher.module';
     DataServiceModule,
     StudentModule,
     TeacherModule,
+    EnrollmentModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
