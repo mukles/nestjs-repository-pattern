@@ -26,8 +26,6 @@ export class StudentService {
       student.lastName = 'Doe';
       student.email = `john.doe.${Date.now()}@example.com`; // Make email unique
       student.dateOfBirth = new Date('1995-05-15');
-      student.password = 'password123';
-      student.gender = 'male';
 
       console.log('Student data before saving:', student);
 

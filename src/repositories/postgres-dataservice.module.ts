@@ -7,17 +7,18 @@ import { Teacher } from 'src/teacher/entities/teacher.entity';
 
 import { GenericDataService } from './implementation/dataservice.implementation';
 import { IDataService } from './interfaces/dataservice.interface';
+import { Enrollment } from 'src/enrollment/entities/enrollment.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Student, Teacher, Course]),
+    TypeOrmModule.forFeature([Student, Teacher, Course, Enrollment]),
     TypeOrmModule.forRootAsync({
       useFactory: (config: ConfigService) => {
         const databaseUrl = config.get<string>('DATABASE_URL');
         return {
           type: 'postgres',
           url: databaseUrl,
-          entities: [Student, Teacher, Course],
+          entities: [Student, Teacher, Course, Enrollment],
           synchronize: false,
           logging: true,
           migrations: ['src/database/migrations/*.ts'],
