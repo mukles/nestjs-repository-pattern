@@ -25,6 +25,11 @@ export class StudentController {
     return await this.studentService.createStudent(student);
   }
 
+  @Get('/:id')
+  async findOne(@Param('id') id: string) {
+    return await this.studentService.getSingleStudent(id);
+  }
+
   @Put('/:id')
   @ApiBody({ type: CreateStudentDto, description: 'Student data' })
   async update(@Param('id') id: string, @Body() student: CreateStudentDto) {

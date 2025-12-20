@@ -42,6 +42,18 @@ export class StudentService {
     return { message: 'Student created successfully', student: newStudent };
   }
 
+  async getSingleStudent(id: string): Promise<Student> {
+    const student = await this.dataService.students.findOne({
+      where: { id: parseInt(id, 10) },
+    });
+
+    if (!student) {
+      throw new NotFoundException(`Student with id '${id}' does not exist`);
+    }
+
+    return student;
+  }
+
   async updateStudent(
     id: string,
     student: CreateStudentDto,
