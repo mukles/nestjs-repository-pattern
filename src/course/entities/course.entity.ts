@@ -1,5 +1,3 @@
-import { Enrollment } from '../../enrollment/entities/enrollment.entity';
-import { Teacher } from '../../teacher/entities/teacher.entity';
 import {
   BaseEntity,
   Column,
@@ -10,6 +8,9 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+
+import { Enrollment } from '../../enrollment/entities/enrollment.entity';
+import { Teacher } from '../../teacher/entities/teacher.entity';
 
 @Entity('courses')
 export class Course extends BaseEntity {
