@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 
-import { StudentService } from './student.service';
-
+import { PaginationResultDto } from '../common/pagination/pagination-result.dto';
 import { CreateStudentDto } from './dto/create-student.dto';
+import { StudentPaginationDto } from './dto/student-pagination.dto';
 import { StudentResponseDto } from './dto/student-response.dto';
+import { StudentService } from './student.service';
 
 @ApiTags('student')
 @Controller('student')
@@ -12,9 +13,10 @@ export class StudentController {
   constructor(private readonly studentService: StudentService) {}
 
   @Get()
-  async findAll(): Promise<StudentResponseDto[]> {
-    const students = await this.studentService.findAllStudents();
-    return students;
+  async findAll(
+    @Query() filter: StudentPaginationDto,
+  ): Promise<PaginationResultDto<StudentResponseDto>> {
+    return this.studentService.findPaginatedStudents(filter);
   }
 
   @Post('create')

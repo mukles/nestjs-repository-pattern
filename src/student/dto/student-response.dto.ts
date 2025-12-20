@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+
 import { Gender, StudentStatus } from '../entities/student.entity';
 
 export class StudentResponseDto {
