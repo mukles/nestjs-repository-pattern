@@ -7,7 +7,7 @@ import { StudentPaginationDto } from './dto/student-pagination.dto';
 import { StudentResponseDto } from './dto/student-response.dto';
 import { StudentService } from './student.service';
 
-@ApiTags('student')
+@ApiTags('Student')
 @Controller('student')
 export class StudentController {
   constructor(private readonly studentService: StudentService) {}
