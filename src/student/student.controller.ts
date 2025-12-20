@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 
 import { Permissions } from '../auth/decorators/permissions.decorator';
 import { PaginationResultDto } from '../common/pagination/pagination-result.dto';
@@ -9,6 +9,7 @@ import { StudentPaginationDto } from './dto/student-pagination.dto';
 import { StudentResponseDto } from './dto/student-response.dto';
 import { StudentService } from './student.service';
 
+@ApiBearerAuth('JWT-auth')
 @ApiTags('Student')
 @Controller('student')
 export class StudentController {
