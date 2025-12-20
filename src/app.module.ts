@@ -8,6 +8,7 @@ import { TeacherModule } from './teacher/teacher.module';
 import { CourseModule } from './course/course.module';
 import { AppService } from './app.service';
 import { AppController } from './app.controller';
+import { ResultModule } from './result/result.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { AppController } from './app.controller';
     TeacherModule,
     EnrollmentModule,
     CourseModule,
+    ResultModule,
   ],
   controllers: [AppController],
   providers: [AppService],
