@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 
 import { PaginationResultDto } from '../common/pagination/pagination-result.dto';
@@ -25,6 +25,14 @@ export class StudentController {
     return await this.studentService.createStudent(student);
   }
 
-  @Get('create-multiple')
-  async createMultiple() {}
+  @Put('/:id')
+  @ApiBody({ type: CreateStudentDto, description: 'Student data' })
+  async update(@Param('id') id: string, @Body() student: CreateStudentDto) {
+    return await this.studentService.updateStudent(id, student);
+  }
+
+  @Delete('/:id')
+  async delete(@Param('id') id: string) {
+    return await this.studentService.deleteStudent(id);
+  }
 }

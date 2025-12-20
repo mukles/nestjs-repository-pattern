@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 
 import { PaginationService } from '../common/pagination/pagination.service';
 import { PaginationResultDto } from '../common/pagination/pagination-result.dto';
@@ -10,10 +10,6 @@ import { Student } from './entities/student.entity';
 @Injectable()
 export class StudentService {
   constructor(private readonly dataService: IDataService) {}
-
-  async findAllStudents(): Promise<Student[]> {
-    return await this.dataService.students.find();
-  }
 
   async findPaginatedStudents(filter: StudentPaginationDto): Promise<PaginationResultDto<Student>> {
     const qb = this.dataService.students.createQueryBuilder('student');
@@ -44,5 +40,36 @@ export class StudentService {
     const newStudent = this.dataService.students.create(student);
     await this.dataService.students.save(newStudent);
     return { message: 'Student created successfully', student: newStudent };
+  }
+
+  async updateStudent(
+    id: string,
+    student: CreateStudentDto,
+  ): Promise<{ message: string; student: Student }> {
+    const existingStudent = await this.dataService.students.findOne({
+      where: { id: parseInt(id, 10) },
+    });
+
+    if (!existingStudent) {
+      throw new NotFoundException(`Student with id '${id}' does not exist`);
+    }
+
+    const updatedStudent = Object.assign(existingStudent, student);
+
+    await this.dataService.students.save(updatedStudent);
+    return { message: 'Student updated successfully', student: updatedStudent };
+  }
+
+  async deleteStudent(id: string): Promise<{ message: string }> {
+    const existingStudent = await this.dataService.students.findOne({
+      where: { id: parseInt(id, 10) },
+    });
+
+    if (!existingStudent) {
+      throw new NotFoundException(`Student with id '${id}' does not exist`);
+    }
+
+    await this.dataService.students.remove(existingStudent);
+    return { message: 'Student deleted successfully' };
   }
 }
