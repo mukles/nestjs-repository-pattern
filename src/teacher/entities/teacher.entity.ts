@@ -1,4 +1,3 @@
-import { Course } from '../../course/entities/course.entity';
 import {
   BaseEntity,
   Column,
@@ -8,6 +7,9 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+
+import { Course } from '../../course/entities/course.entity';
+import { TeacherGender } from '../enum/teacher.gender.enum';
 
 @Entity('teachers')
 export class Teacher extends BaseEntity {
@@ -46,9 +48,9 @@ export class Teacher extends BaseEntity {
 
   @Column({
     type: 'enum',
-    enum: ['male', 'female', 'others'],
+    enum: TeacherGender,
   })
-  gender: 'male' | 'female' | 'others';
+  gender: TeacherGender;
 
   @OneToMany(() => Course, (course) => course.teacher)
   courses: Course[];
