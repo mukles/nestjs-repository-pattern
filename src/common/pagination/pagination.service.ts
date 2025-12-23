@@ -1,28 +1,28 @@
-import { ObjectLiteral, SelectQueryBuilder } from 'typeorm';
+import { applyDecorators, Type } from '@nestjs/common';
+import { ApiExtraModels, ApiOkResponse, getSchemaPath } from '@nestjs/swagger';
 
-import { PaginationDto, SortOrder } from './pagination.dto';
 import { PaginationResultDto } from './pagination-result.dto';
 
-export class PaginationService {
-  static async paginate<T extends ObjectLiteral>(
-    queryBuilder: SelectQueryBuilder<T>,
-    pagination: PaginationDto,
-  ): Promise<PaginationResultDto<T>> {
-    const page = pagination.page || 1;
-    const pageSize = pagination.pageSize || 10;
-    const orderBy = pagination.orderBy || 'id';
-    const sortOrder = pagination.sortOrder || SortOrder.ASC;
-
-    queryBuilder.orderBy(orderBy, sortOrder);
-    queryBuilder.skip((page - 1) * pageSize).take(pageSize);
-
-    const [data, total] = await queryBuilder.getManyAndCount();
-
-    return {
-      data,
-      total,
-      page,
-      pageSize,
-    };
-  }
-}
+export const ApiPaginatedResponse = <TModel extends Type<any>>(model: TModel) => {
+  return applyDecorators(
+    ApiExtraModels(PaginationResultDto),
+    ApiOkResponse({
+      description: 'Successfully received model list',
+      schema: {
+        allOf: [
+          { $ref: getSchemaPath(PaginationResultDto) },
+          {
+            properties: {
+              data: {
+                type: 'array',
+                items: { $ref: getSchemaPath(model) },
+              },
+              message: { type: 'string', example: 'Success' },
+              timestamp: { type: 'string', format: 'date-time' },
+            },
+          },
+        ],
+      },
+    }),
+  );
+};

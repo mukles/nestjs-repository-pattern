@@ -1,5 +1,17 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiPaginatedResponse } from 'src/common/pagination/pagination.service';
 
 import { PaginationResultDto } from '../common/pagination/pagination-result.dto';
 import { CreateStudentDto } from './dto/create-student.dto';
@@ -13,6 +25,8 @@ export class StudentController {
   constructor(private readonly studentService: StudentService) {}
 
   @Get()
+  @HttpCode(HttpStatus.OK)
+  @ApiPaginatedResponse(StudentResponseDto)
   async findAll(
     @Query() filter: StudentPaginationDto,
   ): Promise<PaginationResultDto<StudentResponseDto>> {
