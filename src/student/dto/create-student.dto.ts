@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsEmail, IsEnum, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsDate, IsEmail, IsEnum, IsNotEmpty, IsOptional, MinLength } from 'class-validator';
 
 import { Gender } from '../enum/student.gender.enum';
 import { StudentStatus } from '../enum/student.status.enum';
@@ -16,6 +16,11 @@ export class CreateStudentDto {
   @ApiProperty()
   @IsEmail()
   email: string;
+
+  @ApiProperty({ example: 'password123' })
+  @IsNotEmpty()
+  @MinLength(6)
+  password: string;
 
   @ApiProperty({ type: String, format: 'date-time' })
   @IsDate()
