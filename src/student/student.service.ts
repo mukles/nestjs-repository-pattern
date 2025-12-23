@@ -3,13 +3,18 @@ import { ConflictException, Injectable, NotFoundException } from '@nestjs/common
 import { PageMetaDto } from '../common/pagination/page-meta';
 import { PaginationResultDto } from '../common/pagination/pagination-result.dto';
 import { IDataService } from '../repositories/interfaces/dataservice.interface';
+import { Role as RoleEnum } from '../role/enums/role.enum';
+import { RoleService } from '../role/role.service';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { StudentPaginationDto } from './dto/student-pagination.dto';
 import { Student } from './entities/student.entity';
 
 @Injectable()
 export class StudentService {
-  constructor(private readonly dataService: IDataService) {}
+  constructor(
+    private readonly dataService: IDataService,
+    private readonly roleService: RoleService,
+  ) {}
 
   async findPaginatedStudents(filter: StudentPaginationDto): Promise<PaginationResultDto<Student>> {
     const qb = this.dataService.students.createQueryBuilder('student');
@@ -45,8 +50,33 @@ export class StudentService {
       throw new ConflictException(`Student with email '${student.email}' already exists`);
     }
 
-    const newStudent = this.dataService.students.create(student);
+    const existingUser = await this.dataService.users.findOne({
+      where: { email: student.email },
+    });
+
+    if (existingUser) {
+      throw new ConflictException(`User with email '${student.email}' already exists`);
+    }
+
+    const studentRole = await this.roleService.findByName(RoleEnum.STUDENT);
+    if (!studentRole) {
+      throw new NotFoundException('Student role not found');
+    }
+
+    const { password, ...studentData } = student;
+    const newStudent = this.dataService.students.create(studentData);
     await this.dataService.students.save(newStudent);
+
+    const newUser = this.dataService.users.create({
+      firstName: student.firstName,
+      lastName: student.lastName,
+      email: student.email,
+      password: password,
+      role: studentRole,
+    });
+
+    await this.dataService.users.save(newUser);
+
     return { message: 'Student created successfully', student: newStudent };
   }
 

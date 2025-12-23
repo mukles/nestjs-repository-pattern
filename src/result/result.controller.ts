@@ -1,8 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ResultService } from './result.service';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+
 import { CreateResultDto } from './dto/create-result.dto';
 import { UpdateResultDto } from './dto/update-result.dto';
+import { ResultService } from './result.service';
 
+@ApiBearerAuth('JWT-auth')
+@ApiTags('Result')
 @Controller('result')
 export class ResultController {
   constructor(private readonly resultService: ResultService) {}
