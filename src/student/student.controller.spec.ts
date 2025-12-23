@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { Gender, StudentStatus } from './entities/student.entity';
+import { Gender } from './enum/student.gender.enum';
+import { StudentStatus } from './enum/student.status.enum';
 import { StudentController } from './student.controller';
 import { StudentService } from './student.service';
 
@@ -38,7 +39,7 @@ describe('StudentController', () => {
 
   describe('findAll', () => {
     it('should return paginated students', async () => {
-      const filter = { page: 1, pageSize: 10 };
+      const filter = { page: 1, pageSize: 10, skip: 0 };
       const result = {
         data: [
           {
@@ -60,7 +61,7 @@ describe('StudentController', () => {
     });
 
     it('should filter by name', async () => {
-      const filter = { page: 1, pageSize: 10, name: 'John' };
+      const filter = { page: 1, pageSize: 10, skip: 0, name: 'John' };
       const result = {
         data: [],
         meta: { total: 0, page: 1, pageSize: 10, totalPages: 0 },
@@ -72,7 +73,7 @@ describe('StudentController', () => {
     });
 
     it('should filter by email', async () => {
-      const filter = { page: 1, pageSize: 10, email: 'john@test.com' };
+      const filter = { page: 1, pageSize: 10, skip: 0, email: 'john@test.com' };
       const result = {
         data: [],
         meta: { total: 0, page: 1, pageSize: 10, totalPages: 0 },
