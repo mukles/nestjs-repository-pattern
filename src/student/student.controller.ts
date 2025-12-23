@@ -23,7 +23,7 @@ import { StudentService } from './student.service';
 
 @ApiBearerAuth('JWT-auth')
 @ApiTags('Student')
-@Controller('student')
+@Controller('students')
 export class StudentController {
   constructor(private readonly studentService: StudentService) {}
 
