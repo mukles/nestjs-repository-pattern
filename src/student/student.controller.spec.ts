@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { Gender, StudentStatus } from './entities/student.entity';
+import { Gender } from './enum/student.gender.enum';
+import { StudentStatus } from './enum/student.status.enum';
 import { StudentController } from './student.controller';
 import { StudentService } from './student.service';
 
@@ -38,7 +39,7 @@ describe('StudentController', () => {
 
   describe('findAll', () => {
     it('should return paginated students', async () => {
-      const filter = { page: 1, pageSize: 10 };
+      const filter = { page: 1, take: 10, skip: 0 };
       const result = {
         data: [
           {
@@ -51,7 +52,14 @@ describe('StudentController', () => {
             status: StudentStatus.ACTIVE,
           },
         ],
-        meta: { total: 1, page: 1, pageSize: 10, totalPages: 1 },
+        meta: {
+          page: 1,
+          take: 10,
+          itemCount: 1,
+          pageCount: 1,
+          hasPreviousPage: false,
+          hasNextPage: false,
+        },
       };
       mockStudentService.findPaginatedStudents.mockResolvedValue(result);
 
@@ -60,10 +68,17 @@ describe('StudentController', () => {
     });
 
     it('should filter by name', async () => {
-      const filter = { page: 1, pageSize: 10, name: 'John' };
+      const filter = { page: 1, take: 10, skip: 0, name: 'John' };
       const result = {
         data: [],
-        meta: { total: 0, page: 1, pageSize: 10, totalPages: 0 },
+        meta: {
+          page: 1,
+          take: 10,
+          itemCount: 0,
+          pageCount: 0,
+          hasPreviousPage: false,
+          hasNextPage: false,
+        },
       };
       mockStudentService.findPaginatedStudents.mockResolvedValue(result);
 
@@ -72,10 +87,17 @@ describe('StudentController', () => {
     });
 
     it('should filter by email', async () => {
-      const filter = { page: 1, pageSize: 10, email: 'john@test.com' };
+      const filter = { page: 1, take: 10, skip: 0, email: 'john@test.com' };
       const result = {
         data: [],
-        meta: { total: 0, page: 1, pageSize: 10, totalPages: 0 },
+        meta: {
+          page: 1,
+          take: 10,
+          itemCount: 0,
+          pageCount: 0,
+          hasPreviousPage: false,
+          hasNextPage: false,
+        },
       };
       mockStudentService.findPaginatedStudents.mockResolvedValue(result);
 
@@ -92,6 +114,7 @@ describe('StudentController', () => {
         email: 'john@test.com',
         dateOfBirth: new Date('2000-01-01'),
         gender: Gender.MALE,
+        password: 'password123',
       };
       const result = {
         message: 'Student created successfully',
@@ -113,6 +136,7 @@ describe('StudentController', () => {
         email: 'jane@test.com',
         dateOfBirth: new Date('2000-01-01'),
         gender: Gender.FEMALE,
+        password: 'password123',
       };
       const result = {
         message: 'Student updated successfully',

@@ -1,5 +1,17 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiPaginatedResponse } from 'src/common/pagination/pagination.service';
 
 import { Permissions } from '../auth/decorators/permissions.decorator';
 import { PaginationResultDto } from '../common/pagination/pagination-result.dto';
@@ -16,7 +28,8 @@ export class StudentController {
   constructor(private readonly studentService: StudentService) {}
 
   @Get()
-  @Permissions(Permission.READ_STUDENT)
+  @HttpCode(HttpStatus.OK)
+  @ApiPaginatedResponse(StudentResponseDto)
   async findAll(
     @Query() filter: StudentPaginationDto,
   ): Promise<PaginationResultDto<StudentResponseDto>> {
