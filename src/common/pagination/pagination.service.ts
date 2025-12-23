@@ -5,7 +5,7 @@ import { PaginationResultDto } from './pagination-result.dto';
 
 export const ApiPaginatedResponse = <TModel extends Type<any>>(model: TModel) => {
   return applyDecorators(
-    ApiExtraModels(PaginationResultDto),
+    ApiExtraModels(PaginationResultDto, model),
     ApiOkResponse({
       description: 'Successfully received model list',
       schema: {

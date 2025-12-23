@@ -6,8 +6,11 @@ export interface ApiResponse<T> {
 }
 
 export interface ApiErrorResponse {
-  error: string;
-  message: string | string[];
-  timestamp: string;
+  status: 'error';
   statusCode: number;
+  message: string;
+  timestamp: string;
+  path?: string;
+  stack: string;
+  details?: string[];
 }
