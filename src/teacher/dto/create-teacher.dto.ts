@@ -8,6 +8,8 @@ import {
   MinLength,
 } from 'class-validator';
 
+import { TeacherGender } from '../enum/teacher.gender.enum';
+
 export class CreateTeacherDto {
   @IsString()
   @IsNotEmpty()
@@ -34,7 +36,7 @@ export class CreateTeacherDto {
   @MaxLength(100)
   readonly password: string;
 
-  @IsEnum(['male', 'female', 'others'])
+  @IsEnum(TeacherGender)
   @IsNotEmpty()
-  readonly gender: 'male' | 'female' | 'others';
+  readonly gender: TeacherGender;
 }

@@ -7,7 +7,7 @@ import tseslint from 'typescript-eslint';
 
 export default [
   {
-    ignores: ['eslint.config.mjs'],
+    ignores: ['eslint.config.mjs', 'src/migrations/**'],
   },
   eslint.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
