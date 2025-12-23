@@ -10,38 +10,42 @@ export class ResponseInterceptor<T>
   implements
     NestInterceptor<
       T,
-      ApiResponse<T> | (PaginationResultDto<T> & Pick<ApiResponse<T>, 'message' | 'timestamp'>)
+      | ApiResponse<T>
+      | (PaginationResultDto<T> & Pick<ApiResponse<T>, 'message' | 'timestamp' | 'statusCode'>)
     >
 {
   intercept(
-    _context: ExecutionContext,
+    context: ExecutionContext,
     next: CallHandler,
   ): Observable<
-    ApiResponse<T> | (PaginationResultDto<T> & Pick<ApiResponse<T>, 'message' | 'timestamp'>)
+    | ApiResponse<T>
+    | (PaginationResultDto<T> & Pick<ApiResponse<T>, 'message' | 'timestamp' | 'statusCode'>)
   > {
-    return next.handle().pipe(
-      map(
-        (
-          data,
-        ):
-          | ApiResponse<T>
-          | (PaginationResultDto<T> & Pick<ApiResponse<T>, 'message' | 'timestamp'>) => {
-          if (data && typeof data === 'object' && 'meta' in data && 'data' in data) {
-            const paginated = data as PaginationResultDto<T>;
-            return {
-              ...paginated,
-              message: 'Success',
-              timestamp: new Date().toISOString(),
-            };
-          }
+    const http = context.switchToHttp();
+    const response = http.getResponse<Response>();
+    const statusCode = response.status ?? 200;
 
+    return next.handle().pipe(
+      map((data) => {
+        const timestamp = new Date().toISOString();
+
+        if (data && typeof data === 'object' && 'meta' in data && 'data' in data) {
+          const paginated = data as PaginationResultDto<T>;
           return {
-            data: data as T,
+            ...paginated,
             message: 'Success',
-            timestamp: new Date().toISOString(),
-          } satisfies ApiResponse<T>;
-        },
-      ),
+            timestamp,
+            statusCode,
+          };
+        }
+
+        return {
+          data: data as T,
+          message: 'Success',
+          timestamp,
+          statusCode,
+        } satisfies ApiResponse<T>;
+      }),
     );
   }
 }

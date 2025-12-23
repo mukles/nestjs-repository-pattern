@@ -19,6 +19,7 @@ export const ApiPaginatedResponse = <TModel extends Type<any>>(model: TModel) =>
               },
               message: { type: 'string', example: 'Success' },
               timestamp: { type: 'string', format: 'date-time' },
+              statusCode: { type: 'number', example: 200 },
             },
           },
         ],
