@@ -1,4 +1,3 @@
-import { Enrollment } from '../../enrollment/entities/enrollment.entity';
 import {
   BaseEntity,
   Column,
@@ -9,17 +8,9 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-export enum StudentStatus {
-  ACTIVE = 'active',
-  BANNED = 'banned',
-  SUSPENDED = 'suspended',
-}
-
-export enum Gender {
-  MALE = 'male',
-  FEMALE = 'female',
-  OTHERS = 'others',
-}
+import { Enrollment } from '../../enrollment/entities/enrollment.entity';
+import { Gender } from '../enum/student.gender.enum';
+import { StudentStatus } from '../enum/student.status.enum';
 
 @Entity('students')
 export class Student extends BaseEntity {

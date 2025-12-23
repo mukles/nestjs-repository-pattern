@@ -1,6 +1,6 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 
-import { PaginationService } from '../common/pagination/pagination.service';
+import { PageMetaDto } from '../common/pagination/page-meta';
 import { PaginationResultDto } from '../common/pagination/pagination-result.dto';
 import { IDataService } from '../repositories/interfaces/dataservice.interface';
 import { CreateStudentDto } from './dto/create-student.dto';
@@ -25,7 +25,15 @@ export class StudentService {
       qb.andWhere('student.email ILIKE :email', { email: `%${filter.email}%` });
     }
 
-    return PaginationService.paginate(qb, filter);
+    const [students, itemCount] = await qb
+      .orderBy('student.createdAt', filter.order)
+      .skip(filter.skip)
+      .take(filter.take)
+      .getManyAndCount();
+
+    const pageMeta = new PageMetaDto({ pageOptionsDto: filter, itemCount });
+
+    return new PaginationResultDto<Student>(students, pageMeta);
   }
 
   async createStudent(student: CreateStudentDto): Promise<{ message: string; student: Student }> {
