@@ -68,7 +68,6 @@ export class AuthService {
       throw new UnauthorizedException('User with this email already exists');
     }
 
-    // TODO: CHECK SHOULD WE ALLOW ASSIGNING ANY ROLE DURING REGISTRATION
     const role = await this.dataService.roles.findOne({
       where: { id: roleId },
     });
