@@ -2,24 +2,24 @@ import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nes
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { ApiResponse } from '../interfaces/api-response.interface';
 import { PaginationResultDto } from '../pagination/pagination-result.dto';
+import { ApiResponseDto } from '../response';
 
 @Injectable()
 export class ResponseInterceptor<T>
   implements
     NestInterceptor<
       T,
-      | ApiResponse<T>
-      | (PaginationResultDto<T> & Pick<ApiResponse<T>, 'message' | 'timestamp' | 'statusCode'>)
+      | ApiResponseDto<T>
+      | (PaginationResultDto<T> & Pick<ApiResponseDto<T>, 'message' | 'timestamp' | 'statusCode'>)
     >
 {
   intercept(
     context: ExecutionContext,
     next: CallHandler,
   ): Observable<
-    | ApiResponse<T>
-    | (PaginationResultDto<T> & Pick<ApiResponse<T>, 'message' | 'timestamp' | 'statusCode'>)
+    | ApiResponseDto<T>
+    | (PaginationResultDto<T> & Pick<ApiResponseDto<T>, 'message' | 'timestamp' | 'statusCode'>)
   > {
     const http = context.switchToHttp();
     const response = http.getResponse<Response>();
@@ -44,7 +44,7 @@ export class ResponseInterceptor<T>
           message: 'Success',
           timestamp,
           statusCode,
-        } satisfies ApiResponse<T>;
+        } satisfies ApiResponseDto<T>;
       }),
     );
   }
