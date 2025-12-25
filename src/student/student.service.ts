@@ -41,7 +41,7 @@ export class StudentService {
     return new PaginationResultDto<Student>(students, pageMeta);
   }
 
-  async createStudent(student: CreateStudentDto): Promise<{ message: string; student: Student }> {
+  async createStudent(student: CreateStudentDto): Promise<Student> {
     const existingStudent = await this.dataService.students.findOne({
       where: { email: student.email },
     });
@@ -77,7 +77,7 @@ export class StudentService {
 
     await this.dataService.users.save(newUser);
 
-    return { message: 'Student created successfully', student: newStudent };
+    return newStudent;
   }
 
   async getSingleStudent(id: string): Promise<Student> {
