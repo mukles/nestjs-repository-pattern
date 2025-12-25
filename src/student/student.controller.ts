@@ -40,8 +40,9 @@ export class StudentController {
   @Post('create')
   @HttpCode(HttpStatus.CREATED)
   @ApiBody({ type: CreateStudentDto, description: 'Student data' })
+  @ApiResponse(StudentResponseDto)
   @Permissions(Permission.CREATE_STUDENT)
-  async create(@Body() student: CreateStudentDto) {
+  async create(@Body() student: CreateStudentDto): Promise<StudentResponseDto> {
     return await this.studentService.createStudent(student);
   }
 
