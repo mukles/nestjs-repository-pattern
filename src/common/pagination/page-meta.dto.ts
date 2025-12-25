@@ -1,6 +1,6 @@
 import { PaginationDto } from './pagination.dto';
 
-export interface PageMetaDtoParameters {
+export class PageMetaDtoParameters {
   pageOptionsDto: PaginationDto;
   itemCount: number;
 }

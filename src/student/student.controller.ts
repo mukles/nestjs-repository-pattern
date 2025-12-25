@@ -11,10 +11,11 @@ import {
   Query,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
-import { ApiPaginatedResponse } from 'src/common/pagination/pagination.service';
 
 import { Permissions } from '../auth/decorators/permissions.decorator';
+import { ApiPaginatedResponse } from '../common/pagination/pagination.service';
 import { PaginationResultDto } from '../common/pagination/pagination-result.dto';
+import { ApiResponse } from '../common/response';
 import { Permission } from '../role/enums/permission.enum';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { StudentPaginationDto } from './dto/student-pagination.dto';
@@ -23,7 +24,7 @@ import { StudentService } from './student.service';
 
 @ApiBearerAuth('JWT-auth')
 @ApiTags('Student')
-@Controller('student')
+@Controller('students')
 export class StudentController {
   constructor(private readonly studentService: StudentService) {}
 
@@ -37,19 +38,24 @@ export class StudentController {
   }
 
   @Post('create')
+  @HttpCode(HttpStatus.CREATED)
   @ApiBody({ type: CreateStudentDto, description: 'Student data' })
+  @ApiResponse(StudentResponseDto)
   @Permissions(Permission.CREATE_STUDENT)
-  async create(@Body() student: CreateStudentDto) {
+  async create(@Body() student: CreateStudentDto): Promise<StudentResponseDto> {
     return await this.studentService.createStudent(student);
   }
 
   @Get('/:id')
+  @HttpCode(HttpStatus.OK)
   @Permissions(Permission.READ_STUDENT)
+  @ApiResponse(StudentResponseDto)
   async findOne(@Param('id') id: string) {
     return await this.studentService.getSingleStudent(id);
   }
 
   @Put('/:id')
+  @HttpCode(HttpStatus.OK)
   @ApiBody({ type: CreateStudentDto, description: 'Student data' })
   @Permissions(Permission.UPDATE_STUDENT)
   async update(@Param('id') id: string, @Body() student: CreateStudentDto) {
@@ -57,6 +63,7 @@ export class StudentController {
   }
 
   @Delete('/:id')
+  @HttpCode(HttpStatus.OK)
   @Permissions(Permission.DELETE_STUDENT)
   async delete(@Param('id') id: string) {
     return await this.studentService.deleteStudent(id);

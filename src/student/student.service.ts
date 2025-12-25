@@ -7,6 +7,7 @@ import { Role as RoleEnum } from '../role/enums/role.enum';
 import { RoleService } from '../role/role.service';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { StudentPaginationDto } from './dto/student-pagination.dto';
+import { StudentResponseDto } from './dto/student-response.dto';
 import { Student } from './entities/student.entity';
 
 @Injectable()
@@ -41,7 +42,7 @@ export class StudentService {
     return new PaginationResultDto<Student>(students, pageMeta);
   }
 
-  async createStudent(student: CreateStudentDto): Promise<{ message: string; student: Student }> {
+  async createStudent(student: CreateStudentDto): Promise<StudentResponseDto> {
     const existingStudent = await this.dataService.students.findOne({
       where: { email: student.email },
     });
@@ -77,7 +78,7 @@ export class StudentService {
 
     await this.dataService.users.save(newUser);
 
-    return { message: 'Student created successfully', student: newStudent };
+    return newStudent;
   }
 
   async getSingleStudent(id: string): Promise<Student> {

@@ -68,7 +68,6 @@ export class AuthService {
       throw new UnauthorizedException('User with this email already exists');
     }
 
-    // TODO: CHECK SHOULD WE ALLOW ASSIGNING ANY ROLE DURING REGISTRATION
     const role = await this.dataService.roles.findOne({
       where: { id: roleId },
     });
@@ -153,14 +152,24 @@ export class AuthService {
       permissions: role.permissions?.map((p) => p.name) ?? [],
     };
 
+    const accessTokenExpiry = parseInt(
+      this.configService.get<string>('JWT_EXPIRES_IN') || '900',
+      10,
+    );
+
+    const refreshTokenExpiry = parseInt(
+      this.configService.get<string>('JWT_REFRESH_EXPIRES_IN') || '604800',
+      10,
+    );
+
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(payload, {
         secret: this.configService.get<string>('JWT_SECRET'),
-        expiresIn: this.configService.get<number>('JWT_EXPIRES_IN') || 900,
+        expiresIn: accessTokenExpiry,
       }),
       this.jwtService.signAsync(payload, {
         secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
-        expiresIn: this.configService.get<number>('JWT_REFRESH_EXPIRES_IN') || 604800,
+        expiresIn: refreshTokenExpiry,
       }),
     ]);
 
