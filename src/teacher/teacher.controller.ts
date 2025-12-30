@@ -10,7 +10,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 
 import { Permissions } from '../auth/decorators/permissions.decorator';
 import { ApiPaginatedResponse } from '../common/pagination/pagination.service';
@@ -39,6 +39,7 @@ export class TeacherController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
+  @ApiBody({ type: CreateTeacherDto, description: 'Teacher data' })
   @ApiResponse(TeacherResponseDto)
   @Permissions(Permission.CREATE_TEACHER)
   create(@Body() createTeacherDto: CreateTeacherDto): Promise<TeacherResponseDto> {
