@@ -93,10 +93,7 @@ export class StudentService {
     return student;
   }
 
-  async updateStudent(
-    id: string,
-    student: CreateStudentDto,
-  ): Promise<{ message: string; student: Student }> {
+  async updateStudent(id: string, student: CreateStudentDto): Promise<StudentResponseDto> {
     const existingStudent = await this.dataService.students.findOne({
       where: { id: parseInt(id, 10) },
     });
@@ -108,7 +105,7 @@ export class StudentService {
     const updatedStudent = Object.assign(existingStudent, student);
 
     await this.dataService.students.save(updatedStudent);
-    return { message: 'Student updated successfully', student: updatedStudent };
+    return updatedStudent;
   }
 
   async deleteStudent(id: string): Promise<{ message: string }> {
