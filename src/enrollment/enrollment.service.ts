@@ -24,6 +24,14 @@ export class EnrollmentService {
       qb.andWhere('enrollment.status = :status', { status: filter.status });
     }
 
+    if (filter.startDate) {
+      qb.andWhere('enrollment.createdAt >= :startDate', { startDate: filter.startDate });
+    }
+
+    if (filter.endDate) {
+      qb.andWhere('enrollment.createdAt <= :endDate', { endDate: filter.endDate });
+    }
+
     const [enrollments, itemCount] = await qb
       .orderBy('enrollment.createdAt', filter.order)
       .skip(filter.skip)
