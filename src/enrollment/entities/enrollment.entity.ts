@@ -1,7 +1,6 @@
-import { Course } from '../../course/entities/course.entity';
-import { Student } from '../../student/entities/student.entity';
 import {
   BaseEntity,
+  Column,
   CreateDateColumn,
   Entity,
   JoinColumn,
@@ -9,6 +8,10 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+
+import { Course } from '../../course/entities/course.entity';
+import { Student } from '../../student/entities/student.entity';
+import { EnrollmentStatus } from '../enum/enrolllment-status.enum';
 
 @Entity('enrollments')
 export class Enrollment extends BaseEntity {
@@ -27,6 +30,9 @@ export class Enrollment extends BaseEntity {
     name: 'courseId',
   })
   course: Course;
+
+  @Column({ type: 'enum', enum: EnrollmentStatus })
+  status: EnrollmentStatus;
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
