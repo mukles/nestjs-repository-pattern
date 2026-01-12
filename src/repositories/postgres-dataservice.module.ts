@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { Batch } from '../batch/entities/batch.entity';
 import { Course } from '../course/entities/course.entity';
 import { Enrollment } from '../enrollment/entities/enrollment.entity';
 import { PermissionEntity } from '../role/entities/permission.entity';
@@ -14,13 +15,22 @@ import { IDataService } from './interfaces/dataservice.interface';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Student, Teacher, Course, Enrollment, User, Role, PermissionEntity]),
+    TypeOrmModule.forFeature([
+      Student,
+      Teacher,
+      Course,
+      Enrollment,
+      User,
+      Role,
+      PermissionEntity,
+      Batch,
+    ]),
     TypeOrmModule.forRootAsync({
       useFactory: (config: ConfigService) => {
         return {
           type: 'postgres',
           url: config.get<string>('DATABASE_URL'),
-          entities: [Student, Teacher, Course, Enrollment, User, Role, PermissionEntity],
+          entities: [Student, Teacher, Course, Enrollment, User, Role, PermissionEntity, Batch],
           synchronize: config.get<boolean>('SYNCHRONIZE', false),
           logging: true,
         };

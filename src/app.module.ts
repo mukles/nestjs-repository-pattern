@@ -14,6 +14,7 @@ import { RoleModule } from './role/role.module';
 import { StudentModule } from './student/student.module';
 import { TeacherModule } from './teacher/teacher.module';
 import { UserModule } from './user/user.module';
+import { BatchModule } from './batch/batch.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { UserModule } from './user/user.module';
     EnrollmentModule,
     CourseModule,
     ResultModule,
+    BatchModule,
   ],
   controllers: [AppController],
   providers: [

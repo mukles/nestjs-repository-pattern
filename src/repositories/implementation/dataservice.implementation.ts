@@ -2,6 +2,7 @@ import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager } from 'typeorm';
 
+import { Batch } from '../../batch/entities/batch.entity';
 import { Course } from '../../course/entities/course.entity';
 import { Enrollment } from '../../enrollment/entities/enrollment.entity';
 import { PermissionEntity } from '../../role/entities/permission.entity';
@@ -22,6 +23,7 @@ export class GenericDataService implements IDataService, OnApplicationBootstrap 
   users: IGenericRepository<User>;
   roles: IGenericRepository<Role>;
   permissions: IGenericRepository<PermissionEntity>;
+  batches: IGenericRepository<Batch>;
 
   constructor(
     @InjectEntityManager() private readonly entityManager: EntityManager,
@@ -39,6 +41,8 @@ export class GenericDataService implements IDataService, OnApplicationBootstrap 
     private readonly roleRepository: IGenericRepository<Role>,
     @InjectRepository(PermissionEntity)
     private readonly permissionRepository: IGenericRepository<PermissionEntity>,
+    @InjectRepository(Batch)
+    private readonly batchRepository: IGenericRepository<Batch>,
   ) {}
 
   onApplicationBootstrap() {
@@ -81,6 +85,12 @@ export class GenericDataService implements IDataService, OnApplicationBootstrap 
       PermissionEntity,
       this.entityManager,
       this.permissionRepository.queryRunner!,
+    );
+
+    this.batches = new GenericRepository<Batch>(
+      Batch,
+      this.entityManager,
+      this.batchRepository.queryRunner!,
     );
   }
 }

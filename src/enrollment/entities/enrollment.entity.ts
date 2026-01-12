@@ -9,6 +9,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
+import { Batch } from '../../batch/entities/batch.entity';
 import { Course } from '../../course/entities/course.entity';
 import { Student } from '../../student/entities/student.entity';
 import { EnrollmentStatus } from '../enum/enrolllment-status.enum';
@@ -30,6 +31,10 @@ export class Enrollment extends BaseEntity {
     name: 'courseId',
   })
   course: Course;
+
+  @ManyToOne(() => Batch, (batch) => batch.enrollments, { nullable: false })
+  @JoinColumn({ name: 'batchId' })
+  batch: Batch;
 
   @Column({ type: 'enum', enum: EnrollmentStatus })
   status: EnrollmentStatus;
