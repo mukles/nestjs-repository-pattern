@@ -9,6 +9,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
+import { Batch } from '../../batch/entities/batch.entity';
 import { Enrollment } from '../../enrollment/entities/enrollment.entity';
 import { Teacher } from '../../teacher/entities/teacher.entity';
 
@@ -40,6 +41,9 @@ export class Course extends BaseEntity {
 
   @OneToMany(() => Enrollment, (enrollment) => enrollment, { nullable: false })
   enrollments: Enrollment[];
+
+  @OneToMany(() => Batch, (batch) => batch.course)
+  batches: Batch[];
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;

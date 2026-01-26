@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
 import { PageMetaDto } from 'src/common/pagination/page-meta';
 
 import { PaginationResultDto } from '../common/pagination/pagination-result.dto';
@@ -7,7 +8,6 @@ import { CreateTeacherDto } from './dto/create-teacher.dto';
 import { TeacherPaginationDto } from './dto/teacher-pagination.dto';
 import { TeacherResponseDto } from './dto/teacher-response.dto';
 import { UpdateTeacherDto } from './dto/update-teacher.dto';
-import { Teacher } from './entities/teacher.entity';
 
 @Injectable()
 export class TeacherService {
@@ -36,26 +36,40 @@ export class TeacherService {
       .getManyAndCount();
 
     const pageMeta = new PageMetaDto({ pageOptionsDto: filter, itemCount });
+    const teacherDtos = plainToInstance(TeacherResponseDto, teachers, {
+      excludeExtraneousValues: false,
+    });
 
-    return new PaginationResultDto<Teacher>(teachers, pageMeta);
+    return new PaginationResultDto<TeacherResponseDto>(teacherDtos, pageMeta);
   }
 
   async create(createTeacherDto: CreateTeacherDto): Promise<TeacherResponseDto> {
     const teacher = this.dataService.teachers.create(createTeacherDto);
-    return await this.dataService.teachers.save(teacher);
-  }
-
-  async findOne(id: number): Promise<Teacher | null> {
-    return await this.dataService.teachers.findOne({
-      where: { id },
-      relations: ['courses'],
+    const savedTeacher = await this.dataService.teachers.save(teacher);
+    return plainToInstance(TeacherResponseDto, savedTeacher, {
+      excludeExtraneousValues: false,
     });
   }
 
-  async findOneWithCourses(id: number): Promise<Teacher | null> {
-    return await this.dataService.teachers.findOne({
+  async findOne(id: number): Promise<TeacherResponseDto | null> {
+    const teacher = await this.dataService.teachers.findOne({
       where: { id },
       relations: ['courses'],
+    });
+    if (!teacher) return null;
+    return plainToInstance(TeacherResponseDto, teacher, {
+      excludeExtraneousValues: false,
+    });
+  }
+
+  async findOneWithCourses(id: number): Promise<TeacherResponseDto | null> {
+    const teacher = await this.dataService.teachers.findOne({
+      where: { id },
+      relations: ['courses'],
+    });
+    if (!teacher) return null;
+    return plainToInstance(TeacherResponseDto, teacher, {
+      excludeExtraneousValues: false,
     });
   }
 

@@ -1,5 +1,6 @@
+import { Type } from 'class-transformer';
 import {
-  IsDateString,
+  IsDate,
   IsEmail,
   IsEnum,
   IsNotEmpty,
@@ -26,8 +27,9 @@ export class CreateTeacherDto {
   @MaxLength(100)
   readonly email: string;
 
-  @IsDateString()
+  @IsDate()
   @IsNotEmpty()
+  @Type(() => Date)
   readonly dateOfBirth: Date;
 
   @IsString()
