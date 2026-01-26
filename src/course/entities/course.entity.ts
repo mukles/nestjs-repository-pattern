@@ -12,6 +12,7 @@ import {
 import { Batch } from '../../batch/entities/batch.entity';
 import { Enrollment } from '../../enrollment/entities/enrollment.entity';
 import { Teacher } from '../../teacher/entities/teacher.entity';
+import { CourseStatus } from '../enum/course.status.enum';
 
 @Entity('courses')
 export class Course extends BaseEntity {
@@ -30,6 +31,12 @@ export class Course extends BaseEntity {
   @Column({ type: 'text', nullable: true })
   description: string;
 
+  @Column({
+    type: 'enum',
+    enum: CourseStatus,
+  })
+  status: CourseStatus;
+
   @Column({ type: 'simple-array', nullable: true })
   tags: string[];
 
@@ -39,7 +46,7 @@ export class Course extends BaseEntity {
   @ManyToOne(() => Teacher, (teacher) => teacher.courses, { nullable: false })
   teacher: Teacher;
 
-  @OneToMany(() => Enrollment, (enrollment) => enrollment, { nullable: false })
+  @OneToMany(() => Enrollment, (enrollment) => enrollment.course, { nullable: false })
   enrollments: Enrollment[];
 
   @OneToMany(() => Batch, (batch) => batch.course)
