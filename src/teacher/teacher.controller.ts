@@ -54,14 +54,6 @@ export class TeacherController {
     return this.teacherService.findOne(+id);
   }
 
-  @Get(':id/courses')
-  @HttpCode(HttpStatus.OK)
-  @ApiResponse(TeacherResponseDto)
-  @Permissions(Permission.READ_TEACHER)
-  findOneWithCourses(@Param('id') id: string) {
-    return this.teacherService.findOneWithCourses(+id);
-  }
-
   @Patch(':id')
   @HttpCode(HttpStatus.OK)
   @ApiResponse(TeacherResponseDto)
