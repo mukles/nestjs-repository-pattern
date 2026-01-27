@@ -48,6 +48,18 @@ export class EnrollResponseDto {
   @ApiProperty({ description: 'Status of the enrollment', enum: EnrollmentStatus })
   status: EnrollmentStatus;
 
+  @ApiProperty({ description: 'Reason for suspension', required: false, nullable: true })
+  suspensionReason?: string | null;
+
+  @ApiProperty({
+    description: 'Date when enrollment was suspended',
+    type: String,
+    format: 'date-time',
+    required: false,
+    nullable: true,
+  })
+  suspendedAt?: Date | null;
+
   @ApiProperty({
     description: 'Date when enrollment was created',
     type: String,

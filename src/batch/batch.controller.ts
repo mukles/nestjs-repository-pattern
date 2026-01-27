@@ -14,8 +14,6 @@ import { ApiBearerAuth, ApiResponse as ApiSwaggerResponse, ApiTags } from '@nest
 
 import { Permissions } from '../auth/decorators/permissions.decorator';
 import { ApiResponse } from '../common/response';
-import { CreateEnrollmentDto } from '../enrollment/dto/create-enrollment.dto';
-import { EnrollResponseDto } from '../enrollment/dto/enrollment-response.dto';
 import { Permission } from '../role/enums/permission.enum';
 import { BatchService } from './batch.service';
 import { BatchResponseDto } from './dto/batch-response.dto';
@@ -37,18 +35,6 @@ export class BatchController {
     @Body() createBatchDto: CreateBatchDto,
   ): Promise<BatchResponseDto> {
     return this.batchService.create(courseId, createBatchDto);
-  }
-
-  @Post(':batchId/enrollments')
-  @HttpCode(HttpStatus.CREATED)
-  @ApiResponse(EnrollResponseDto)
-  @Permissions(Permission.CREATE_ENROLLMENT)
-  async enrollment(
-    @Param('courseId', ParseIntPipe) courseId: number,
-    @Param('batchId', ParseIntPipe) batchId: number,
-    @Body() createEnrollmentDto: CreateEnrollmentDto,
-  ): Promise<EnrollResponseDto> {
-    return this.batchService.enrollment(courseId, batchId, createEnrollmentDto);
   }
 
   @Get()
