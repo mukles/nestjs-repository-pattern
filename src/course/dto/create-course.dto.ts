@@ -40,8 +40,4 @@ export class CreateCourseDto {
   @ApiProperty()
   @IsNotEmpty()
   teacherId: number;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  batchId: number;
 }

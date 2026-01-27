@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { PageMetaDto } from 'src/common/pagination/page-meta';
-import { PaginationResultDto } from 'src/common/pagination/pagination-result.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
+import { PageMetaDto } from '../common/pagination/page-meta';
+import { PaginationResultDto } from '../common/pagination/pagination-result.dto';
 import { IDataService } from '../repositories/interfaces/dataservice.interface';
+import { Teacher } from '../teacher/entities/teacher.entity';
 import { CoursePaginationDto } from './dto/course-pagination.dto';
 import { CourseResponseDto } from './dto/course-response.dto';
 import { CreateCourseDto } from './dto/create-course.dto';
@@ -36,34 +37,56 @@ export class CourseService {
   }
 
   async createCourse(createCourseDto: CreateCourseDto): Promise<CourseResponseDto> {
-    const course = this.dataService.courses.create(createCourseDto);
+    const { teacherId, ...courseData } = createCourseDto;
+
+    const course = this.dataService.courses.create({
+      ...courseData,
+      teacher: { id: teacherId } as Teacher,
+    });
+
     return await this.dataService.courses.save(course);
   }
 
   async getSingleCourse(id: string): Promise<CourseResponseDto | null> {
-    return await this.dataService.courses.findOne({
+    const course = await this.dataService.courses.findOne({
       where: { id: Number(id) },
-      relations: ['teacher', 'batch'],
     });
+
+    if (!course) {
+      throw new NotFoundException(`Course with id '${id}' not found`);
+    }
+
+    return course;
   }
 
   async updateCourse(id: string, updateCourseDto: CreateCourseDto): Promise<CourseResponseDto> {
-    await this.dataService.courses.update({ id: Number(id) }, updateCourseDto);
-
     const existingCourse = await this.dataService.courses.findOne({
       where: { id: parseInt(id, 10) },
     });
 
     if (!existingCourse) {
-      throw new Error(`Course with id '${id}' not found`);
+      throw new NotFoundException(`Course with id '${id}' not found`);
     }
 
-    const updatedCourse = Object.assign(existingCourse, updateCourseDto);
+    const { teacherId, ...courseData } = updateCourseDto;
 
-    return await this.dataService.courses.save(updatedCourse);
+    Object.assign(existingCourse, {
+      ...courseData,
+      teacher: { id: teacherId } as Teacher,
+    });
+
+    return await this.dataService.courses.save(existingCourse);
   }
 
   async deleteCourse(id: string): Promise<void> {
+    const existingCourse = await this.dataService.courses.findOne({
+      where: { id: Number(id) },
+    });
+
+    if (!existingCourse) {
+      throw new NotFoundException(`Course with id '${id}' not found`);
+    }
+
     await this.dataService.courses.delete({ id: Number(id) });
   }
 }
