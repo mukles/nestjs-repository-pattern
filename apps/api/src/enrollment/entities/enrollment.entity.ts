@@ -1,3 +1,4 @@
+import { ResultEntity } from 'src/result/entities/result.entity';
 import {
   BaseEntity,
   Column,
@@ -5,30 +6,34 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   Unique,
   UpdateDateColumn,
 } from 'typeorm';
 
-import { Batch } from '../../batch/entities/batch.entity';
-import { Student } from '../../student/entities/student.entity';
+import { BatchEntity } from '../../batch/entities/batch.entity';
+import { StudentEntity } from '../../student/entities/student.entity';
 import { EnrollmentStatus } from '../enum/enrolllment-status.enum';
 @Unique(['student', 'batch'])
 @Entity('enrollments')
-export class Enrollment extends BaseEntity {
+export class EnrollmentEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Student, (student) => student.enrollments, {
+  @ManyToOne(() => StudentEntity, (student) => student.enrollments, {
     nullable: false,
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'studentId' })
-  student: Student;
+  student: StudentEntity;
 
-  @ManyToOne(() => Batch, (batch) => batch.enrollments, { nullable: false })
+  @ManyToOne(() => BatchEntity, (batch) => batch.enrollments, { nullable: false })
   @JoinColumn({ name: 'batchId' })
-  batch: Batch;
+  batch: BatchEntity;
+
+  @OneToMany(() => ResultEntity, (result) => result.enrollment)
+  results: ResultEntity[];
 
   @Column({ type: 'enum', enum: EnrollmentStatus })
   status: EnrollmentStatus;

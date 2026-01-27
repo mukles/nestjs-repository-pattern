@@ -10,12 +10,12 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { Course } from '../../course/entities/course.entity';
-import { Enrollment } from '../../enrollment/entities/enrollment.entity';
+import { CourseEntity } from '../../course/entities/course.entity';
+import { EnrollmentEntity } from '../../enrollment/entities/enrollment.entity';
 import { BatchStatus } from '../enum/batch-status.enum';
 
 @Entity('batches')
-export class Batch extends BaseEntity {
+export class BatchEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -34,12 +34,15 @@ export class Batch extends BaseEntity {
   @Column({ type: 'enum', enum: BatchStatus, default: BatchStatus.DRAFT })
   status: BatchStatus;
 
-  @ManyToOne(() => Course, (course) => course.batches, { nullable: false, onDelete: 'CASCADE' })
+  @ManyToOne(() => CourseEntity, (course) => course.batches, {
+    nullable: false,
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'courseId' })
-  course: Course;
+  course: CourseEntity;
 
-  @OneToMany(() => Enrollment, (enrollment) => enrollment.batch)
-  enrollments: Enrollment[];
+  @OneToMany(() => EnrollmentEntity, (enrollment) => enrollment.batch)
+  enrollments: EnrollmentEntity[];
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;

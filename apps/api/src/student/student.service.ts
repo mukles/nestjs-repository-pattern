@@ -8,7 +8,7 @@ import { RoleService } from '../role/role.service';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { StudentPaginationDto } from './dto/student-pagination.dto';
 import { StudentResponseDto } from './dto/student-response.dto';
-import { Student } from './entities/student.entity';
+import { StudentEntity } from './entities/student.entity';
 
 @Injectable()
 export class StudentService {
@@ -17,7 +17,9 @@ export class StudentService {
     private readonly roleService: RoleService,
   ) {}
 
-  async findPaginatedStudents(filter: StudentPaginationDto): Promise<PaginationResultDto<Student>> {
+  async findPaginatedStudents(
+    filter: StudentPaginationDto,
+  ): Promise<PaginationResultDto<StudentResponseDto>> {
     const qb = this.dataService.students.createQueryBuilder('student');
 
     if (filter.name) {
@@ -39,7 +41,7 @@ export class StudentService {
 
     const pageMeta = new PageMetaDto({ pageOptionsDto: filter, itemCount });
 
-    return new PaginationResultDto<Student>(students, pageMeta);
+    return new PaginationResultDto<StudentResponseDto>(students, pageMeta);
   }
 
   async createStudent(student: CreateStudentDto): Promise<StudentResponseDto> {
@@ -81,7 +83,7 @@ export class StudentService {
     return newStudent;
   }
 
-  async getSingleStudent(id: string): Promise<Student> {
+  async getSingleStudent(id: string): Promise<StudentEntity> {
     const student = await this.dataService.students.findOne({
       where: { id: parseInt(id, 10) },
     });
@@ -96,7 +98,7 @@ export class StudentService {
   async updateStudent(
     id: string,
     student: CreateStudentDto,
-  ): Promise<{ message: string; student: Student }> {
+  ): Promise<{ message: string; student: StudentEntity }> {
     const existingStudent = await this.dataService.students.findOne({
       where: { id: parseInt(id, 10) },
     });

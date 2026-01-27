@@ -11,10 +11,10 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { Role } from '../../role/entities/role.entity';
+import { RoleEntity } from '../../role/entities/role.entity';
 
 @Entity('users')
-export class User extends BaseEntity {
+export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -55,8 +55,8 @@ export class User extends BaseEntity {
   })
   refreshToken: string | null;
 
-  @ManyToOne(() => Role, (role) => role.users, { nullable: false })
-  role: Role;
+  @ManyToOne(() => RoleEntity, (role) => role.users, { nullable: false })
+  role: RoleEntity;
 
   @CreateDateColumn()
   createdAt: Date;

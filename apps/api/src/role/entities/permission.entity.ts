@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 
 import { Permission } from '../enums/permission.enum';
-import { Role } from './role.entity';
+import { RoleEntity } from './role.entity';
 
 @Entity('permissions')
 export class PermissionEntity extends BaseEntity {
@@ -30,8 +30,8 @@ export class PermissionEntity extends BaseEntity {
   })
   description: string;
 
-  @ManyToMany(() => Role, (role) => role.permissions)
-  roles: Role[];
+  @ManyToMany(() => RoleEntity, (role) => role.permissions)
+  roles: RoleEntity[];
 
   @CreateDateColumn()
   createdAt: Date;

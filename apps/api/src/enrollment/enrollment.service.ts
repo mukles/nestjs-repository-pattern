@@ -14,7 +14,7 @@ import { CreateEnrollmentDto } from './dto/create-enrollment.dto';
 import { EnrollmentPaginationDto } from './dto/enrollment-pagination.dto';
 import { EnrollResponseDto } from './dto/enrollment-response.dto';
 import { UpdateEnrollmentStatusDto } from './dto/update-enrollment-status.dto';
-import { Enrollment } from './entities/enrollment.entity';
+import { EnrollmentEntity } from './entities/enrollment.entity';
 import { EnrollmentStatus } from './enum/enrolllment-status.enum';
 
 @Injectable()
@@ -191,7 +191,7 @@ export class EnrollmentService {
     return this.transformToResponseDto(updatedEnrollment);
   }
 
-  private transformToResponseDto(enrollment: Enrollment): EnrollResponseDto {
+  private transformToResponseDto(enrollment: EnrollmentEntity): EnrollResponseDto {
     return {
       id: enrollment.id,
       student: {

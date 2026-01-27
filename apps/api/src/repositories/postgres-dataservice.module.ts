@@ -2,28 +2,30 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { Batch } from '../batch/entities/batch.entity';
-import { Course } from '../course/entities/course.entity';
-import { Enrollment } from '../enrollment/entities/enrollment.entity';
+import { BatchEntity } from '../batch/entities/batch.entity';
+import { CourseEntity } from '../course/entities/course.entity';
+import { EnrollmentEntity } from '../enrollment/entities/enrollment.entity';
+import { ResultEntity } from '../result/entities/result.entity';
 import { PermissionEntity } from '../role/entities/permission.entity';
-import { Role } from '../role/entities/role.entity';
-import { Student } from '../student/entities/student.entity';
-import { Teacher } from '../teacher/entities/teacher.entity';
-import { User } from '../user/entities/user.entity';
+import { RoleEntity } from '../role/entities/role.entity';
+import { StudentEntity } from '../student/entities/student.entity';
+import { TeacherEntity } from '../teacher/entities/teacher.entity';
+import { UserEntity } from '../user/entities/user.entity';
 import { GenericDataService } from './implementation/dataservice.implementation';
 import { IDataService } from './interfaces/dataservice.interface';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      Student,
-      Teacher,
-      Course,
-      Enrollment,
-      User,
-      Role,
+      StudentEntity,
+      TeacherEntity,
+      CourseEntity,
+      EnrollmentEntity,
+      UserEntity,
+      RoleEntity,
       PermissionEntity,
-      Batch,
+      BatchEntity,
+      ResultEntity,
     ]),
     TypeOrmModule.forRootAsync({
       useFactory: (config: ConfigService) => {
@@ -31,7 +33,17 @@ import { IDataService } from './interfaces/dataservice.interface';
         return {
           type: 'postgres',
           url: config.get<string>('DATABASE_URL'),
-          entities: [Student, Teacher, Course, Enrollment, User, Role, PermissionEntity, Batch],
+          entities: [
+            StudentEntity,
+            TeacherEntity,
+            CourseEntity,
+            EnrollmentEntity,
+            UserEntity,
+            RoleEntity,
+            PermissionEntity,
+            BatchEntity,
+            ResultEntity,
+          ],
           synchronize: config.get<boolean>('SYNCHRONIZE', false),
           logging: true,
         };

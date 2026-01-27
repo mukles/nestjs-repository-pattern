@@ -1,14 +1,13 @@
 import * as bcrypt from 'bcrypt';
 import { DataSource } from 'typeorm';
 
-import { Role } from '../../role/entities/role.entity';
+import { RoleEntity } from '../../role/entities/role.entity';
 import { Role as RoleEnum } from '../../role/enums/role.enum';
-import { User } from '../../user/entities/user.entity';
+import { UserEntity } from '../../user/entities/user.entity';
 
 export async function seedSuperAdmin(dataSource: DataSource): Promise<void> {
-  const userRepository = dataSource.getRepository(User);
-  const roleRepository = dataSource.getRepository(Role);
-
+  const userRepository = dataSource.getRepository(UserEntity);
+  const roleRepository = dataSource.getRepository(RoleEntity);
   // Get super admin role (should already be created by roles seeder)
   const superAdminRole = await roleRepository.findOne({
     where: { name: RoleEnum.SUPER_ADMIN },
@@ -36,7 +35,7 @@ export async function seedSuperAdmin(dataSource: DataSource): Promise<void> {
   await userRepository
     .createQueryBuilder()
     .insert()
-    .into(User)
+    .into(UserEntity)
     .values({
       firstName: 'Super',
       lastName: 'Admin',
