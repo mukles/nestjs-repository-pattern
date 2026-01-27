@@ -1,5 +1,6 @@
 import { ConfigService } from '@nestjs/config';
 import { config } from 'dotenv';
+import { join } from 'path';
 import { DataSource } from 'typeorm';
 
 import { Batch } from './src/batch/entities/batch.entity';
@@ -11,7 +12,8 @@ import { Student } from './src/student/entities/student.entity';
 import { Teacher } from './src/teacher/entities/teacher.entity';
 import { User } from './src/user/entities/user.entity';
 
-config();
+// Load .env from root of monorepo
+config({ path: join(__dirname, '../../.env') });
 
 const configService = new ConfigService();
 

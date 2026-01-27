@@ -27,6 +27,7 @@ import { IDataService } from './interfaces/dataservice.interface';
     ]),
     TypeOrmModule.forRootAsync({
       useFactory: (config: ConfigService) => {
+        console.log({ dbUrl: config.get<string>('DATABASE_URL') });
         return {
           type: 'postgres',
           url: config.get<string>('DATABASE_URL'),
