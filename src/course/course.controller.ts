@@ -23,7 +23,7 @@ import { CreateCourseDto } from './dto/create-course.dto';
 
 @ApiBearerAuth('JWT-auth')
 @ApiTags('Course')
-@Controller('course')
+@Controller('courses')
 export class CourseController {
   constructor(private readonly courseService: CourseService) {}
 
