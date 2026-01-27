@@ -6,14 +6,11 @@ import { PaginationResultDto } from '../pagination/pagination-result.dto';
 import { ApiResponseDto } from '../response';
 
 @Injectable()
-export class ResponseInterceptor<T>
-  implements
-    NestInterceptor<
-      T,
-      | ApiResponseDto<T>
-      | (PaginationResultDto<T> & Pick<ApiResponseDto<T>, 'message' | 'timestamp' | 'statusCode'>)
-    >
-{
+export class ResponseInterceptor<T> implements NestInterceptor<
+  T,
+  | ApiResponseDto<T>
+  | (PaginationResultDto<T> & Pick<ApiResponseDto<T>, 'message' | 'timestamp' | 'statusCode'>)
+> {
   intercept(
     context: ExecutionContext,
     next: CallHandler,
