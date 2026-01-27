@@ -1,21 +1,24 @@
 {
-  "name": "nestjs-nextjs-monorepo",
+  "name": "student-management-system",
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev",
-    "lint": "turbo run lint",
-    "test": "turbo run test",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+  "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "ui": "pnpm --filter @repo/ui ui",
+    "check-types": "turbo run check-types"
   },
   "devDependencies": {
-    "prettier": "^3.4.2",
-    "turbo": "^2.3.3"
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "prettier": "catalog:",
+    "turbo": "2.6.0"
   },
-  "packageManager": "pnpm@9.15.0",
+  "packageManager": "pnpm@10.15.0",
   "engines": {
-    "node": ">=18"
+    "node": ">=24"
   },
   "workspaces": [
     "apps/*",
