@@ -41,14 +41,14 @@ export class BatchService {
     );
   }
 
-  async findOne(id: number): Promise<BatchResponseDto> {
+  async findOne(courseId: number, id: number): Promise<BatchResponseDto> {
     const batch = await this.dataService.batches.findOne({
-      where: { id },
+      where: { id, course: { id: courseId } },
       relations: ['course', 'enrollments'],
     });
 
     if (!batch) {
-      throw new NotFoundException(`Batch with id '${id}' not found`);
+      throw new NotFoundException(`Batch with id '${id}' not found for course '${courseId}'`);
     }
 
     return this.transformBatchToResponse(batch, batch.enrollments?.length || 0);
