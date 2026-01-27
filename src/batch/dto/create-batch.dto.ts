@@ -33,7 +33,7 @@ export class CreateBatchDto {
   @IsPositive()
   maxStudents: number;
 
-  @ApiProperty({ description: 'Batch status', enum: BatchStatus, default: BatchStatus.DRAFT })
+  @ApiProperty({ description: 'Batch status', enum: BatchStatus, default: BatchStatus.OPEN })
   @IsOptional()
   @IsEnum(BatchStatus)
   status?: BatchStatus;

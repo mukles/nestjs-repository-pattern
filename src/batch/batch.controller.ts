@@ -47,8 +47,11 @@ export class BatchController {
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   @ApiResponse(BatchResponseDto)
-  async findOne(@Param('id', ParseIntPipe) id: number): Promise<BatchResponseDto> {
-    return this.batchService.findOne(id);
+  async findOne(
+    @Param('courseId', ParseIntPipe) courseId: number,
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<BatchResponseDto> {
+    return this.batchService.findOne(courseId, id);
   }
 
   @Patch(':id')
