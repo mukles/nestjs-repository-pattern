@@ -11,12 +11,12 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { User } from '../../user/entities/user.entity';
+import { UserEntity } from '../../user/entities/user.entity';
 import { Role as RoleEnum } from '../enums/role.enum';
 import { PermissionEntity } from './permission.entity';
 
 @Entity('roles')
-export class Role extends BaseEntity {
+export class RoleEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -45,8 +45,8 @@ export class Role extends BaseEntity {
   })
   permissions: Relation<PermissionEntity[]>;
 
-  @OneToMany(() => User, (user) => user.role)
-  users: Relation<User[]>;
+  @OneToMany(() => UserEntity, (user) => user.role)
+  users: Relation<UserEntity[]>;
 
   @CreateDateColumn()
   createdAt: Date;

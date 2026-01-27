@@ -4,7 +4,7 @@ import { IDataService } from '../repositories/interfaces/dataservice.interface';
 import { BatchResponseDto } from './dto/batch-response.dto';
 import { CreateBatchDto } from './dto/create-batch.dto';
 import { UpdateBatchDto } from './dto/update-batch.dto';
-import { Batch } from './entities/batch.entity';
+import { BatchEntity } from './entities/batch.entity';
 
 @Injectable()
 export class BatchService {
@@ -82,7 +82,7 @@ export class BatchService {
     await this.dataService.batches.remove(batch);
   }
 
-  private transformBatchToResponse(batch: Batch, enrolledCount: number): BatchResponseDto {
+  private transformBatchToResponse(batch: BatchEntity, enrolledCount: number): BatchResponseDto {
     return {
       id: batch.id,
       name: batch.name,

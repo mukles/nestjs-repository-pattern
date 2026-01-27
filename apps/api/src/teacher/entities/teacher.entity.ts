@@ -8,11 +8,11 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { Course } from '../../course/entities/course.entity';
+import { CourseEntity } from '../../course/entities/course.entity';
 import { TeacherGender } from '../enum/teacher.gender.enum';
 
 @Entity('teachers')
-export class Teacher extends BaseEntity {
+export class TeacherEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -53,8 +53,8 @@ export class Teacher extends BaseEntity {
   })
   gender: TeacherGender;
 
-  @OneToMany(() => Course, (course) => course.teacher)
-  courses: Course[];
+  @OneToMany(() => CourseEntity, (course) => course.teacher)
+  courses: CourseEntity[];
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;

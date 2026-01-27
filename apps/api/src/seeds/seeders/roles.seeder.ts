@@ -1,7 +1,7 @@
 import { DataSource } from 'typeorm';
 
 import { PermissionEntity } from '../../role/entities/permission.entity';
-import { Role } from '../../role/entities/role.entity';
+import { RoleEntity } from '../../role/entities/role.entity';
 import { Permission } from '../../role/enums/permission.enum';
 import { Role as RoleEnum } from '../../role/enums/role.enum';
 
@@ -80,7 +80,7 @@ const roleDescriptions: Record<RoleEnum, string> = {
 };
 
 export async function seedRoles(dataSource: DataSource): Promise<void> {
-  const roleRepository = dataSource.getRepository(Role);
+  const roleRepository = dataSource.getRepository(RoleEntity);
   const permissionRepository = dataSource.getRepository(PermissionEntity);
 
   const allRoles = Object.values(RoleEnum);

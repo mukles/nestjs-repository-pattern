@@ -8,12 +8,12 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { Enrollment } from '../../enrollment/entities/enrollment.entity';
+import { EnrollmentEntity } from '../../enrollment/entities/enrollment.entity';
 import { Gender } from '../enum/student.gender.enum';
 import { StudentStatus } from '../enum/student.status.enum';
 
 @Entity('students')
-export class Student extends BaseEntity {
+export class StudentEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -41,8 +41,8 @@ export class Student extends BaseEntity {
   })
   dateOfBirth: Date;
 
-  @OneToMany(() => Enrollment, (enrollment) => enrollment.student)
-  enrollments: Enrollment[];
+  @OneToMany(() => EnrollmentEntity, (enrollment) => enrollment.student)
+  enrollments: EnrollmentEntity[];
 
   @Column({
     type: 'enum',

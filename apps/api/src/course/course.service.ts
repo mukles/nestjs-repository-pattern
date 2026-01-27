@@ -3,7 +3,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PageMetaDto } from '../common/pagination/page-meta';
 import { PaginationResultDto } from '../common/pagination/pagination-result.dto';
 import { IDataService } from '../repositories/interfaces/dataservice.interface';
-import { Teacher } from '../teacher/entities/teacher.entity';
+import { TeacherEntity } from '../teacher/entities/teacher.entity';
 import { CoursePaginationDto } from './dto/course-pagination.dto';
 import { CourseResponseDto } from './dto/course-response.dto';
 import { CreateCourseDto } from './dto/create-course.dto';
@@ -42,7 +42,7 @@ export class CourseService {
 
     const course = this.dataService.courses.create({
       ...courseData,
-      teacher: { id: teacherId } as Teacher,
+      teacher: { id: teacherId } as TeacherEntity,
     });
 
     return await this.dataService.courses.save(course);
@@ -73,7 +73,7 @@ export class CourseService {
 
     Object.assign(existingCourse, {
       ...courseData,
-      teacher: { id: teacherId } as Teacher,
+      teacher: { id: teacherId } as TeacherEntity,
     });
 
     return await this.dataService.courses.save(existingCourse);
