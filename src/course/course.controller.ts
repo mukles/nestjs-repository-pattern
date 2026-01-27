@@ -20,6 +20,7 @@ import { CourseService } from './course.service';
 import { CoursePaginationDto } from './dto/course-pagination.dto';
 import { CourseResponseDto } from './dto/course-response.dto';
 import { CreateCourseDto } from './dto/create-course.dto';
+import { UpdateCourseDto } from './dto/update-course.dto';
 
 @ApiBearerAuth('JWT-auth')
 @ApiTags('Course')
@@ -53,9 +54,10 @@ export class CourseController {
 
   @Put('/:id')
   @HttpCode(HttpStatus.OK)
-  @ApiBody({ type: CreateCourseDto, description: 'Course data' })
+  @ApiBody({ type: UpdateCourseDto, description: 'Course data' })
   @Permissions(Permission.UPDATE_COURSE)
-  async update(@Param('id') id: string, @Body() course: CreateCourseDto) {
+  async update(@Param('id') id: string, @Body() course: UpdateCourseDto) {
+    console.log({ id, course });
     return await this.courseService.updateCourse(id, course);
   }
 

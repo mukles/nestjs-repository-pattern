@@ -6,9 +6,9 @@ import { PaginationResultDto } from 'src/common/pagination/pagination-result.dto
 import { Permissions } from '../auth/decorators/permissions.decorator';
 import { ApiResponse } from '../common/response';
 import { Permission } from '../role/enums/permission.enum';
-import { CreateEnrollmentDto } from './dto/create-enrollment.dto';
 import { EnrollmentPaginationDto } from './dto/enrollment-pagination.dto';
 import { EnrollResponseDto } from './dto/enrollment-response.dto';
+import { UpdateEnrollmentStatusDto } from './dto/update-enrollment-status.dto';
 import { EnrollmentService } from './enrollment.service';
 
 @ApiBearerAuth('JWT-auth')
@@ -32,8 +32,8 @@ export class EnrollmentController {
   @Permissions(Permission.UPDATE_ENROLLMENT)
   async updateEnrollmentStatus(
     @Param('enrollmentId') enrollmentId: string,
-    @Body() enrollment: CreateEnrollmentDto,
+    @Body() updateStatusDto: UpdateEnrollmentStatusDto,
   ): Promise<EnrollResponseDto> {
-    return this.enrollmentService.updateEnrollmentStatus(enrollmentId, enrollment);
+    return this.enrollmentService.updateEnrollmentStatus(+enrollmentId, updateStatusDto.status);
   }
 }

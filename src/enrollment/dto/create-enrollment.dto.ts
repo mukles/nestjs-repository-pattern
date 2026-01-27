@@ -9,11 +9,6 @@ export class CreateEnrollmentDto {
   @IsNotEmpty()
   studentId: number;
 
-  @ApiProperty({ description: 'ID of the course to enroll in' })
-  @IsNumber()
-  @IsNotEmpty()
-  courseId: number;
-
   @ApiProperty({ description: 'Status of the enrollment', enum: EnrollmentStatus, required: false })
   @IsEnum(EnrollmentStatus)
   @IsOptional()

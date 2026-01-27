@@ -10,7 +10,6 @@ import {
 } from 'typeorm';
 
 import { Batch } from '../../batch/entities/batch.entity';
-import { Course } from '../../course/entities/course.entity';
 import { Student } from '../../student/entities/student.entity';
 import { EnrollmentStatus } from '../enum/enrolllment-status.enum';
 
@@ -25,12 +24,6 @@ export class Enrollment extends BaseEntity {
   })
   @JoinColumn({ name: 'studentId' })
   student: Student;
-
-  @ManyToOne(() => Course, (course) => course.enrollments, { onDelete: 'CASCADE', nullable: false })
-  @JoinColumn({
-    name: 'courseId',
-  })
-  course: Course;
 
   @ManyToOne(() => Batch, (batch) => batch.enrollments, { nullable: false })
   @JoinColumn({ name: 'batchId' })

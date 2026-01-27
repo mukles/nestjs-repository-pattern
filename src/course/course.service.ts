@@ -7,6 +7,7 @@ import { Teacher } from '../teacher/entities/teacher.entity';
 import { CoursePaginationDto } from './dto/course-pagination.dto';
 import { CourseResponseDto } from './dto/course-response.dto';
 import { CreateCourseDto } from './dto/create-course.dto';
+import { UpdateCourseDto } from './dto/update-course.dto';
 
 @Injectable()
 export class CourseService {
@@ -59,7 +60,7 @@ export class CourseService {
     return course;
   }
 
-  async updateCourse(id: string, updateCourseDto: CreateCourseDto): Promise<CourseResponseDto> {
+  async updateCourse(id: string, updateCourseDto: UpdateCourseDto): Promise<CourseResponseDto> {
     const existingCourse = await this.dataService.courses.findOne({
       where: { id: parseInt(id, 10) },
     });

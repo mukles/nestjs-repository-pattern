@@ -24,6 +24,14 @@ class CourseInfo {
   teacherName: string;
 }
 
+class BatchInfo {
+  @ApiProperty({ description: 'Batch ID' })
+  id: number;
+
+  @ApiProperty({ description: 'Batch name' })
+  name: string;
+}
+
 export class EnrollResponseDto {
   @ApiProperty({ description: 'Enrollment ID' })
   id: number;
@@ -33,6 +41,9 @@ export class EnrollResponseDto {
 
   @ApiProperty({ description: 'Course information', type: () => CourseInfo })
   course: CourseInfo;
+
+  @ApiProperty({ type: BatchInfo })
+  batch: BatchInfo;
 
   @ApiProperty({ description: 'Status of the enrollment', enum: EnrollmentStatus })
   status: EnrollmentStatus;

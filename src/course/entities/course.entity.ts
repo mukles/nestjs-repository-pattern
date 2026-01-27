@@ -10,7 +10,6 @@ import {
 } from 'typeorm';
 
 import { Batch } from '../../batch/entities/batch.entity';
-import { Enrollment } from '../../enrollment/entities/enrollment.entity';
 import { Teacher } from '../../teacher/entities/teacher.entity';
 import { CourseStatus } from '../enum/course.status.enum';
 
@@ -45,9 +44,6 @@ export class Course extends BaseEntity {
 
   @ManyToOne(() => Teacher, (teacher) => teacher.courses, { nullable: false })
   teacher: Teacher;
-
-  @OneToMany(() => Enrollment, (enrollment) => enrollment.course, { nullable: false })
-  enrollments: Enrollment[];
 
   @OneToMany(() => Batch, (batch) => batch.course)
   batches: Batch[];
