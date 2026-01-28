@@ -1,0 +1,34 @@
+{
+  "site": {
+    "title": "Student Management",
+    "base_url": "",
+    "base_path": "/",
+    "trailing_slash": false,
+    "favicon": "",
+    "footerLogo": "/images/footer-logo.svg",
+    "logo": "",
+    "logo_width": "48",
+    "logo_height": "48",
+    "logo_text": "Student Management",
+    "sticky_header": true,
+    "default_pagination_size": 20,
+    "website_url": "http://localhost:3000"
+  },
+  "idCard": {
+    "download": {
+      "cardWidth": 300,
+      "cardHeight": 321,
+      "gap": 32,
+      "padding": 24,
+      "shadowOffset": 8,
+      "layout": "horizontal",
+      "backgroundColor": "#fff",
+      "shadow": {
+        "dx": 4,
+        "dy": 6,
+        "stdDeviation": 4,
+        "opacity": 0.2
+      }
+    }
+  }
+}
