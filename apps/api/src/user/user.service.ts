@@ -20,12 +20,18 @@ export class UserService {
     return this.userRepository.findOne({ where: { id } });
   }
 
-  async create(userData: Partial<UserEntity>, role: RoleEntity): Promise<UserEntity> {
+  async create(
+    userData: Partial<UserEntity>,
+    role: RoleEntity,
+  ): Promise<UserEntity> {
     const user = this.userRepository.create({ ...userData, role });
     return this.userRepository.save(user);
   }
 
-  async updateRefreshToken(userId: number, refreshToken: string | null): Promise<void> {
+  async updateRefreshToken(
+    userId: number,
+    refreshToken: string | null,
+  ): Promise<void> {
     await this.userRepository.update(userId, { refreshToken });
   }
 }

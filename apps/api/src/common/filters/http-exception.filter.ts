@@ -1,4 +1,10 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  ArgumentsHost,
+  Catch,
+  ExceptionFilter,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { Request, Response } from 'express';
 
 @Catch()
@@ -9,7 +15,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const req = ctx.getRequest<Request>();
 
     const isHttpException = exception instanceof HttpException;
-    const statusCode = isHttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
+    const statusCode = isHttpException
+      ? exception.getStatus()
+      : HttpStatus.INTERNAL_SERVER_ERROR;
     const response = isHttpException ? exception.getResponse() : null;
 
     const responseMessage = isHttpException
@@ -25,11 +33,11 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const details: string[] = [];
 
     if (Array.isArray(responseMessage)) {
-      details.push(...responseMessage.filter((item): item is string => typeof item === 'string'));
-    }
-
-    if (exception instanceof Error && exception.cause) {
-      // details.push(String(exception.cause));
+      details.push(
+        ...responseMessage.filter(
+          (item): item is string => typeof item === 'string',
+        ),
+      );
     }
 
     const stack = (exception as { stack?: string })?.stack ?? '';

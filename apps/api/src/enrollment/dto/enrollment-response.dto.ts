@@ -45,10 +45,17 @@ export class EnrollResponseDto {
   @ApiProperty({ type: BatchInfo })
   batch: BatchInfo;
 
-  @ApiProperty({ description: 'Status of the enrollment', enum: EnrollmentStatus })
+  @ApiProperty({
+    description: 'Status of the enrollment',
+    enum: EnrollmentStatus,
+  })
   status: EnrollmentStatus;
 
-  @ApiProperty({ description: 'Reason for suspension', required: false, nullable: true })
+  @ApiProperty({
+    description: 'Reason for suspension',
+    required: false,
+    nullable: true,
+  })
   suspensionReason?: string | null;
 
   @ApiProperty({

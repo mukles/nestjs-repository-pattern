@@ -38,7 +38,9 @@ export class EnrollmentService {
       });
 
       if (!teacher) {
-        throw new NotFoundException('Teacher profile not found for current user');
+        throw new NotFoundException(
+          'Teacher profile not found for current user',
+        );
       }
 
       qb.andWhere('teacher.id = :teacherId', { teacherId: teacher.id });
@@ -98,7 +100,9 @@ export class EnrollmentService {
     });
 
     if (!student) {
-      throw new NotFoundException(`Student with id ${createEnrollmentDto.studentId} not found`);
+      throw new NotFoundException(
+        `Student with id ${createEnrollmentDto.studentId} not found`,
+      );
     }
 
     const batch = await this.dataService.batches.findOne({
@@ -118,7 +122,10 @@ export class EnrollmentService {
     }
 
     const existingEnrollment = await this.dataService.enrollments.findOne({
-      where: { student: { id: createEnrollmentDto.studentId }, batch: { id: batchId } },
+      where: {
+        student: { id: createEnrollmentDto.studentId },
+        batch: { id: batchId },
+      },
     });
 
     if (existingEnrollment) {
@@ -186,12 +193,15 @@ export class EnrollmentService {
     }
 
     enrollment.status = updateStatusDto.status;
-    const updatedEnrollment = await this.dataService.enrollments.save(enrollment);
+    const updatedEnrollment =
+      await this.dataService.enrollments.save(enrollment);
 
     return this.transformToResponseDto(updatedEnrollment);
   }
 
-  private transformToResponseDto(enrollment: EnrollmentEntity): EnrollResponseDto {
+  private transformToResponseDto(
+    enrollment: EnrollmentEntity,
+  ): EnrollResponseDto {
     return {
       id: enrollment.id,
       student: {

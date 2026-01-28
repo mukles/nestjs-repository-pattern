@@ -14,7 +14,9 @@ export async function seedSuperAdmin(dataSource: DataSource): Promise<void> {
   });
 
   if (!superAdminRole) {
-    console.log('❌ Super Admin role not found. Please run roles seeder first.');
+    console.log(
+      '❌ Super Admin role not found. Please run roles seeder first.',
+    );
     return;
   }
 

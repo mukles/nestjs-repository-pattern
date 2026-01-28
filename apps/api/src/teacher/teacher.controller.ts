@@ -33,7 +33,9 @@ export class TeacherController {
   @HttpCode(HttpStatus.OK)
   @ApiPaginatedResponse(TeacherResponseDto)
   @Permissions(Permission.READ_TEACHER)
-  findAll(@Query() filter: TeacherPaginationDto): Promise<PaginationResultDto<TeacherResponseDto>> {
+  findAll(
+    @Query() filter: TeacherPaginationDto,
+  ): Promise<PaginationResultDto<TeacherResponseDto>> {
     return this.teacherService.findPaginatedTeachers(filter);
   }
 
@@ -42,7 +44,9 @@ export class TeacherController {
   @ApiBody({ type: CreateTeacherDto, description: 'Teacher data' })
   @ApiResponse(TeacherResponseDto)
   @Permissions(Permission.CREATE_TEACHER)
-  create(@Body() createTeacherDto: CreateTeacherDto): Promise<TeacherResponseDto> {
+  create(
+    @Body() createTeacherDto: CreateTeacherDto,
+  ): Promise<TeacherResponseDto> {
     return this.teacherService.create(createTeacherDto);
   }
 

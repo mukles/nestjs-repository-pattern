@@ -1,4 +1,9 @@
-import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
+import {
+  CallHandler,
+  ExecutionContext,
+  Injectable,
+  NestInterceptor,
+} from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -9,14 +14,16 @@ import { ApiResponseDto } from '../response';
 export class ResponseInterceptor<T> implements NestInterceptor<
   T,
   | ApiResponseDto<T>
-  | (PaginationResultDto<T> & Pick<ApiResponseDto<T>, 'message' | 'timestamp' | 'statusCode'>)
+  | (PaginationResultDto<T> &
+      Pick<ApiResponseDto<T>, 'message' | 'timestamp' | 'statusCode'>)
 > {
   intercept(
     context: ExecutionContext,
     next: CallHandler,
   ): Observable<
     | ApiResponseDto<T>
-    | (PaginationResultDto<T> & Pick<ApiResponseDto<T>, 'message' | 'timestamp' | 'statusCode'>)
+    | (PaginationResultDto<T> &
+        Pick<ApiResponseDto<T>, 'message' | 'timestamp' | 'statusCode'>)
   > {
     const http = context.switchToHttp();
     const response = http.getResponse<Response>();
@@ -26,7 +33,12 @@ export class ResponseInterceptor<T> implements NestInterceptor<
       map((data) => {
         const timestamp = new Date().toISOString();
 
-        if (data && typeof data === 'object' && 'meta' in data && 'data' in data) {
+        if (
+          data &&
+          typeof data === 'object' &&
+          'meta' in data &&
+          'data' in data
+        ) {
           const paginated = data as PaginationResultDto<T>;
           return {
             ...paginated,

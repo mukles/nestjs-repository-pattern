@@ -1,4 +1,8 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 
 import { PageMetaDto } from '../common/pagination/page-meta';
 import { PaginationResultDto } from '../common/pagination/pagination-result.dto';
@@ -8,6 +12,7 @@ import { RoleService } from '../role/role.service';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { StudentPaginationDto } from './dto/student-pagination.dto';
 import { StudentResponseDto } from './dto/student-response.dto';
+import { UpdateStudentDto } from './dto/update-student.dto';
 import { StudentEntity } from './entities/student.entity';
 
 @Injectable()
@@ -50,7 +55,9 @@ export class StudentService {
     });
 
     if (existingStudent) {
-      throw new ConflictException(`Student with email '${student.email}' already exists`);
+      throw new ConflictException(
+        `Student with email '${student.email}' already exists`,
+      );
     }
 
     const existingUser = await this.dataService.users.findOne({
@@ -58,7 +65,9 @@ export class StudentService {
     });
 
     if (existingUser) {
-      throw new ConflictException(`User with email '${student.email}' already exists`);
+      throw new ConflictException(
+        `User with email '${student.email}' already exists`,
+      );
     }
 
     const studentRole = await this.roleService.findByName(RoleEnum.STUDENT);
@@ -97,7 +106,7 @@ export class StudentService {
 
   async updateStudent(
     id: string,
-    student: CreateStudentDto,
+    student: UpdateStudentDto,
   ): Promise<{ message: string; student: StudentEntity }> {
     const existingStudent = await this.dataService.students.findOne({
       where: { id: parseInt(id, 10) },

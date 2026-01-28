@@ -1,4 +1,8 @@
-import { ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard as PassportAuthGuard } from '@nestjs/passport';
 
@@ -24,7 +28,10 @@ export class AuthGuard extends PassportAuthGuard('jwt') {
     return super.canActivate(context);
   }
 
-  override handleRequest<TUser = UserEntity>(err: Error | null, user: TUser | false): TUser {
+  override handleRequest<TUser = UserEntity>(
+    err: Error | null,
+    user: TUser | false,
+  ): TUser {
     if (err || !user) {
       throw err ?? new UnauthorizedException();
     }

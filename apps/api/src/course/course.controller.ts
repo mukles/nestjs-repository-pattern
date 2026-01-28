@@ -31,7 +31,9 @@ export class CourseController {
   @Get('/')
   @HttpCode(HttpStatus.OK)
   @Permissions(Permission.READ_COURSE)
-  findAll(@Query() filter: CoursePaginationDto): Promise<PaginationResultDto<CourseResponseDto>> {
+  findAll(
+    @Query() filter: CoursePaginationDto,
+  ): Promise<PaginationResultDto<CourseResponseDto>> {
     return this.courseService.findPaginatedCourses(filter);
   }
 
@@ -40,7 +42,9 @@ export class CourseController {
   @ApiBody({ type: CreateCourseDto, description: 'Course data' })
   @ApiResponse(CourseResponseDto)
   @Permissions(Permission.CREATE_COURSE)
-  createCourse(@Body() createCourseDto: CreateCourseDto): Promise<CourseResponseDto> {
+  createCourse(
+    @Body() createCourseDto: CreateCourseDto,
+  ): Promise<CourseResponseDto> {
     return this.courseService.createCourse(createCourseDto);
   }
 

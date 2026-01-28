@@ -10,7 +10,10 @@ import { BatchEntity } from './entities/batch.entity';
 export class BatchService {
   constructor(private readonly dataService: IDataService) {}
 
-  async create(courseId: number, createBatchDto: CreateBatchDto): Promise<BatchResponseDto> {
+  async create(
+    courseId: number,
+    createBatchDto: CreateBatchDto,
+  ): Promise<BatchResponseDto> {
     const course = await this.dataService.courses.findOne({
       where: { id: courseId },
     });
@@ -48,13 +51,18 @@ export class BatchService {
     });
 
     if (!batch) {
-      throw new NotFoundException(`Batch with id '${id}' not found for course '${courseId}'`);
+      throw new NotFoundException(
+        `Batch with id '${id}' not found for course '${courseId}'`,
+      );
     }
 
     return this.transformBatchToResponse(batch, batch.enrollments?.length || 0);
   }
 
-  async update(id: number, updateBatchDto: UpdateBatchDto): Promise<BatchResponseDto> {
+  async update(
+    id: number,
+    updateBatchDto: UpdateBatchDto,
+  ): Promise<BatchResponseDto> {
     const batch = await this.dataService.batches.findOne({
       where: { id },
       relations: ['course', 'enrollments'],
@@ -67,7 +75,10 @@ export class BatchService {
     Object.assign(batch, updateBatchDto);
     const updatedBatch = await this.dataService.batches.save(batch);
 
-    return this.transformBatchToResponse(updatedBatch, batch.enrollments?.length || 0);
+    return this.transformBatchToResponse(
+      updatedBatch,
+      batch.enrollments?.length || 0,
+    );
   }
 
   async remove(id: number): Promise<void> {
@@ -82,7 +93,10 @@ export class BatchService {
     await this.dataService.batches.remove(batch);
   }
 
-  private transformBatchToResponse(batch: BatchEntity, enrolledCount: number): BatchResponseDto {
+  private transformBatchToResponse(
+    batch: BatchEntity,
+    enrolledCount: number,
+  ): BatchResponseDto {
     return {
       id: batch.id,
       name: batch.name,

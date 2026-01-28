@@ -16,7 +16,9 @@ import { IGenericRepository } from '../interfaces/repository.interface';
 import { GenericRepository } from './repository.implementation';
 
 @Injectable()
-export class GenericDataService implements IDataService, OnApplicationBootstrap {
+export class GenericDataService
+  implements IDataService, OnApplicationBootstrap
+{
   students: IGenericRepository<StudentEntity>;
   teachers: IGenericRepository<TeacherEntity>;
   courses: IGenericRepository<CourseEntity>;

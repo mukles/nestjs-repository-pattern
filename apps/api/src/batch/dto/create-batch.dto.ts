@@ -17,12 +17,20 @@ export class CreateBatchDto {
   @IsString()
   name: string;
 
-  @ApiProperty({ description: 'Start date of the batch', type: String, format: 'date-time' })
+  @ApiProperty({
+    description: 'Start date of the batch',
+    type: String,
+    format: 'date-time',
+  })
   @IsNotEmpty()
   @IsDateString()
   startDate: string;
 
-  @ApiProperty({ description: 'End date of the batch', type: String, format: 'date-time' })
+  @ApiProperty({
+    description: 'End date of the batch',
+    type: String,
+    format: 'date-time',
+  })
   @IsNotEmpty()
   @IsDateString()
   endDate: string;
@@ -33,7 +41,11 @@ export class CreateBatchDto {
   @IsPositive()
   maxStudents: number;
 
-  @ApiProperty({ description: 'Batch status', enum: BatchStatus, default: BatchStatus.OPEN })
+  @ApiProperty({
+    description: 'Batch status',
+    enum: BatchStatus,
+    default: BatchStatus.OPEN,
+  })
   @IsOptional()
   @IsEnum(BatchStatus)
   status?: BatchStatus;

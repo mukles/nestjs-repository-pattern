@@ -42,7 +42,9 @@ export class CourseEntity extends BaseEntity {
   @Column({ type: 'varchar', length: 50 })
   duration: string;
 
-  @ManyToOne(() => TeacherEntity, (teacher) => teacher.courses, { nullable: false })
+  @ManyToOne(() => TeacherEntity, (teacher) => teacher.courses, {
+    nullable: false,
+  })
   teacher: TeacherEntity;
 
   @OneToMany(() => BatchEntity, (batch) => batch.course)

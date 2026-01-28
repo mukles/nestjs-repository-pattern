@@ -10,7 +10,11 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiResponse as ApiSwaggerResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiResponse as ApiSwaggerResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 import { Permissions } from '../auth/decorators/permissions.decorator';
 import { ApiResponse } from '../common/response';
@@ -40,7 +44,9 @@ export class BatchController {
   @Get()
   @HttpCode(HttpStatus.OK)
   @ApiSwaggerResponse({ type: [BatchResponseDto] })
-  async findAll(@Param('courseId', ParseIntPipe) courseId: number): Promise<BatchResponseDto[]> {
+  async findAll(
+    @Param('courseId', ParseIntPipe) courseId: number,
+  ): Promise<BatchResponseDto[]> {
     return this.batchService.findAll(courseId);
   }
 

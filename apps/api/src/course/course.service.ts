@@ -37,7 +37,9 @@ export class CourseService {
     return new PaginationResultDto<CourseResponseDto>(courses, pageMeta);
   }
 
-  async createCourse(createCourseDto: CreateCourseDto): Promise<CourseResponseDto> {
+  async createCourse(
+    createCourseDto: CreateCourseDto,
+  ): Promise<CourseResponseDto> {
     const { teacherId, ...courseData } = createCourseDto;
 
     const course = this.dataService.courses.create({
@@ -60,7 +62,10 @@ export class CourseService {
     return course;
   }
 
-  async updateCourse(id: string, updateCourseDto: UpdateCourseDto): Promise<CourseResponseDto> {
+  async updateCourse(
+    id: string,
+    updateCourseDto: UpdateCourseDto,
+  ): Promise<CourseResponseDto> {
     const existingCourse = await this.dataService.courses.findOne({
       where: { id: parseInt(id, 10) },
     });

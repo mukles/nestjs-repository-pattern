@@ -1,9 +1,5 @@
-import { Gender } from './entities/student.entity';
+import { Gender } from './enum/student.gender.enum';
 import { StudentService } from './student.service';
-
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 
 describe('StudentService', () => {
   let service: StudentService;
@@ -42,8 +38,18 @@ describe('StudentService', () => {
         save: jest.fn(),
         remove: jest.fn(),
       },
+      users: {
+        find: jest.fn(),
+        findOne: jest.fn(),
+        create: jest.fn(),
+        save: jest.fn(),
+        remove: jest.fn(),
+      },
     };
-    service = new StudentService(dataService);
+    const roleService = {
+      findByName: jest.fn().mockResolvedValue({ id: 2, name: 'student' }),
+    };
+    service = new StudentService(dataService, roleService as any);
   });
 
   it('should be defined', () => {
@@ -53,36 +59,64 @@ describe('StudentService', () => {
   describe('createStudent', () => {
     it('should create a new student', async () => {
       dataService.students.findOne.mockResolvedValue(null);
-      dataService.students.create.mockReturnValue({ id: 1, email: 'test@test.com' });
-      dataService.students.save.mockResolvedValue({ id: 1, email: 'test@test.com' });
+      dataService.users.findOne.mockResolvedValue(null);
+      dataService.students.create.mockReturnValue({
+        id: 1,
+        email: 'test@test.com',
+      });
+      dataService.users.create.mockReturnValue({
+        id: 1,
+        email: 'test@test.com',
+      });
+      dataService.students.save.mockResolvedValue({
+        id: 1,
+        email: 'test@test.com',
+      });
+      dataService.users.save.mockResolvedValue({
+        id: 1,
+        email: 'test@test.com',
+      });
       const dto = {
         firstName: 'John',
         lastName: 'Doe',
         email: 'test@test.com',
         dateOfBirth: new Date(),
         gender: Gender.MALE,
+        password: 'password123',
       };
       const result = await service.createStudent(dto);
-      expect(result.student.email).toBe('test@test.com');
+      expect(result.email).toBe('test@test.com');
     });
 
     it('should throw ConflictException if email exists', async () => {
-      dataService.students.findOne.mockResolvedValue({ id: 1, email: 'test@test.com' });
+      dataService.students.findOne.mockResolvedValue({
+        id: 1,
+        email: 'test@test.com',
+      });
       const dto = {
         firstName: 'John',
         lastName: 'Doe',
         email: 'test@test.com',
         dateOfBirth: new Date(),
         gender: Gender.MALE,
+        password: 'password123',
       };
-      await expect(service.createStudent(dto)).rejects.toThrow('Student with email');
+      await expect(service.createStudent(dto)).rejects.toThrow(
+        'Student with email',
+      );
     });
   });
 
   describe('updateStudent', () => {
     it('should update an existing student', async () => {
-      dataService.students.findOne.mockResolvedValue({ id: 1, email: 'test@test.com' });
-      dataService.students.save.mockResolvedValue({ id: 1, email: 'new@test.com' });
+      dataService.students.findOne.mockResolvedValue({
+        id: 1,
+        email: 'test@test.com',
+      });
+      dataService.students.save.mockResolvedValue({
+        id: 1,
+        email: 'new@test.com',
+      });
       const dto = {
         firstName: 'Jane',
         lastName: 'Doe',
@@ -103,7 +137,9 @@ describe('StudentService', () => {
         dateOfBirth: new Date(),
         gender: Gender.FEMALE,
       };
-      await expect(service.updateStudent('1', dto)).rejects.toThrow('Student with id');
+      await expect(service.updateStudent('1', dto)).rejects.toThrow(
+        'Student with id',
+      );
     });
   });
 
@@ -117,7 +153,9 @@ describe('StudentService', () => {
 
     it('should throw NotFoundException if student not found', async () => {
       dataService.students.findOne.mockResolvedValue(null);
-      await expect(service.deleteStudent('1')).rejects.toThrow('Student with id');
+      await expect(service.deleteStudent('1')).rejects.toThrow(
+        'Student with id',
+      );
     });
   });
 });

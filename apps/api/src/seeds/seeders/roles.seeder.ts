@@ -116,5 +116,7 @@ export async function seedRoles(dataSource: DataSource): Promise<void> {
     }
   }
 
-  console.log(`✅ Roles seeded: ${createdCount} created, ${updatedCount} updated`);
+  console.log(
+    `✅ Roles seeded: ${createdCount} created, ${updatedCount} updated`,
+  );
 }
