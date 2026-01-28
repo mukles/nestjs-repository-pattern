@@ -1,3 +1,4 @@
+import { TwSizeIndicator } from '@repo/ui/components/core/tw-sizeIndicator';
 import '@repo/ui/main.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
@@ -16,7 +17,10 @@ export default function RootLayout({
 }): React.JSX.Element {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <TwSizeIndicator />
+        {children}
+      </body>
     </html>
   );
 }
