@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
-import { PageMetaDto } from 'src/common/pagination/page-meta';
+import { PageMetaDto } from '../common/pagination/page-meta';
 
 import { PaginationResultDto } from '../common/pagination/pagination-result.dto';
 import { IDataService } from '../repositories/interfaces/dataservice.interface';
@@ -43,7 +43,9 @@ export class TeacherService {
     return new PaginationResultDto<TeacherResponseDto>(teacherDtos, pageMeta);
   }
 
-  async create(createTeacherDto: CreateTeacherDto): Promise<TeacherResponseDto> {
+  async create(
+    createTeacherDto: CreateTeacherDto,
+  ): Promise<TeacherResponseDto> {
     const teacher = this.dataService.teachers.create(createTeacherDto);
     const savedTeacher = await this.dataService.teachers.save(teacher);
     return plainToInstance(TeacherResponseDto, savedTeacher, {

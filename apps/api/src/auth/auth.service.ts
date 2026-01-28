@@ -1,8 +1,12 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { IDataService } from 'src/repositories/interfaces/dataservice.interface';
+import { IDataService } from '../repositories/interfaces/dataservice.interface';
 
 import { Permission } from '../role/enums/permission.enum';
 import { Role } from '../role/enums/role.enum';
@@ -86,7 +90,11 @@ export class AuthService {
 
     const savedUser = await this.dataService.users.save(user);
 
-    const tokens = await this.generateTokens(savedUser.id, savedUser.email, role);
+    const tokens = await this.generateTokens(
+      savedUser.id,
+      savedUser.email,
+      role,
+    );
 
     await this.updateRefreshToken(savedUser.id, tokens.refreshToken);
 
@@ -106,9 +114,12 @@ export class AuthService {
     const { refreshToken } = refreshTokenDto;
 
     try {
-      const payload: JwtPayload = await this.jwtService.verifyAsync(refreshToken, {
-        secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
-      });
+      const payload: JwtPayload = await this.jwtService.verifyAsync(
+        refreshToken,
+        {
+          secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
+        },
+      );
 
       const user = await this.dataService.users.findOne({
         where: { id: payload.sub },
@@ -119,7 +130,10 @@ export class AuthService {
         throw new UnauthorizedException('Access denied');
       }
 
-      const isRefreshTokenValid = await bcrypt.compare(refreshToken, user.refreshToken);
+      const isRefreshTokenValid = await bcrypt.compare(
+        refreshToken,
+        user.refreshToken,
+      );
 
       if (!isRefreshTokenValid) {
         throw new UnauthorizedException('Access denied');

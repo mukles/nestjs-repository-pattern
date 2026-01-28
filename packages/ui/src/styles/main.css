@@ -1,0 +1,23 @@
+@import 'tailwindcss';
+@source '../../../apps/**/*.{ts,tsx}';
+@source '../**/*.{ts,tsx}';
+
+@import 'tw-animate-css';
+@custom-variant dark (&:is(.dark *));
+
+@import './variables/default.css';
+@import './variables/soft-pop.css';
+@import './variables/brutalist.css';
+@import './variables/tangerine.css';
+
+@import './variables.css';
+@import './theme.css';
+@import './utilities.css';
+
+@layer base {
+  @import './base.css';
+}
+
+@layer components {
+  @import './components.css';
+}

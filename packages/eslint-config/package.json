@@ -5,9 +5,11 @@
   "private": true,
   "exports": {
     "./base": "./base.js",
+    "./library": "./library.js",
     "./next-js": "./next.js",
-    "./react-internal": "./react-internal.js",
-    "./nestjs": "./nestjs.js"
+    "./nest-js": "./nest.js",
+    "./prettier-base": "./prettier-base.js",
+    "./react-internal": "./react-internal.js"
   },
   "devDependencies": {
     "@eslint/js": "catalog:",
@@ -17,8 +19,10 @@
     "eslint-plugin-only-warn": "^1.1.0",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-tailwindcss": "beta",
     "eslint-plugin-turbo": "^2.6.0",
     "globals": "^16.5.0",
+    "prettier-plugin-tailwindcss": "catalog:",
     "typescript": "catalog:",
     "typescript-eslint": "^8.46.3"
   }

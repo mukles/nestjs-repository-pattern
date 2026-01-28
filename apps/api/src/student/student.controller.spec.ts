@@ -9,7 +9,9 @@ describe('StudentController', () => {
   let controller: StudentController;
 
   const mockStudentService = {
-    findPaginatedStudents: jest.fn().mockImplementation(() => Promise.resolve({})),
+    findPaginatedStudents: jest
+      .fn()
+      .mockImplementation(() => Promise.resolve({})),
     createStudent: jest.fn().mockImplementation(() => Promise.resolve({})),
     updateStudent: jest.fn().mockImplementation(() => Promise.resolve({})),
     deleteStudent: jest.fn().mockImplementation(() => Promise.resolve({})),
@@ -64,7 +66,9 @@ describe('StudentController', () => {
       mockStudentService.findPaginatedStudents.mockResolvedValue(result);
 
       expect(await controller.findAll(filter)).toBe(result);
-      expect(mockStudentService.findPaginatedStudents).toHaveBeenCalledWith(filter);
+      expect(mockStudentService.findPaginatedStudents).toHaveBeenCalledWith(
+        filter,
+      );
     });
 
     it('should filter by name', async () => {
@@ -83,7 +87,9 @@ describe('StudentController', () => {
       mockStudentService.findPaginatedStudents.mockResolvedValue(result);
 
       expect(await controller.findAll(filter)).toBe(result);
-      expect(mockStudentService.findPaginatedStudents).toHaveBeenCalledWith(filter);
+      expect(mockStudentService.findPaginatedStudents).toHaveBeenCalledWith(
+        filter,
+      );
     });
 
     it('should filter by email', async () => {
@@ -102,7 +108,9 @@ describe('StudentController', () => {
       mockStudentService.findPaginatedStudents.mockResolvedValue(result);
 
       expect(await controller.findAll(filter)).toBe(result);
-      expect(mockStudentService.findPaginatedStudents).toHaveBeenCalledWith(filter);
+      expect(mockStudentService.findPaginatedStudents).toHaveBeenCalledWith(
+        filter,
+      );
     });
   });
 

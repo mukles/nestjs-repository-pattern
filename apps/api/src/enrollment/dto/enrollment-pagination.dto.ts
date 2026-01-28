@@ -6,7 +6,10 @@ import { PaginationDto } from '../../common/pagination/pagination.dto';
 import { EnrollmentStatus } from '../enum/enrolllment-status.enum';
 
 export class EnrollmentPaginationDto extends PaginationDto {
-  @ApiPropertyOptional({ description: 'Filter by enrollment status', enum: EnrollmentStatus })
+  @ApiPropertyOptional({
+    description: 'Filter by enrollment status',
+    enum: EnrollmentStatus,
+  })
   @IsOptional()
   @IsString()
   status?: EnrollmentStatus;

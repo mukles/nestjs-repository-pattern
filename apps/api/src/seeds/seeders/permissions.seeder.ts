@@ -70,5 +70,7 @@ export async function seedPermissions(dataSource: DataSource): Promise<void> {
     }
   }
 
-  console.log(`✅ Permissions seeded: ${createdCount} created, ${existingCount} already existed`);
+  console.log(
+    `✅ Permissions seeded: ${createdCount} created, ${existingCount} already existed`,
+  );
 }

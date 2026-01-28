@@ -46,9 +46,15 @@ export class Migration1766512952244 implements MigrationInterface {
     await queryRunner.query(
       `ALTER TABLE "role_permissions" DROP CONSTRAINT "FK_178199805b901ccd220ab7740ec"`,
     );
-    await queryRunner.query(`ALTER TABLE "users" DROP CONSTRAINT "FK_368e146b785b574f42ae9e53d5e"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_17022daf3f885f7d35423e9971"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_178199805b901ccd220ab7740e"`);
+    await queryRunner.query(
+      `ALTER TABLE "users" DROP CONSTRAINT "FK_368e146b785b574f42ae9e53d5e"`,
+    );
+    await queryRunner.query(
+      `DROP INDEX "public"."IDX_17022daf3f885f7d35423e9971"`,
+    );
+    await queryRunner.query(
+      `DROP INDEX "public"."IDX_178199805b901ccd220ab7740e"`,
+    );
     await queryRunner.query(`DROP TABLE "role_permissions"`);
     await queryRunner.query(`DROP TABLE "permissions"`);
     await queryRunner.query(`DROP TYPE "public"."permissions_name_enum"`);

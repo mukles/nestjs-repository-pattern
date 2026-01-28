@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 
 import { PageMetaDto } from '../common/pagination/page-meta';
 import { PaginationResultDto } from '../common/pagination/pagination-result.dto';
@@ -82,7 +86,8 @@ export class ResultService {
   }
 
   async create(createResultDto: CreateResultDto): Promise<ResultResponseDto> {
-    const { enrollmentId, score, maxScore, type, grade, remarks } = createResultDto;
+    const { enrollmentId, score, maxScore, type, grade, remarks } =
+      createResultDto;
 
     if (score > maxScore) {
       throw new BadRequestException('Score cannot be greater than maxScore');
@@ -174,7 +179,10 @@ export class ResultService {
     };
   }
 
-  async update(id: number, updateResultDto: UpdateResultDto): Promise<ResultResponseDto> {
+  async update(
+    id: number,
+    updateResultDto: UpdateResultDto,
+  ): Promise<ResultResponseDto> {
     const saved = await this.dataService.results.findOne({
       where: { id },
       relations: [

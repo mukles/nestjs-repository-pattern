@@ -40,7 +40,11 @@ export class EnrollmentController {
     @Param('batchId') batchId: string,
     @Body() createEnrollmentDto: CreateEnrollmentDto,
   ): Promise<EnrollResponseDto> {
-    return await this.enrollmentService.create(+courseId, +batchId, createEnrollmentDto);
+    return await this.enrollmentService.create(
+      +courseId,
+      +batchId,
+      createEnrollmentDto,
+    );
   }
 
   @Get()
@@ -106,7 +110,9 @@ export class EnrollmentController {
   @ApiOperation({ summary: 'Get enrollment details by ID' })
   @ApiResponse(EnrollResponseDto)
   @Permissions(Permission.READ_ENROLLMENT)
-  async findOne(@Param('enrollmentId') enrollmentId: string): Promise<EnrollResponseDto> {
+  async findOne(
+    @Param('enrollmentId') enrollmentId: string,
+  ): Promise<EnrollResponseDto> {
     return await this.enrollmentService.findOne(+enrollmentId);
   }
 
@@ -123,6 +129,9 @@ export class EnrollmentController {
     @Param('enrollmentId') enrollmentId: string,
     @Body() updateStatusDto: UpdateEnrollmentStatusDto,
   ): Promise<EnrollResponseDto> {
-    return this.enrollmentService.updateEnrollmentStatus(+enrollmentId, updateStatusDto);
+    return this.enrollmentService.updateEnrollmentStatus(
+      +enrollmentId,
+      updateStatusDto,
+    );
   }
 }

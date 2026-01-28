@@ -9,10 +9,18 @@ export class BatchResponseDto {
   @ApiProperty({ description: 'Batch name' })
   name: string;
 
-  @ApiProperty({ description: 'Start date of the batch', type: String, format: 'date-time' })
+  @ApiProperty({
+    description: 'Start date of the batch',
+    type: String,
+    format: 'date-time',
+  })
   startDate: Date;
 
-  @ApiProperty({ description: 'End date of the batch', type: String, format: 'date-time' })
+  @ApiProperty({
+    description: 'End date of the batch',
+    type: String,
+    format: 'date-time',
+  })
   endDate: Date;
 
   @ApiProperty({ description: 'Maximum number of students (slots)' })

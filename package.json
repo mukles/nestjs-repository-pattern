@@ -3,10 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-  "build": "turbo build",
-    "dev": "turbo dev",
-    "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "test:e2e": "turbo run test:e2e",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{js,mjs,ts,tsx,md,json,css,scss}\"",
     "ui": "pnpm --filter @repo/ui ui",
     "check-types": "turbo run check-types"
   },
@@ -14,9 +16,11 @@
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "prettier": "catalog:",
+    "prettier-plugin-tailwindcss": "catalog:",
     "turbo": "2.6.0"
   },
   "packageManager": "pnpm@10.15.0",
+  "prettier": "./.prettierrc.mjs",
   "engines": {
     "node": ">=24"
   },

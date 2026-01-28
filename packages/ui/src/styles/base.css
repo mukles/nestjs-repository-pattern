@@ -1,0 +1,17 @@
+* {
+  @apply border-border outline-ring/50;
+}
+
+html {
+  @apply text-[16px];
+}
+
+body {
+  @apply bg-background text-foreground antialiased;
+  font-family: 'Inter', sans-serif;
+}
+
+button:not(:disabled),
+[role='button']:not(:disabled) {
+  cursor: pointer;
+}

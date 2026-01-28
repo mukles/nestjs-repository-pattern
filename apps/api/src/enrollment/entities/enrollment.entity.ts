@@ -1,4 +1,4 @@
-import { ResultEntity } from 'src/result/entities/result.entity';
+import { ResultEntity } from '../../result/entities/result.entity';
 import {
   BaseEntity,
   Column,
@@ -28,7 +28,9 @@ export class EnrollmentEntity extends BaseEntity {
   @JoinColumn({ name: 'studentId' })
   student: StudentEntity;
 
-  @ManyToOne(() => BatchEntity, (batch) => batch.enrollments, { nullable: false })
+  @ManyToOne(() => BatchEntity, (batch) => batch.enrollments, {
+    nullable: false,
+  })
   @JoinColumn({ name: 'batchId' })
   batch: BatchEntity;
 
