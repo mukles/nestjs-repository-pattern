@@ -20,6 +20,7 @@
     "turbo": "2.6.0"
   },
   "packageManager": "pnpm@10.15.0",
+  "prettier": "./.prettierrc.mjs",
   "engines": {
     "node": ">=24"
   },

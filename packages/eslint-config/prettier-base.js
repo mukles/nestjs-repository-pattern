@@ -10,6 +10,7 @@ const config = {
   trailingComma: 'all',
   printWidth: 80,
   tabWidth: 2,
+  endOfLine: 'lf',
   plugins: ['prettier-plugin-tailwindcss'],
   tailwindFunctions: ['cva', 'cn', 'clsx', 'twMerge'],
 };
