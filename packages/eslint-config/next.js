@@ -1,7 +1,6 @@
 import js from "@eslint/js";
 import { globalIgnores } from "eslint/config";
 import eslintConfigPrettier from "eslint-config-prettier";
-import prettierPluginTailwindcss from "prettier-plugin-tailwindcss";
 import tseslint from "typescript-eslint";
 import pluginReactHooks from "eslint-plugin-react-hooks";
 import pluginReact from "eslint-plugin-react";
@@ -21,7 +20,6 @@ export const config = [
     ...eslintConfigPrettier,
     plugins: {
       ...(eslintConfigPrettier.plugins || {}),
-      "prettier-plugin-tailwindcss": prettierPluginTailwindcss,
     },
   },
   ...tseslint.configs.recommended,

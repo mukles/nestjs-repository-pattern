@@ -28,7 +28,7 @@ catalogs:
       specifier: 16.0.10
       version: 16.0.10
     prettier:
-      specifier: ^3.6.2
+      specifier: 3.8.1
       version: 3.8.1
     tailwindcss:
       specifier: ^4.1.17
@@ -63,6 +63,9 @@ importers:
       prettier:
         specifier: 'catalog:'
         version: 3.8.1
+      prettier-plugin-tailwindcss:
+        specifier: 0.7.1
+        version: 0.7.1(prettier@3.8.1)
       turbo:
         specifier: 2.6.0
         version: 2.6.0
@@ -225,7 +228,7 @@ importers:
         specifier: ^30.0.0
         version: 30.2.0(@types/node@22.19.7)(ts-node@10.9.2(@types/node@22.19.7)(typescript@5.9.3))
       prettier:
-        specifier: ^3.4.2
+        specifier: 'catalog:'
         version: 3.8.1
       source-map-support:
         specifier: ^0.5.21
@@ -327,6 +330,15 @@ importers:
       typescript-eslint:
         specifier: ^8.46.3
         version: 8.54.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
+
+  packages/prettier-config:
+    dependencies:
+      prettier:
+        specifier: '>=2.8.0'
+        version: 3.8.1
+      prettier-plugin-tailwindcss:
+        specifier: '>=0.5.0'
+        version: 0.7.1(prettier@3.8.1)
 
   packages/shared-types:
     devDependencies:

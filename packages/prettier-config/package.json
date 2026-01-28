@@ -1,0 +1,9 @@
+{
+  "name": "@student-mangement/prettier-config",
+  "version": "1.0.0",
+  "main": "index.js",
+  "peerDependencies": {
+    "prettier": ">=2.8.0",
+    "prettier-plugin-tailwindcss": ">=0.5.0"
+  }
+}
