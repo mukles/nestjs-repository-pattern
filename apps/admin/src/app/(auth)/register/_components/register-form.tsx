@@ -14,7 +14,8 @@ import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-export const loginSchema = z.object({
+export const registerSchema = z.object({
+  fullName: z.string().min(2, 'Full name is required'),
   email: z
     .string()
     .trim()
@@ -24,22 +25,46 @@ export const loginSchema = z.object({
   password: z.string().min(1, 'Password is required'),
 });
 
-export function LoginForm() {
-  const form = useForm<z.infer<typeof loginSchema>>({
-    resolver: zodResolver(loginSchema),
+export function RegisterForm() {
+  const form = useForm<z.infer<typeof registerSchema>>({
+    resolver: zodResolver(registerSchema),
     defaultValues: {
-      email: 'superadmin@example.com',
-      password: 'SuperAdmin@123',
+      fullName: '',
+      email: '',
+      password: '',
     },
   });
 
-  function onSubmit(data: z.infer<typeof loginSchema>) {
-    console.log('Form Data:', data);
+  function onSubmit(data: z.infer<typeof registerSchema>) {
+    console.log('Register Data:', data);
   }
 
   return (
     <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
       <FieldGroup>
+        <Controller
+          name="fullName"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel
+                htmlFor="fullName"
+                className="text-neutral-700 capitalize"
+              >
+                {field.name.replace('fullName', 'Full Name')}
+              </FieldLabel>
+              <Input
+                className="placeholder:text-gray-400"
+                id="fullName"
+                type="text"
+                placeholder="Your full name"
+                {...field}
+                aria-invalid={fieldState.invalid}
+              />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
         <Controller
           name="email"
           control={form.control}
@@ -63,7 +88,6 @@ export function LoginForm() {
             </Field>
           )}
         />
-
         <Controller
           name="password"
           control={form.control}
@@ -80,23 +104,14 @@ export function LoginForm() {
             </Field>
           )}
         />
-
-        <div className="flex items-center justify-between">
-          <div className="text-sm leading-6">
-            <Link href="#" className="font-normal text-neutral-500">
-              Forgot password?
-            </Link>
-          </div>
-        </div>
-
         <Field>
           <Button className="rounded-full" type="submit">
-            Login
+            Register
           </Button>
           <p className="dark:text-muted-dark mt-4 text-center text-sm text-neutral-600">
-            Don&apos;t have an account?{' '}
-            <Link href="/register" className="text-black dark:text-white">
-              Sign up
+            Already have an account?{' '}
+            <Link href="/login" className="text-black dark:text-white">
+              Sign in
             </Link>
           </p>
         </Field>
