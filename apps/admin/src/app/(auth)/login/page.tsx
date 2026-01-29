@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import {
   Field,
   FieldDescription,
@@ -5,6 +6,7 @@ import {
 } from '@repo/ui/components/ui-kit/field';
 import { LoginForm } from './_components/login-form';
 import { Button } from '@repo/ui/components/ui-kit/button';
+import { Borders } from './_components/borders';
 
 export default function LoginPage() {
   return (
@@ -46,7 +48,65 @@ export default function LoginPage() {
           </div>
         </div>
       </div>
-      <div className="relative z-20 hidden w-full items-center justify-center overflow-hidden border-l border-neutral-100 bg-gray-50 md:flex dark:border-neutral-800 dark:bg-neutral-900"></div>
+      <div className="relative z-20 hidden w-full items-center justify-center overflow-hidden border-l border-neutral-100 bg-gray-50 md:flex dark:border-neutral-800 dark:bg-neutral-900">
+        <Borders />
+        <div className="relative z-30 mx-auto max-w-lg p-8 text-center">
+          <div className="mt-16 pt-12">
+            <div className="flex items-center justify-center -space-x-2">
+              <Image
+                src="/images/educators/educator_avatar_1_1769667282209.png"
+                alt="Educator"
+                width={48}
+                height={48}
+                className="h-12 w-12 rounded-full border-2 border-white object-cover dark:border-neutral-900"
+              />
+              <Image
+                src="/images/educators/educator_avatar_2_1769667301297.png"
+                alt="Educator"
+                width={48}
+                height={48}
+                className="h-12 w-12 rounded-full border-2 border-white object-cover dark:border-neutral-900"
+              />
+              <Image
+                src="/images/educators/educator_avatar_3_1769667316538.png"
+                alt="Educator"
+                width={48}
+                height={48}
+                className="h-12 w-12 rounded-full border-2 border-white object-cover dark:border-neutral-900"
+              />
+              <Image
+                src="/images/educators/educator_avatar_4_1769667335754.png"
+                alt="Educator"
+                width={48}
+                height={48}
+                className="h-12 w-12 rounded-full border-2 border-white object-cover dark:border-neutral-900"
+              />
+              <Image
+                src="/images/educators/educator_avatar_5_1769667352343.png"
+                alt="Educator"
+                width={48}
+                height={48}
+                className="h-12 w-12 rounded-full border-2 border-white object-cover dark:border-neutral-900"
+              />
+              <Image
+                src="/images/educators/educator_avatar_6_1769667373046.png"
+                alt="Educator"
+                width={48}
+                height={48}
+                className="h-12 w-12 rounded-full border-2 border-white object-cover dark:border-neutral-900"
+              />
+            </div>
+            <h3 className="mt-8 text-2xl font-bold text-neutral-900 dark:text-white">
+              Trusted by thousands of educators
+            </h3>
+            <p className="mt-4 text-base leading-relaxed text-neutral-600 dark:text-neutral-400">
+              With lots of student management systems around, this platform
+              stands out with its intuitive interface and powerful
+              administration capabilities.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
