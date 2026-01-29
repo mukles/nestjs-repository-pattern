@@ -5,11 +5,11 @@ import { Input } from './ui-kit/input';
 import { useState } from 'react';
 import { cn } from '../lib/utils';
 
-interface PasswordInputProps {
+interface PasswordInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   className?: string;
 }
 
-export function PasswordInput({ className }: PasswordInputProps) {
+export function PasswordInput({ className, ...rest }: PasswordInputProps) {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   return (
@@ -18,7 +18,7 @@ export function PasswordInput({ className }: PasswordInputProps) {
         className={cn('pr-8.5 placeholder:text-gray-400', className)}
         id="password"
         type={isPasswordVisible ? 'text' : 'password'}
-        required
+        {...rest}
       />
 
       {isPasswordVisible ? (
