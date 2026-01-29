@@ -3,12 +3,12 @@ import packageJson from '../../package.json';
 const currentYear = new Date().getFullYear();
 
 export const APP_CONFIG = {
-  name: 'Studio Admin',
+  name: 'EduManage',
   version: packageJson.version,
-  copyright: `© ${currentYear}, Studio Admin.`,
+  copyright: `© ${currentYear}, EduManage.`,
   meta: {
-    title: 'Studio Admin - Modern Next.js Dashboard Starter Template',
+    title: 'EduManage - Student Management System',
     description:
-      'Studio Admin is a modern, open-source dashboard starter template built with Next.js 16, Tailwind CSS v4, and shadcn/ui. Perfect for SaaS apps, admin panels, and internal tools—fully customizable and production-ready.',
+      'EduManage is a modern student management system built with Next.js, TypeScript, and NestJS. Manage students, enrollments, courses, batches, and results with ease.',
   },
 };
