@@ -1,15 +1,16 @@
+import { Button } from '@repo/ui/components/ui-kit/button';
 import {
   Field,
   FieldDescription,
   FieldSeparator,
 } from '@repo/ui/components/ui-kit/field';
-import { LoginForm } from './_components/login-form';
-import { Button } from '@repo/ui/components/ui-kit/button';
 import { Borders } from './_components/borders';
+import { LoginForm } from './_components/login-form';
 
+import { Logo } from '@/app/components/logo';
 import { AnimatedTooltip } from '@repo/ui/components/ui-kit/animated-tooltip';
-import { ProductFeatures } from './_components/product-features';
 import Link from 'next/link';
+import { ProductFeatures } from './_components/product-features';
 
 const people = [
   {
@@ -45,6 +46,7 @@ export default function LoginPage() {
         <div className="flex w-full items-center justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
           <div className="mx-auto w-full max-w-md">
             <div className="">
+              <Logo />
               <h1 className="mt-8 text-2xl leading-9 font-bold tracking-tight text-black dark:text-white">
                 Sign in to your account
               </h1>

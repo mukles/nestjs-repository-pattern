@@ -6,6 +6,7 @@ import {
 } from '@repo/ui/components/ui-kit/field';
 import { Input } from '@repo/ui/components/ui-kit/input';
 import Link from 'next/link';
+import { PasswordInput } from '@repo/ui/components/password-input';
 
 export function LoginForm() {
   return (
@@ -29,12 +30,13 @@ export function LoginForm() {
               Password
             </FieldLabel>
           </div>
-          <Input
+          <PasswordInput />
+          {/* <Input
             className="placeholder:text-gray-400"
             id="password"
             type="password"
             required
-          />
+          /> */}
         </Field>
 
         <div className="flex items-center justify-between">

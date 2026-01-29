@@ -1,26 +1,22 @@
 'use client';
 
-import Link from 'next/link';
-
 import { useShallow } from 'zustand/react/shallow';
 
+import { rootUser } from '@/data/users';
+import { usePreferencesStore } from '@/stores/preferences/preferences-provider';
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuButton,
   SidebarMenuItem,
 } from '@repo/ui/components/ui-kit/sidebar';
-import { APP_CONFIG } from '@/config/app-config';
-import { rootUser } from '@/data/users';
-import { usePreferencesStore } from '@/stores/preferences/preferences-provider';
 
-import { NavUser } from './nav-user';
+import { Logo } from '@/app/components/logo';
 import { sidebarItems } from '@/config/navigation';
 import { NavMain } from './nav-main';
-import { Command } from 'lucide-react';
+import { NavUser } from './nav-user';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { sidebarVariant, sidebarCollapsible, isSynced } = usePreferencesStore(
@@ -39,14 +35,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild>
-              <Link prefetch={false} href="/dashboard/default">
-                <Command />
-                <span className="text-base font-semibold">
-                  {APP_CONFIG.name}
-                </span>
-              </Link>
-            </SidebarMenuButton>
+            <div className="flex h-12 items-center px-2">
+              <Logo />
+            </div>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
