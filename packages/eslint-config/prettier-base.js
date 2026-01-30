@@ -7,12 +7,12 @@
 
 const config = {
   singleQuote: false,
-  trailingComma: "all",
+  trailingComma: 'all',
   printWidth: 80,
   tabWidth: 2,
-  endOfLine: "lf",
-  plugins: ["prettier-plugin-tailwindcss"],
-  tailwindFunctions: ["cva", "cn", "clsx", "twMerge"],
+  endOfLine: 'lf',
+  plugins: ['prettier-plugin-tailwindcss'],
+  tailwindFunctions: ['cva', 'cn', 'clsx', 'twMerge'],
 };
 
 export default config;
