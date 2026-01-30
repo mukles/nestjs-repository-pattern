@@ -1,19 +1,20 @@
-import { Injectable, OnApplicationBootstrap } from "@nestjs/common";
-import { InjectEntityManager, InjectRepository } from "@nestjs/typeorm";
-import { EntityManager } from "typeorm";
+import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
+import { EntityManager } from 'typeorm';
 
-import { BatchEntity } from "../../batch/entities/batch.entity";
-import { CourseEntity } from "../../course/entities/course.entity";
-import { EnrollmentEntity } from "../../enrollment/entities/enrollment.entity";
-import { ResultEntity } from "../../result/entities/result.entity";
-import { PermissionEntity } from "../../role/entities/permission.entity";
-import { RoleEntity } from "../../role/entities/role.entity";
-import { StudentEntity } from "../../student/entities/student.entity";
-import { TeacherEntity } from "../../teacher/entities/teacher.entity";
-import { UserEntity } from "../../user/entities/user.entity";
-import { IDataService } from "../interfaces/dataservice.interface";
-import { IGenericRepository } from "../interfaces/repository.interface";
-import { GenericRepository } from "./repository.implementation";
+import { BatchEntity } from '../../batch/entities/batch.entity';
+import { CourseEntity } from '../../course/entities/course.entity';
+import { EnrollmentEntity } from '../../enrollment/entities/enrollment.entity';
+import { ResultEntity } from '../../result/entities/result.entity';
+import { PermissionEntity } from '../../role/entities/permission.entity';
+import { RoleEntity } from '../../role/entities/role.entity';
+import { StudentEntity } from '../../student/entities/student.entity';
+import { TeacherEntity } from '../../teacher/entities/teacher.entity';
+import { UserEntity } from '../../user/entities/user.entity';
+import { IDataService } from '../interfaces/dataservice.interface';
+import { IGenericRepository } from '../interfaces/repository.interface';
+import { GenericRepository } from './repository.implementation';
+import { SessionEntry } from '../../session/entities/session.entry';
 
 @Injectable()
 export class GenericDataService
@@ -28,6 +29,7 @@ export class GenericDataService
   permissions: IGenericRepository<PermissionEntity>;
   batches: IGenericRepository<BatchEntity>;
   results: IGenericRepository<ResultEntity>;
+  sessions: IGenericRepository<SessionEntry>;
 
   constructor(
     @InjectEntityManager() private readonly entityManager: EntityManager,
@@ -47,6 +49,10 @@ export class GenericDataService
     private readonly permissionRepository: IGenericRepository<PermissionEntity>,
     @InjectRepository(BatchEntity)
     private readonly batchRepository: IGenericRepository<BatchEntity>,
+    @InjectRepository(ResultEntity)
+    private readonly resultRepository: IGenericRepository<ResultEntity>,
+    @InjectRepository(SessionEntry)
+    private readonly sessionRepository: IGenericRepository<SessionEntry>,
   ) {}
 
   onApplicationBootstrap() {
@@ -101,7 +107,13 @@ export class GenericDataService
     this.results = new GenericRepository<ResultEntity>(
       ResultEntity,
       this.entityManager,
-      this.batchRepository.queryRunner!,
+      this.resultRepository.queryRunner!,
+    );
+
+    this.sessions = new GenericRepository<SessionEntry>(
+      SessionEntry,
+      this.entityManager,
+      this.sessionRepository.queryRunner!,
     );
   }
 }

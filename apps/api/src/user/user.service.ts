@@ -1,9 +1,9 @@
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
-import { RoleEntity } from "../role/entities/role.entity";
-import { UserEntity } from "./entities/user.entity";
+import { RoleEntity } from '../role/entities/role.entity';
+import { UserEntity } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
@@ -26,12 +26,5 @@ export class UserService {
   ): Promise<UserEntity> {
     const user = this.userRepository.create({ ...userData, role });
     return this.userRepository.save(user);
-  }
-
-  async updateRefreshToken(
-    userId: number,
-    refreshToken: string | null,
-  ): Promise<void> {
-    await this.userRepository.update(userId, { refreshToken });
   }
 }

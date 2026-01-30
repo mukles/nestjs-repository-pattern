@@ -3,19 +3,19 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
-} from "@nestjs/common";
+} from '@nestjs/common';
 
-import { JwtPayload } from "../auth/interface/jwt-interface";
-import { PageMetaDto } from "../common/pagination/page-meta";
-import { PaginationResultDto } from "../common/pagination/pagination-result.dto";
-import { IDataService } from "../repositories/interfaces/dataservice.interface";
-import { Role } from "../role/enums/role.enum";
-import { CreateEnrollmentDto } from "./dto/create-enrollment.dto";
-import { EnrollmentPaginationDto } from "./dto/enrollment-pagination.dto";
-import { EnrollResponseDto } from "./dto/enrollment-response.dto";
-import { UpdateEnrollmentStatusDto } from "./dto/update-enrollment-status.dto";
-import { EnrollmentEntity } from "./entities/enrollment.entity";
-import { EnrollmentStatus } from "./enum/enrolllment-status.enum";
+import { JwtPayload } from '../auth/interface/jwt-interface';
+import { PageMetaDto } from '../common/pagination/page-meta';
+import { PaginationResultDto } from '../common/pagination/pagination-result.dto';
+import { IDataService } from '../repositories/interfaces/dataservice.interface';
+import { Role } from '../role/enums/role.enum';
+import { CreateEnrollmentDto } from './dto/create-enrollment.dto';
+import { EnrollmentPaginationDto } from './dto/enrollment-pagination.dto';
+import { EnrollResponseDto } from './dto/enrollment-response.dto';
+import { UpdateEnrollmentStatusDto } from './dto/update-enrollment-status.dto';
+import { EnrollmentEntity } from './entities/enrollment.entity';
+import { EnrollmentStatus } from './enum/enrolllment-status.enum';
 
 @Injectable()
 export class EnrollmentService {
@@ -26,56 +26,56 @@ export class EnrollmentService {
     user?: JwtPayload,
   ): Promise<PaginationResultDto<EnrollResponseDto>> {
     const qb = this.dataService.enrollments
-      .createQueryBuilder("enrollment")
-      .leftJoinAndSelect("enrollment.student", "student")
-      .leftJoinAndSelect("enrollment.batch", "batch")
-      .leftJoinAndSelect("batch.course", "course")
-      .leftJoinAndSelect("course.teacher", "teacher");
+      .createQueryBuilder('enrollment')
+      .leftJoinAndSelect('enrollment.student', 'student')
+      .leftJoinAndSelect('enrollment.batch', 'batch')
+      .leftJoinAndSelect('batch.course', 'course')
+      .leftJoinAndSelect('course.teacher', 'teacher');
 
     if (user && user.role?.includes(Role.TEACHER)) {
       const teacher = await this.dataService.teachers.findOne({
-        where: { email: user.email },
+        where: { email: user.id },
       });
 
       if (!teacher) {
         throw new NotFoundException(
-          "Teacher profile not found for current user",
+          'Teacher profile not found for current user',
         );
       }
 
-      qb.andWhere("teacher.id = :teacherId", { teacherId: teacher.id });
+      qb.andWhere('teacher.id = :teacherId', { teacherId: teacher.id });
     }
 
     if (filter.status) {
-      qb.andWhere("enrollment.status = :status", { status: filter.status });
+      qb.andWhere('enrollment.status = :status', { status: filter.status });
     }
 
     if (filter.courseId) {
-      qb.andWhere("course.id = :courseId", { courseId: filter.courseId });
+      qb.andWhere('course.id = :courseId', { courseId: filter.courseId });
     }
 
     if (filter.batchId) {
-      qb.andWhere("batch.id = :batchId", { batchId: filter.batchId });
+      qb.andWhere('batch.id = :batchId', { batchId: filter.batchId });
     }
 
     if (filter.studentId) {
-      qb.andWhere("student.id = :studentId", { studentId: filter.studentId });
+      qb.andWhere('student.id = :studentId', { studentId: filter.studentId });
     }
 
     if (filter.startDate) {
-      qb.andWhere("enrollment.createdAt >= :startDate", {
+      qb.andWhere('enrollment.createdAt >= :startDate', {
         startDate: filter.startDate,
       });
     }
 
     if (filter.endDate) {
-      qb.andWhere("enrollment.createdAt <= :endDate", {
+      qb.andWhere('enrollment.createdAt <= :endDate', {
         endDate: filter.endDate,
       });
     }
 
     const [enrollments, itemCount] = await qb
-      .orderBy("enrollment.createdAt", filter.order)
+      .orderBy('enrollment.createdAt', filter.order)
       .skip(filter.skip)
       .take(filter.take)
       .getManyAndCount();
@@ -107,7 +107,7 @@ export class EnrollmentService {
 
     const batch = await this.dataService.batches.findOne({
       where: { id: batchId },
-      relations: ["course", "course.teacher"],
+      relations: ['course', 'course.teacher'],
     });
 
     if (!batch) {
@@ -129,7 +129,7 @@ export class EnrollmentService {
     });
 
     if (existingEnrollment) {
-      throw new ConflictException("Student is already enrolled in this batch");
+      throw new ConflictException('Student is already enrolled in this batch');
     }
 
     const enrollment = this.dataService.enrollments.create({
@@ -142,11 +142,11 @@ export class EnrollmentService {
 
     const enrollmentWithRelations = await this.dataService.enrollments.findOne({
       where: { id: savedEnrollment.id },
-      relations: ["student", "batch", "batch.course", "batch.course.teacher"],
+      relations: ['student', 'batch', 'batch.course', 'batch.course.teacher'],
     });
 
     if (!enrollmentWithRelations) {
-      throw new NotFoundException("Failed to retrieve created enrollment");
+      throw new NotFoundException('Failed to retrieve created enrollment');
     }
 
     return this.transformToResponseDto(enrollmentWithRelations);
@@ -155,7 +155,7 @@ export class EnrollmentService {
   async findOne(id: number): Promise<EnrollResponseDto> {
     const enrollment = await this.dataService.enrollments.findOne({
       where: { id },
-      relations: ["student", "batch", "batch.course", "batch.course.teacher"],
+      relations: ['student', 'batch', 'batch.course', 'batch.course.teacher'],
     });
 
     if (!enrollment) {
@@ -171,7 +171,7 @@ export class EnrollmentService {
   ): Promise<EnrollResponseDto> {
     const enrollment = await this.dataService.enrollments.findOne({
       where: { id },
-      relations: ["student", "batch", "batch.course", "batch.course.teacher"],
+      relations: ['student', 'batch', 'batch.course', 'batch.course.teacher'],
     });
 
     if (!enrollment) {
@@ -181,7 +181,7 @@ export class EnrollmentService {
     if (updateStatusDto.status === EnrollmentStatus.SUSPENDED) {
       if (!updateStatusDto.suspensionReason) {
         throw new BadRequestException(
-          "Suspension reason is required when suspending an enrollment",
+          'Suspension reason is required when suspending an enrollment',
         );
       }
       enrollment.suspensionReason = updateStatusDto.suspensionReason;

@@ -1,4 +1,4 @@
-import * as bcrypt from "bcrypt";
+import * as bcrypt from 'bcrypt';
 import {
   BaseEntity,
   BeforeInsert,
@@ -9,51 +9,53 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from "typeorm";
+} from 'typeorm';
 
-import { RoleEntity } from "../../role/entities/role.entity";
+import { RoleEntity } from '../../role/entities/role.entity';
+import { UserStatus } from '../enums/user-status.enum';
 
-@Entity("users")
+@Entity('users')
 export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({
-    type: "varchar",
+    type: 'varchar',
     length: 100,
   })
   firstName: string;
 
   @Column({
-    type: "varchar",
+    type: 'varchar',
     length: 100,
   })
   lastName: string;
 
   @Column({
-    type: "varchar",
+    type: 'varchar',
     length: 255,
     unique: true,
   })
   email: string;
 
   @Column({
-    type: "varchar",
+    type: 'varchar',
     length: 255,
   })
   password: string;
 
   @Column({
-    type: "boolean",
-    default: true,
+    type: 'enum',
+    enum: UserStatus,
+    default: UserStatus.ACTIVE,
   })
-  isActive: boolean;
+  status: UserStatus;
 
   @Column({
-    type: "varchar",
+    type: 'text',
     nullable: true,
   })
-  refreshToken: string | null;
+  banReason?: string;
 
   @ManyToOne(() => RoleEntity, (role) => role.users, { nullable: false })
   role: RoleEntity;

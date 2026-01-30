@@ -1,19 +1,22 @@
 import {
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
   UnauthorizedException,
-} from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
-import { JwtService } from "@nestjs/jwt";
-import * as bcrypt from "bcrypt";
-import { IDataService } from "../repositories/interfaces/dataservice.interface";
-
-import { Permission } from "../role/enums/permission.enum";
-import { Role } from "../role/enums/role.enum";
-import { LoginDto } from "./dto/login.dto";
-import { RefreshTokenDto } from "./dto/refresh-token.dto";
-import { RegisterDto } from "./dto/register.dto";
-import { JwtPayload } from "./interface/jwt-interface";
+} from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+import { Request } from 'express';
+import { IDataService } from '../repositories/interfaces/dataservice.interface';
+import { LoginDto } from './dto/login.dto';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { RegisterDto } from './dto/register.dto';
+import { JwtPayload } from './interface/jwt-interface';
+import { AuthResponseDto } from './dto/auth-response.dto';
+import { SessionService } from '../session/session.service';
+import { UserService } from '../user/user.service';
+import { UserStatus } from '../user/enums/user-status.enum';
+import { UserEntity } from 'user/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -21,47 +24,60 @@ export class AuthService {
     private readonly dataService: IDataService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly sessionService: SessionService,
+    private readonly userService: UserService,
   ) {}
 
-  async login(loginDto: LoginDto) {
+  async login(loginDto: LoginDto, req: Request): Promise<AuthResponseDto> {
     const { email, password } = loginDto;
 
     const user = await this.dataService.users.findOne({
       where: { email },
-      relations: ["role", "role.permissions"],
     });
 
     if (!user) {
-      throw new NotFoundException("User not found");
+      throw new NotFoundException('User not found');
     }
 
     const isPasswordValid = await user.validatePassword(password);
 
     if (!isPasswordValid) {
-      throw new UnauthorizedException("Invalid credentials");
+      throw new UnauthorizedException('Invalid credentials');
     }
 
-    if (!user.isActive) {
-      throw new UnauthorizedException("User account is deactivated");
+    if (user.status === UserStatus.BANNED) {
+      const message = user.banReason
+        ? `Your account has been banned. Reason: ${user.banReason}`
+        : 'Your account has been banned';
+      throw new UnauthorizedException(message);
     }
 
-    const tokens = await this.generateTokens(user.id, user.email, user.role);
+    if (user.status === UserStatus.INACTIVE) {
+      throw new UnauthorizedException('Your account is inactive');
+    }
 
-    await this.updateRefreshToken(user.id, tokens.refreshToken);
+    if (user.status === UserStatus.PENDING) {
+      throw new UnauthorizedException('Your account is pending activation');
+    }
+
+    const session = await this.sessionService.createSession(
+      user.id.toString(),
+      req.headers['user-agent'],
+      req.ip,
+    );
+
+    const tokens = await this.generateTokens(user, session.sessionId);
 
     return {
-      user: {
-        id: user.id,
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        role: user.role.name,
-      },
-      ...tokens,
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
     };
   }
 
-  async register(registerDto: RegisterDto) {
+  async register(
+    registerDto: RegisterDto,
+    req: Request,
+  ): Promise<AuthResponseDto> {
     const { email, password, firstName, lastName, roleId } = registerDto;
 
     const existingUser = await this.dataService.users.findOne({
@@ -69,7 +85,7 @@ export class AuthService {
     });
 
     if (existingUser) {
-      throw new UnauthorizedException("User with this email already exists");
+      throw new UnauthorizedException('User with this email already exists');
     }
 
     const role = await this.dataService.roles.findOne({
@@ -77,7 +93,7 @@ export class AuthService {
     });
 
     if (!role) {
-      throw new NotFoundException("Role not found");
+      throw new NotFoundException('Role not found');
     }
 
     const user = this.dataService.users.create({
@@ -89,115 +105,151 @@ export class AuthService {
     });
 
     const savedUser = await this.dataService.users.save(user);
-
-    const tokens = await this.generateTokens(
-      savedUser.id,
-      savedUser.email,
-      role,
+    const session = await this.sessionService.createSession(
+      savedUser.id.toString(),
+      req.headers['user-agent'],
+      req.ip,
     );
 
-    await this.updateRefreshToken(savedUser.id, tokens.refreshToken);
+    const tokens = await this.generateTokens(savedUser, session.sessionId);
 
     return {
-      user: {
-        id: savedUser.id,
-        email: savedUser.email,
-        firstName: savedUser.firstName,
-        lastName: savedUser.lastName,
-        role: role.name,
-      },
-      ...tokens,
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
     };
   }
 
-  async refreshTokens(refreshTokenDto: RefreshTokenDto) {
-    const { refreshToken } = refreshTokenDto;
-
+  public async refreshTokens(
+    refreshTokenDto: RefreshTokenDto,
+  ): Promise<AuthResponseDto> {
     try {
-      const payload: JwtPayload = await this.jwtService.verifyAsync(
-        refreshToken,
-        {
-          secret: this.configService.get<string>("JWT_REFRESH_SECRET"),
-        },
+      const { sessionId, user } = await this.validateRefreshToken(
+        refreshTokenDto.refreshToken,
       );
 
-      const user = await this.dataService.users.findOne({
-        where: { id: payload.sub },
-        relations: ["role", "role.permissions"],
-      });
-
-      if (!user || !user.refreshToken) {
-        throw new UnauthorizedException("Access denied");
-      }
-
-      const isRefreshTokenValid = await bcrypt.compare(
-        refreshToken,
-        user.refreshToken,
+      await this.sessionService.deleteSession(sessionId);
+      const newSession = await this.sessionService.createSession(
+        user.id.toString(),
       );
 
-      if (!isRefreshTokenValid) {
-        throw new UnauthorizedException("Access denied");
+      return this.generateTokens(user, newSession.sessionId);
+    } catch (err) {
+      if (err?.status) throw err;
+      if (err.name === 'JsonWebTokenError') {
+        throw new UnauthorizedException('Invalid refresh token');
       }
 
-      const tokens = await this.generateTokens(user.id, user.email, user.role);
+      if (err.name === 'TokenExpiredError') {
+        throw new UnauthorizedException('Refresh token expired');
+      }
 
-      await this.updateRefreshToken(user.id, tokens.refreshToken);
-
-      return tokens;
-    } catch {
-      throw new UnauthorizedException("Invalid refresh token");
+      throw new InternalServerErrorException(
+        'Something went wrong while refreshing token',
+      );
     }
   }
 
-  async logout(userId: number) {
-    await this.dataService.users.update(userId, { refreshToken: null });
-    return { message: "Logged out successfully" };
+  async logout(refreshTokenDto: RefreshTokenDto): Promise<{ message: string }> {
+    const { sessionId } = await this.validateRefreshToken(
+      refreshTokenDto.refreshToken,
+    );
+    await this.sessionService.deleteSession(sessionId);
+    return {
+      message: 'User logged out successfully',
+    };
   }
 
-  private async generateTokens(
-    userId: number,
-    email: string,
-    role: { name: Role; permissions: { name: Permission }[] },
-  ) {
+  private async generateTokens(user: UserEntity, sessionId: string) {
     const payload: JwtPayload = {
-      sub: userId,
-      email,
-      role: [role.name],
-      permissions: role.permissions?.map((p) => p.name) ?? [],
+      id: user.id.toString(),
+      sessionId,
+      email: user.email,
+      // @TODO: Populate actual roles and permissions
+      role: [],
+      permissions: [],
     };
 
     const accessTokenExpiry = parseInt(
-      this.configService.get<string>("JWT_EXPIRES_IN") || "900",
+      this.configService.get<string>('JWT_EXPIRES_IN') || '900',
       10,
     );
 
     const refreshTokenExpiry = parseInt(
-      this.configService.get<string>("JWT_REFRESH_EXPIRES_IN") || "604800",
+      this.configService.get<string>('JWT_REFRESH_EXPIRES_IN') || '604800',
       10,
     );
 
     const [accessToken, refreshToken] = await Promise.all([
-      this.jwtService.signAsync(payload, {
-        secret: this.configService.get<string>("JWT_SECRET"),
-        expiresIn: accessTokenExpiry,
-      }),
-      this.jwtService.signAsync(payload, {
-        secret: this.configService.get<string>("JWT_REFRESH_SECRET"),
-        expiresIn: refreshTokenExpiry,
-      }),
+      this.signToken<Partial<JwtPayload>>(user.id, accessTokenExpiry, payload),
+      this.signToken(user.id, refreshTokenExpiry, { sessionId }),
     ]);
 
     return {
       accessToken,
       refreshToken,
-      tokenType: "Bearer",
     };
   }
 
-  private async updateRefreshToken(userId: number, refreshToken: string) {
-    const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
-    await this.dataService.users.update(userId, {
-      refreshToken: hashedRefreshToken,
+  private async validateRefreshToken(refreshToken: string) {
+    const { sessionId } = await this.jwtService.verifyAsync<
+      Pick<JwtPayload, 'sessionId'>
+    >(refreshToken, {
+      secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
+      audience: this.configService.get<string>('JWT_AUDIENCE'),
+      issuer: this.configService.get<string>('JWT_ISSUER'),
     });
+
+    const session = await this.sessionService.validateSession(sessionId);
+
+    const user = await this.userService.findById(session.user.id);
+
+    if (!user) {
+      await this.sessionService.deleteSession(session.sessionId);
+      throw new UnauthorizedException('User not found');
+    }
+
+    return { id: session.id, sessionId: session.sessionId, user };
+  }
+
+  private async signToken<T>(
+    userId: number,
+    expiresIn: number,
+    payload?: T,
+  ): Promise<string> {
+    return await this.jwtService.signAsync(
+      {
+        sub: userId,
+        ...payload,
+      },
+      {
+        audience: this.configService.get<string>('JWT_AUDIENCE'),
+        issuer: this.configService.get<string>('JWT_ISSUER'),
+        secret: this.configService.get<string>('JWT_SECRET'),
+        expiresIn,
+      },
+    );
+  }
+
+  public async validateToken(jwtPayload: JwtPayload) {
+    const user = this.dataService.users.findOne({
+      where: { id: parseInt(jwtPayload.id, 10) },
+      relations: ['role', 'role.permissions'],
+    });
+
+    if (!user) {
+      const { id } = await this.sessionService.validateSession(
+        jwtPayload.sessionId,
+      );
+
+      if (!id) {
+        throw new UnauthorizedException('Invalid token');
+      }
+
+      await this.sessionService.deleteSession(id);
+
+      throw new UnauthorizedException('Invalid token');
+    }
+
+    return user;
   }
 }
