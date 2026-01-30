@@ -4,12 +4,12 @@ import {
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
-} from 'typeorm';
-import { UserEntity } from 'user/entities/user.entity';
+} from "typeorm";
+import { UserEntity } from "../../user/entities/user.entity";
 
-@Entity('sessions')
+@Entity("sessions")
 export class SessionEntry extends BaseEntity {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn("uuid")
   id: string;
 
   @Column()
@@ -24,17 +24,17 @@ export class SessionEntry extends BaseEntity {
   @Column()
   ipAddress: string;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: "timestamp" })
   expiresAt: Date;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: "timestamp" })
   createdAt: Date;
 
   @Column({
-    type: 'timestamp',
+    type: "timestamp",
   })
   updatedAt: Date;
 
-  @ManyToOne(() => UserEntity, { onDelete: 'CASCADE' })
+  @ManyToOne(() => UserEntity, { onDelete: "CASCADE" })
   user: UserEntity;
 }

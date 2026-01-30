@@ -33,7 +33,7 @@ export class ResultEntity extends BaseEntity {
   @Column({ type: "text", nullable: true })
   remarks: string;
 
-  @ManyToOne(() => EnrollmentEntity, {
+  @ManyToOne(() => EnrollmentEntity, (enrollment) => enrollment.results, {
     nullable: false,
     onDelete: "CASCADE",
   })

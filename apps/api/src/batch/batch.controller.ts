@@ -66,7 +66,7 @@ export class BatchController {
   @Permissions(Permission.UPDATE_COURSE)
   async update(
     @Param("id", ParseIntPipe) id: number,
-    @Param("courseId", ParseIntPipe) courseId: number,
+    @Param("courseId", ParseIntPipe) _courseId: number,
     @Body() updateBatchDto: UpdateBatchDto,
   ): Promise<BatchResponseDto> {
     return this.batchService.update(id, updateBatchDto);

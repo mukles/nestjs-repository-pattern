@@ -7,15 +7,19 @@ import { BatchEntity } from "./src/batch/entities/batch.entity";
 import { CourseEntity } from "./src/course/entities/course.entity";
 import { EnrollmentEntity } from "./src/enrollment/entities/enrollment.entity";
 import { PermissionEntity } from "./src/role/entities/permission.entity";
+import { ResultEntity } from "./src/result/entities/result.entity";
 import { RoleEntity } from "./src/role/entities/role.entity";
 import { StudentEntity } from "./src/student/entities/student.entity";
 import { TeacherEntity } from "./src/teacher/entities/teacher.entity";
 import { UserEntity } from "./src/user/entities/user.entity";
 
 // Load .env from root of monorepo
-config({ path: join(__dirname, "../../.env") });
+config({ path: join(__dirname, "../../apps/api/.env") });
 
 const configService = new ConfigService();
+console.log({
+  dbUrl: configService.get<string>("DATABASE_URL"),
+});
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -29,6 +33,7 @@ export const AppDataSource = new DataSource({
     UserEntity,
     RoleEntity,
     PermissionEntity,
+    ResultEntity,
   ],
   logging: true,
   migrations: ["src/migrations/*.ts"],

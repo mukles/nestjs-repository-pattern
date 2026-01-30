@@ -18,9 +18,9 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "typeorm": "ts-node ./node_modules/typeorm/cli",
+    "typeorm": "ts-node --project tsconfig.typeorm.json -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "migration:create": "npm run typeorm -- migration:create ./src/migrations/migration",
-    "migration:generate": "npm run typeorm -- migration:generate ./src/migrations/migration -d ./typeorm.config.ts",
+    "migration:generate": "npm run typeorm -- migration:generate src/migrations/migration -d typeorm.config.ts",
     "migration:run": "npm run typeorm migration:run -- -d ./typeorm.config.ts",
     "migration:revert": "npm run typeorm migration:revert -- -d ./typeorm.config.ts",
     "seed": "ts-node ./src/seeds/seed.ts"
@@ -76,7 +76,8 @@
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "catalog:",
-    "typescript-eslint": "^8.20.0"
+    "typescript-eslint": "^8.20.0",
+    "@repo/typescript-config": "workspace:"
   },
   "jest": {
     "moduleFileExtensions": [

@@ -3,20 +3,20 @@ import {
   InternalServerErrorException,
   NotFoundException,
   UnauthorizedException,
-} from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
-import { Request } from 'express';
-import { IDataService } from '../repositories/interfaces/dataservice.interface';
-import { LoginDto } from './dto/login.dto';
-import { RefreshTokenDto } from './dto/refresh-token.dto';
-import { RegisterDto } from './dto/register.dto';
-import { JwtPayload } from './interface/jwt-interface';
-import { AuthResponseDto } from './dto/auth-response.dto';
-import { SessionService } from '../session/session.service';
-import { UserService } from '../user/user.service';
-import { UserStatus } from '../user/enums/user-status.enum';
-import { UserEntity } from 'user/entities/user.entity';
+} from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { JwtService } from "@nestjs/jwt";
+import { Request } from "express";
+import { IDataService } from "../repositories/interfaces/dataservice.interface";
+import { LoginDto } from "./dto/login.dto";
+import { RefreshTokenDto } from "./dto/refresh-token.dto";
+import { RegisterDto } from "./dto/register.dto";
+import { JwtPayload } from "./interface/jwt-interface";
+import { AuthResponseDto } from "./dto/auth-response.dto";
+import { SessionService } from "../session/session.service";
+import { UserService } from "../user/user.service";
+import { UserStatus } from "../user/enums/user-status.enum";
+import { UserEntity } from "user/entities/user.entity";
 
 @Injectable()
 export class AuthService {
@@ -35,34 +35,36 @@ export class AuthService {
       where: { email },
     });
 
+    console.log({ user });
+
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException("User not found");
     }
 
     const isPasswordValid = await user.validatePassword(password);
 
     if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException("Invalid credentials");
     }
 
     if (user.status === UserStatus.BANNED) {
       const message = user.banReason
         ? `Your account has been banned. Reason: ${user.banReason}`
-        : 'Your account has been banned';
+        : "Your account has been banned";
       throw new UnauthorizedException(message);
     }
 
     if (user.status === UserStatus.INACTIVE) {
-      throw new UnauthorizedException('Your account is inactive');
+      throw new UnauthorizedException("Your account is inactive");
     }
 
     if (user.status === UserStatus.PENDING) {
-      throw new UnauthorizedException('Your account is pending activation');
+      throw new UnauthorizedException("Your account is pending activation");
     }
 
     const session = await this.sessionService.createSession(
       user.id.toString(),
-      req.headers['user-agent'],
+      req.headers["user-agent"],
       req.ip,
     );
 
@@ -85,7 +87,7 @@ export class AuthService {
     });
 
     if (existingUser) {
-      throw new UnauthorizedException('User with this email already exists');
+      throw new UnauthorizedException("User with this email already exists");
     }
 
     const role = await this.dataService.roles.findOne({
@@ -93,7 +95,7 @@ export class AuthService {
     });
 
     if (!role) {
-      throw new NotFoundException('Role not found');
+      throw new NotFoundException("Role not found");
     }
 
     const user = this.dataService.users.create({
@@ -107,7 +109,7 @@ export class AuthService {
     const savedUser = await this.dataService.users.save(user);
     const session = await this.sessionService.createSession(
       savedUser.id.toString(),
-      req.headers['user-agent'],
+      req.headers["user-agent"],
       req.ip,
     );
 
@@ -134,17 +136,18 @@ export class AuthService {
 
       return this.generateTokens(user, newSession.sessionId);
     } catch (err) {
-      if (err?.status) throw err;
-      if (err.name === 'JsonWebTokenError') {
-        throw new UnauthorizedException('Invalid refresh token');
-      }
-
-      if (err.name === 'TokenExpiredError') {
-        throw new UnauthorizedException('Refresh token expired');
+      if (err && typeof err === "object" && "status" in err) throw err;
+      if (err && typeof err === "object" && "name" in err) {
+        if (err.name === "JsonWebTokenError") {
+          throw new UnauthorizedException("Invalid refresh token");
+        }
+        if (err.name === "TokenExpiredError") {
+          throw new UnauthorizedException("Refresh token expired");
+        }
       }
 
       throw new InternalServerErrorException(
-        'Something went wrong while refreshing token',
+        "Something went wrong while refreshing token",
       );
     }
   }
@@ -155,7 +158,7 @@ export class AuthService {
     );
     await this.sessionService.deleteSession(sessionId);
     return {
-      message: 'User logged out successfully',
+      message: "User logged out successfully",
     };
   }
 
@@ -170,12 +173,12 @@ export class AuthService {
     };
 
     const accessTokenExpiry = parseInt(
-      this.configService.get<string>('JWT_EXPIRES_IN') || '900',
+      this.configService.get<string>("JWT_EXPIRES_IN") || "900",
       10,
     );
 
     const refreshTokenExpiry = parseInt(
-      this.configService.get<string>('JWT_REFRESH_EXPIRES_IN') || '604800',
+      this.configService.get<string>("JWT_REFRESH_EXPIRES_IN") || "604800",
       10,
     );
 
@@ -192,11 +195,11 @@ export class AuthService {
 
   private async validateRefreshToken(refreshToken: string) {
     const { sessionId } = await this.jwtService.verifyAsync<
-      Pick<JwtPayload, 'sessionId'>
+      Pick<JwtPayload, "sessionId">
     >(refreshToken, {
-      secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
-      audience: this.configService.get<string>('JWT_AUDIENCE'),
-      issuer: this.configService.get<string>('JWT_ISSUER'),
+      secret: this.configService.get<string>("JWT_REFRESH_SECRET"),
+      audience: this.configService.get<string>("JWT_AUDIENCE"),
+      issuer: this.configService.get<string>("JWT_ISSUER"),
     });
 
     const session = await this.sessionService.validateSession(sessionId);
@@ -205,7 +208,7 @@ export class AuthService {
 
     if (!user) {
       await this.sessionService.deleteSession(session.sessionId);
-      throw new UnauthorizedException('User not found');
+      throw new UnauthorizedException("User not found");
     }
 
     return { id: session.id, sessionId: session.sessionId, user };
@@ -222,9 +225,9 @@ export class AuthService {
         ...payload,
       },
       {
-        audience: this.configService.get<string>('JWT_AUDIENCE'),
-        issuer: this.configService.get<string>('JWT_ISSUER'),
-        secret: this.configService.get<string>('JWT_SECRET'),
+        audience: this.configService.get<string>("JWT_AUDIENCE"),
+        issuer: this.configService.get<string>("JWT_ISSUER"),
+        secret: this.configService.get<string>("JWT_SECRET"),
         expiresIn,
       },
     );
@@ -233,7 +236,7 @@ export class AuthService {
   public async validateToken(jwtPayload: JwtPayload) {
     const user = this.dataService.users.findOne({
       where: { id: parseInt(jwtPayload.id, 10) },
-      relations: ['role', 'role.permissions'],
+      relations: ["role", "role.permissions"],
     });
 
     if (!user) {
@@ -242,12 +245,12 @@ export class AuthService {
       );
 
       if (!id) {
-        throw new UnauthorizedException('Invalid token');
+        throw new UnauthorizedException("Invalid token");
       }
 
       await this.sessionService.deleteSession(id);
 
-      throw new UnauthorizedException('Invalid token');
+      throw new UnauthorizedException("Invalid token");
     }
 
     return user;

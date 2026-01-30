@@ -2,8 +2,10 @@ import { ConfigService } from "@nestjs/config";
 import { config } from "dotenv";
 import { DataSource } from "typeorm";
 
+import { BatchEntity } from "../batch/entities/batch.entity";
 import { CourseEntity } from "../course/entities/course.entity";
 import { EnrollmentEntity } from "../enrollment/entities/enrollment.entity";
+import { ResultEntity } from "../result/entities/result.entity";
 import { PermissionEntity } from "../role/entities/permission.entity";
 import { RoleEntity } from "../role/entities/role.entity";
 import { StudentEntity } from "../student/entities/student.entity";
@@ -25,6 +27,8 @@ export const SeedDataSource = new DataSource({
     TeacherEntity,
     CourseEntity,
     EnrollmentEntity,
+    BatchEntity,
+    ResultEntity,
   ],
   synchronize: false,
 });

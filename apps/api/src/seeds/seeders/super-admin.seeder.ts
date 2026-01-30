@@ -1,4 +1,3 @@
-import * as bcrypt from 'bcrypt';
 import { DataSource } from 'typeorm';
 
 import { RoleEntity } from '../../role/entities/role.entity';
@@ -32,22 +31,19 @@ export async function seedSuperAdmin(dataSource: DataSource): Promise<void> {
   }
 
   // Create super admin user
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash('SuperAdmin@123', salt);
+  // Note: Password will be automatically hashed by UserEntity's @BeforeInsert() hook
+  const superAdmin = userRepository.create({
+    firstName: 'Super',
+    lastName: 'Admin',
+    email: 'superadmin@example.com',
+    password: 'SuperAdmin@123',
+    status: UserStatus.ACTIVE,
+    role: superAdminRole,
+  });
 
-  await userRepository
-    .createQueryBuilder()
-    .insert()
-    .into(UserEntity)
-    .values({
-      firstName: 'Super',
-      lastName: 'Admin',
-      email: 'superadmin@example.com',
-      password: hashedPassword,
-      status: UserStatus.ACTIVE,
-      role: superAdminRole,
-    })
-    .execute();
+  console.log('Creating Super Admin user with email:', superAdmin.email);
+
+  await userRepository.save(superAdmin);
 
   console.log('✅ Super Admin user created');
   console.log('   Email: superadmin@example.com');

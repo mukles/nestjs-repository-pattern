@@ -7,7 +7,7 @@ import {
   Req,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
-import { Request } from 'express';
+import type { Request } from 'express';
 
 import { AuthService } from './auth.service';
 import { Public } from './decorators/public.decorator';

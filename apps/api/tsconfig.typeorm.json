@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "es2023",
+    "module": "commonjs",
+    "moduleResolution": "node",
+
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+
+    "useDefineForClassFields": false,
+    "isolatedModules": false,
+    "strictPropertyInitialization": false,
+
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*.ts", "typeorm.config.ts"]
+}
