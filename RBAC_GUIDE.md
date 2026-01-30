@@ -201,8 +201,8 @@ async getProfile(@CurrentUser() user: any) {
 ## Example: Student Controller with RBAC
 
 ```typescript
-@ApiTags('Student')
-@Controller('student')
+@ApiTags("Student")
+@Controller("student")
 export class StudentController {
   @Get()
   @Permissions(Permission.READ_STUDENT)
@@ -210,17 +210,17 @@ export class StudentController {
     // Only users with READ_STUDENT permission
   }
 
-  @Post('create')
+  @Post("create")
   @Roles(Role.ADMIN, Role.SUPER_ADMIN)
   @Permissions(Permission.CREATE_STUDENT)
   async create(@Body() student: CreateStudentDto) {
     // Only ADMIN or SUPER_ADMIN with CREATE_STUDENT permission
   }
 
-  @Delete('/:id')
+  @Delete("/:id")
   @Roles(Role.SUPER_ADMIN)
   @Permissions(Permission.DELETE_STUDENT)
-  async delete(@Param('id') id: string) {
+  async delete(@Param("id") id: string) {
     // Only SUPER_ADMIN with DELETE_STUDENT permission
   }
 }

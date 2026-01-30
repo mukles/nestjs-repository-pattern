@@ -1,7 +1,7 @@
-import { User } from '@repo/shared-types';
-import { Permission, Role } from '../constants/roles-permissions';
+import { User } from "@repo/shared-types";
+import { Permission, Role } from "../constants/roles-permissions";
 
-export type AuthStatus = 'authenticated' | 'unauthenticated' | 'loading';
+export type AuthStatus = "authenticated" | "unauthenticated" | "loading";
 
 export interface AuthSession {
   user: User | null;

@@ -1,13 +1,13 @@
-import { Button } from '@repo/ui/components/ui-kit/button';
+import { Button } from "@repo/ui/components/ui-kit/button";
 import {
   Field,
   FieldDescription,
   FieldSeparator,
-} from '@repo/ui/components/ui-kit/field';
-import { LoginForm } from './_components/login-form';
+} from "@repo/ui/components/ui-kit/field";
+import { LoginForm } from "./_components/login-form";
 
-import Link from 'next/link';
-import { Logo } from '@/app/components/logo';
+import Link from "next/link";
+import { Logo } from "@/app/components/logo";
 
 export default function LoginPage() {
   return (
@@ -38,11 +38,11 @@ export default function LoginPage() {
           </Field>
 
           <FieldDescription className="!mt-8 block text-center text-sm text-neutral-600 dark:text-neutral-400">
-            By clicking continue, you agree to our{' '}
+            By clicking continue, you agree to our{" "}
             <Link href="#" className="text-black !no-underline dark:text-white">
               Terms of Service
-            </Link>{' '}
-            and{' '}
+            </Link>{" "}
+            and{" "}
             <Link className="text-black !no-underline dark:text-white" href="#">
               Privacy Policy
             </Link>

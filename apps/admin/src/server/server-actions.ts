@@ -1,6 +1,6 @@
-'use server';
+"use server";
 
-import { cookies } from 'next/headers';
+import { cookies } from "next/headers";
 
 export async function getValueFromCookie(
   key: string,
@@ -16,7 +16,7 @@ export async function setValueToCookie(
 ): Promise<void> {
   const cookieStore = await cookies();
   cookieStore.set(key, value, {
-    path: options.path ?? '/',
+    path: options.path ?? "/",
     maxAge: options.maxAge ?? 60 * 60 * 24 * 7, // default: 7 days
   });
 }

@@ -1,40 +1,40 @@
-'use client';
+"use client";
 
-import { Button } from '@repo/ui/components/ui-kit/button';
+import { Button } from "@repo/ui/components/ui-kit/button";
 import {
   Field,
   FieldError,
   FieldGroup,
   FieldLabel,
-} from '@repo/ui/components/ui-kit/field';
-import { Input } from '@repo/ui/components/ui-kit/input';
-import Link from 'next/link';
-import { PasswordInput } from '@repo/ui/components/password-input';
-import { Controller, useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
+} from "@repo/ui/components/ui-kit/field";
+import { Input } from "@repo/ui/components/ui-kit/input";
+import Link from "next/link";
+import { PasswordInput } from "@repo/ui/components/password-input";
+import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export const loginSchema = z.object({
   email: z
     .string()
     .trim()
     .refine((val) => z.string().email().safeParse(val).success, {
-      message: 'Invalid email address',
+      message: "Invalid email address",
     }),
-  password: z.string().min(1, 'Password is required'),
+  password: z.string().min(1, "Password is required"),
 });
 
 export function LoginForm() {
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: 'superadmin@example.com',
-      password: 'SuperAdmin@123',
+      email: "superadmin@example.com",
+      password: "SuperAdmin@123",
     },
   });
 
   function onSubmit(data: z.infer<typeof loginSchema>) {
-    console.log('Form Data:', data);
+    console.log("Form Data:", data);
   }
 
   return (
@@ -94,7 +94,7 @@ export function LoginForm() {
             Login
           </Button>
           <p className="dark:text-muted-dark mt-4 text-center text-sm text-neutral-600">
-            Don&apos;t have an account?{' '}
+            Don&apos;t have an account?{" "}
             <Link href="/register" className="text-black dark:text-white">
               Sign up
             </Link>

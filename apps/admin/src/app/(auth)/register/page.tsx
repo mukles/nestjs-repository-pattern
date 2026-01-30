@@ -1,12 +1,12 @@
-import { Logo } from '@/app/components/logo';
-import { RegisterForm } from './_components/register-form';
+import { Logo } from "@/app/components/logo";
+import { RegisterForm } from "./_components/register-form";
 import {
   Field,
   FieldDescription,
   FieldSeparator,
-} from '@repo/ui/components/ui-kit/field';
-import { Button } from '@repo/ui/components/ui-kit/button';
-import Link from 'next/link';
+} from "@repo/ui/components/ui-kit/field";
+import { Button } from "@repo/ui/components/ui-kit/button";
+import Link from "next/link";
 
 export default function RegisterPage() {
   return (
@@ -37,11 +37,11 @@ export default function RegisterPage() {
           </Field>
 
           <FieldDescription className="!mt-8 block text-center text-sm text-neutral-600 dark:text-neutral-400">
-            By clicking continue, you agree to our{' '}
+            By clicking continue, you agree to our{" "}
             <Link href="#" className="text-black !no-underline dark:text-white">
               Terms of Service
-            </Link>{' '}
-            and{' '}
+            </Link>{" "}
+            and{" "}
             <Link className="text-black !no-underline dark:text-white" href="#">
               Privacy Policy
             </Link>

@@ -3,19 +3,19 @@ import {
   ExecutionContext,
   Injectable,
   NestInterceptor,
-} from '@nestjs/common';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+} from "@nestjs/common";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
 
-import { PaginationResultDto } from '../pagination/pagination-result.dto';
-import { ApiResponseDto } from '../response';
+import { PaginationResultDto } from "../pagination/pagination-result.dto";
+import { ApiResponseDto } from "../response";
 
 @Injectable()
 export class ResponseInterceptor<T> implements NestInterceptor<
   T,
   | ApiResponseDto<T>
   | (PaginationResultDto<T> &
-      Pick<ApiResponseDto<T>, 'message' | 'timestamp' | 'statusCode'>)
+      Pick<ApiResponseDto<T>, "message" | "timestamp" | "statusCode">)
 > {
   intercept(
     context: ExecutionContext,
@@ -23,7 +23,7 @@ export class ResponseInterceptor<T> implements NestInterceptor<
   ): Observable<
     | ApiResponseDto<T>
     | (PaginationResultDto<T> &
-        Pick<ApiResponseDto<T>, 'message' | 'timestamp' | 'statusCode'>)
+        Pick<ApiResponseDto<T>, "message" | "timestamp" | "statusCode">)
   > {
     const http = context.switchToHttp();
     const response = http.getResponse<Response>();
@@ -35,14 +35,14 @@ export class ResponseInterceptor<T> implements NestInterceptor<
 
         if (
           data &&
-          typeof data === 'object' &&
-          'meta' in data &&
-          'data' in data
+          typeof data === "object" &&
+          "meta" in data &&
+          "data" in data
         ) {
           const paginated = data as PaginationResultDto<T>;
           return {
             ...paginated,
-            message: 'Success',
+            message: "Success",
             timestamp,
             statusCode,
           };
@@ -50,7 +50,7 @@ export class ResponseInterceptor<T> implements NestInterceptor<
 
         return {
           data: data as T,
-          message: 'Success',
+          message: "Success",
           timestamp,
           statusCode,
         } satisfies ApiResponseDto<T>;

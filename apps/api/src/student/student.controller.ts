@@ -9,22 +9,22 @@ import {
   Post,
   Put,
   Query,
-} from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
+} from "@nestjs/common";
+import { ApiBearerAuth, ApiBody, ApiTags } from "@nestjs/swagger";
 
-import { Permissions } from '../auth/decorators/permissions.decorator';
-import { ApiPaginatedResponse } from '../common/pagination/pagination.service';
-import { PaginationResultDto } from '../common/pagination/pagination-result.dto';
-import { ApiResponse } from '../common/response';
-import { Permission } from '../role/enums/permission.enum';
-import { CreateStudentDto } from './dto/create-student.dto';
-import { StudentPaginationDto } from './dto/student-pagination.dto';
-import { StudentResponseDto } from './dto/student-response.dto';
-import { StudentService } from './student.service';
+import { Permissions } from "../auth/decorators/permissions.decorator";
+import { ApiPaginatedResponse } from "../common/pagination/pagination.service";
+import { PaginationResultDto } from "../common/pagination/pagination-result.dto";
+import { ApiResponse } from "../common/response";
+import { Permission } from "../role/enums/permission.enum";
+import { CreateStudentDto } from "./dto/create-student.dto";
+import { StudentPaginationDto } from "./dto/student-pagination.dto";
+import { StudentResponseDto } from "./dto/student-response.dto";
+import { StudentService } from "./student.service";
 
-@ApiBearerAuth('JWT-auth')
-@ApiTags('Student')
-@Controller('students')
+@ApiBearerAuth("JWT-auth")
+@ApiTags("Student")
+@Controller("students")
 export class StudentController {
   constructor(private readonly studentService: StudentService) {}
 
@@ -37,35 +37,35 @@ export class StudentController {
     return this.studentService.findPaginatedStudents(filter);
   }
 
-  @Post('create')
+  @Post("create")
   @HttpCode(HttpStatus.CREATED)
-  @ApiBody({ type: CreateStudentDto, description: 'Student data' })
+  @ApiBody({ type: CreateStudentDto, description: "Student data" })
   @ApiResponse(StudentResponseDto)
   @Permissions(Permission.CREATE_STUDENT)
   async create(@Body() student: CreateStudentDto): Promise<StudentResponseDto> {
     return await this.studentService.createStudent(student);
   }
 
-  @Get('/:id')
+  @Get("/:id")
   @HttpCode(HttpStatus.OK)
   @Permissions(Permission.READ_STUDENT)
   @ApiResponse(StudentResponseDto)
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param("id") id: string) {
     return await this.studentService.getSingleStudent(id);
   }
 
-  @Put('/:id')
+  @Put("/:id")
   @HttpCode(HttpStatus.OK)
-  @ApiBody({ type: CreateStudentDto, description: 'Student data' })
+  @ApiBody({ type: CreateStudentDto, description: "Student data" })
   @Permissions(Permission.UPDATE_STUDENT)
-  async update(@Param('id') id: string, @Body() student: CreateStudentDto) {
+  async update(@Param("id") id: string, @Body() student: CreateStudentDto) {
     return await this.studentService.updateStudent(id, student);
   }
 
-  @Delete('/:id')
+  @Delete("/:id")
   @HttpCode(HttpStatus.OK)
   @Permissions(Permission.DELETE_STUDENT)
-  async delete(@Param('id') id: string) {
+  async delete(@Param("id") id: string) {
     return await this.studentService.deleteStudent(id);
   }
 }

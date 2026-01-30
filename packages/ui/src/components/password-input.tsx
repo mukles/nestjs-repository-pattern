@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { Eye, EyeOff } from 'lucide-react';
-import { Input } from './ui-kit/input';
-import { useState } from 'react';
-import { cn } from '../lib/utils';
+import { Eye, EyeOff } from "lucide-react";
+import { Input } from "./ui-kit/input";
+import { useState } from "react";
+import { cn } from "../lib/utils";
 
 interface PasswordInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   className?: string;
@@ -15,9 +15,9 @@ export function PasswordInput({ className, ...rest }: PasswordInputProps) {
   return (
     <div className="relative">
       <Input
-        className={cn('pr-8.5 placeholder:text-gray-400', className)}
+        className={cn("pr-8.5 placeholder:text-gray-400", className)}
         id="password"
-        type={isPasswordVisible ? 'text' : 'password'}
+        type={isPasswordVisible ? "text" : "password"}
         {...rest}
       />
 

@@ -1,5 +1,5 @@
 export const enum DataSource {
-  TYPEORM = 'typeorm',
+  TYPEORM = "typeorm",
 }
 
-export const TYPE_TOKEN_BEARER = 'Bearer';
+export const TYPE_TOKEN_BEARER = "Bearer";

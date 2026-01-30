@@ -1,11 +1,11 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { promises as fs } from 'fs';
-import * as path from 'path';
+import { Injectable, Logger } from "@nestjs/common";
+import { promises as fs } from "fs";
+import * as path from "path";
 
 @Injectable()
 export class UtilsService {
   private readonly logger = new Logger(UtilsService.name);
-  private readonly uploadDir = path.join(__dirname, '..', '..', '..', '..');
+  private readonly uploadDir = path.join(__dirname, "..", "..", "..", "..");
 
   public async doesImageExist(imagePath: string): Promise<boolean> {
     if (!imagePath) return false;
@@ -30,7 +30,7 @@ export class UtilsService {
         );
         return true;
       } catch (err) {
-        if (err.code === 'ENOENT') {
+        if (err.code === "ENOENT") {
           this.logger.warn(`File not found: ${filePathStr}`);
           return false;
         }

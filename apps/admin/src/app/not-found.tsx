@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { Button } from '@repo/ui/components/ui-kit/button';
-import Link from 'next/link';
+import { Button } from "@repo/ui/components/ui-kit/button";
+import Link from "next/link";
 
 export default function NotFound() {
   return (

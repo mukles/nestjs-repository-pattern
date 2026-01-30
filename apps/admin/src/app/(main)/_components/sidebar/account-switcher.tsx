@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 
-import { BadgeCheck, Bell, CreditCard, LogOut } from 'lucide-react';
+import { BadgeCheck, Bell, CreditCard, LogOut } from "lucide-react";
 
-import { getInitials } from '@/lib/utils';
+import { getInitials } from "@/lib/utils";
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from '@repo/ui/components/ui-kit/avatar';
+} from "@repo/ui/components/ui-kit/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,8 +17,8 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@repo/ui/components/ui-kit/dropdown-menu';
-import { cn } from '@repo/ui/lib/utils';
+} from "@repo/ui/components/ui-kit/dropdown-menu";
+import { cn } from "@repo/ui/lib/utils";
 
 export function AccountSwitcher({
   users,
@@ -56,9 +56,9 @@ export function AccountSwitcher({
           <DropdownMenuItem
             key={user.email}
             className={cn(
-              'p-0',
+              "p-0",
               user.id === activeUser!.id &&
-                'border-l-primary bg-accent/50 border-l-2',
+                "border-l-primary bg-accent/50 border-l-2",
             )}
             onClick={() => setActiveUser(user)}
           >

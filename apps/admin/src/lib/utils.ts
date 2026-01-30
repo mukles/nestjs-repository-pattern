@@ -1,5 +1,5 @@
 export const getInitials = (str: string): string => {
-  if (typeof str !== 'string' || !str.trim()) return '?';
+  if (typeof str !== "string" || !str.trim()) return "?";
 
   return (
     str
@@ -7,8 +7,8 @@ export const getInitials = (str: string): string => {
       .split(/\s+/)
       .filter(Boolean)
       .map((word) => word[0])
-      .join('')
-      .toUpperCase() || '?'
+      .join("")
+      .toUpperCase() || "?"
   );
 };
 
@@ -23,15 +23,15 @@ export function formatCurrency(
   },
 ) {
   const {
-    currency = 'USD',
-    locale = 'en-US',
+    currency = "USD",
+    locale = "en-US",
     minimumFractionDigits,
     maximumFractionDigits,
     noDecimals,
   } = opts ?? {};
 
   const formatOptions: Intl.NumberFormatOptions = {
-    style: 'currency',
+    style: "currency",
     currency,
     minimumFractionDigits: noDecimals ? 0 : minimumFractionDigits,
     maximumFractionDigits: noDecimals ? 0 : maximumFractionDigits,

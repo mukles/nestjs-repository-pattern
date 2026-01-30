@@ -1,11 +1,11 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { ApiProperty } from "@nestjs/swagger";
+import { IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
-import { EnrollmentStatus } from '../enum/enrolllment-status.enum';
+import { EnrollmentStatus } from "../enum/enrolllment-status.enum";
 
 export class UpdateEnrollmentStatusDto {
   @ApiProperty({
-    description: 'Status of the enrollment',
+    description: "Status of the enrollment",
     enum: EnrollmentStatus,
   })
   @IsEnum(EnrollmentStatus)
@@ -13,7 +13,7 @@ export class UpdateEnrollmentStatusDto {
   status: EnrollmentStatus;
 
   @ApiProperty({
-    description: 'Reason for suspension (required if status is SUSPENDED)',
+    description: "Reason for suspension (required if status is SUSPENDED)",
     required: false,
   })
   @IsString()

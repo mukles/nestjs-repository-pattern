@@ -4,8 +4,8 @@ import {
   ExceptionFilter,
   HttpException,
   HttpStatus,
-} from '@nestjs/common';
-import { Request, Response } from 'express';
+} from "@nestjs/common";
+import { Request, Response } from "express";
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -21,33 +21,33 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const response = isHttpException ? exception.getResponse() : null;
 
     const responseMessage = isHttpException
-      ? typeof response === 'string'
+      ? typeof response === "string"
         ? response
-        : ((response as { message?: string | string[] })?.message ?? 'Error')
-      : 'Internal server error';
+        : ((response as { message?: string | string[] })?.message ?? "Error")
+      : "Internal server error";
 
     const normalizedMessage = Array.isArray(responseMessage)
-      ? (responseMessage[0] ?? 'Error')
-      : (responseMessage ?? 'Error');
+      ? (responseMessage[0] ?? "Error")
+      : (responseMessage ?? "Error");
 
     const details: string[] = [];
 
     if (Array.isArray(responseMessage)) {
       details.push(
         ...responseMessage.filter(
-          (item): item is string => typeof item === 'string',
+          (item): item is string => typeof item === "string",
         ),
       );
     }
 
-    const stack = (exception as { stack?: string })?.stack ?? '';
+    const stack = (exception as { stack?: string })?.stack ?? "";
 
-    if (process.env.NODE_ENV !== 'production' && stack) {
+    if (process.env.NODE_ENV !== "production" && stack) {
       // will do something later;
     }
 
     res.status(statusCode).json({
-      status: 'error',
+      status: "error",
       statusCode,
       message: normalizedMessage,
       timestamp: new Date().toISOString(),

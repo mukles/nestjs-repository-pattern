@@ -1,11 +1,11 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test, TestingModule } from "@nestjs/testing";
 
-import { Gender } from './enum/student.gender.enum';
-import { StudentStatus } from './enum/student.status.enum';
-import { StudentController } from './student.controller';
-import { StudentService } from './student.service';
+import { Gender } from "./enum/student.gender.enum";
+import { StudentStatus } from "./enum/student.status.enum";
+import { StudentController } from "./student.controller";
+import { StudentService } from "./student.service";
 
-describe('StudentController', () => {
+describe("StudentController", () => {
   let controller: StudentController;
 
   const mockStudentService = {
@@ -35,20 +35,20 @@ describe('StudentController', () => {
     jest.clearAllMocks();
   });
 
-  it('should be defined', () => {
+  it("should be defined", () => {
     expect(controller).toBeDefined();
   });
 
-  describe('findAll', () => {
-    it('should return paginated students', async () => {
+  describe("findAll", () => {
+    it("should return paginated students", async () => {
       const filter = { page: 1, take: 10, skip: 0 };
       const result = {
         data: [
           {
             id: 1,
-            firstName: 'John',
-            lastName: 'Doe',
-            email: 'john@test.com',
+            firstName: "John",
+            lastName: "Doe",
+            email: "john@test.com",
             dateOfBirth: new Date(),
             gender: Gender.MALE,
             status: StudentStatus.ACTIVE,
@@ -71,8 +71,8 @@ describe('StudentController', () => {
       );
     });
 
-    it('should filter by name', async () => {
-      const filter = { page: 1, take: 10, skip: 0, name: 'John' };
+    it("should filter by name", async () => {
+      const filter = { page: 1, take: 10, skip: 0, name: "John" };
       const result = {
         data: [],
         meta: {
@@ -92,8 +92,8 @@ describe('StudentController', () => {
       );
     });
 
-    it('should filter by email', async () => {
-      const filter = { page: 1, take: 10, skip: 0, email: 'john@test.com' };
+    it("should filter by email", async () => {
+      const filter = { page: 1, take: 10, skip: 0, email: "john@test.com" };
       const result = {
         data: [],
         meta: {
@@ -114,18 +114,18 @@ describe('StudentController', () => {
     });
   });
 
-  describe('create', () => {
-    it('should create a new student', async () => {
+  describe("create", () => {
+    it("should create a new student", async () => {
       const dto = {
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'john@test.com',
-        dateOfBirth: new Date('2000-01-01'),
+        firstName: "John",
+        lastName: "Doe",
+        email: "john@test.com",
+        dateOfBirth: new Date("2000-01-01"),
         gender: Gender.MALE,
-        password: 'password123',
+        password: "password123",
       };
       const result = {
-        message: 'Student created successfully',
+        message: "Student created successfully",
         student: { id: 1, ...dto, status: StudentStatus.ACTIVE },
       };
       mockStudentService.createStudent.mockResolvedValue(result);
@@ -135,19 +135,19 @@ describe('StudentController', () => {
     });
   });
 
-  describe('update', () => {
-    it('should update an existing student', async () => {
-      const id = '1';
+  describe("update", () => {
+    it("should update an existing student", async () => {
+      const id = "1";
       const dto = {
-        firstName: 'Jane',
-        lastName: 'Doe',
-        email: 'jane@test.com',
-        dateOfBirth: new Date('2000-01-01'),
+        firstName: "Jane",
+        lastName: "Doe",
+        email: "jane@test.com",
+        dateOfBirth: new Date("2000-01-01"),
         gender: Gender.FEMALE,
-        password: 'password123',
+        password: "password123",
       };
       const result = {
-        message: 'Student updated successfully',
+        message: "Student updated successfully",
         student: { id: 1, ...dto, status: StudentStatus.ACTIVE },
       };
       mockStudentService.updateStudent.mockResolvedValue(result);
@@ -157,10 +157,10 @@ describe('StudentController', () => {
     });
   });
 
-  describe('delete', () => {
-    it('should delete a student', async () => {
-      const id = '1';
-      const result = { message: 'Student deleted successfully' };
+  describe("delete", () => {
+    it("should delete a student", async () => {
+      const id = "1";
+      const result = { message: "Student deleted successfully" };
       mockStudentService.deleteStudent.mockResolvedValue(result);
 
       expect(await controller.delete(id)).toBe(result);

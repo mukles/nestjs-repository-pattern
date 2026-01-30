@@ -2,18 +2,18 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
-} from '@nestjs/common';
+} from "@nestjs/common";
 
-import { PageMetaDto } from '../common/pagination/page-meta';
-import { PaginationResultDto } from '../common/pagination/pagination-result.dto';
-import { IDataService } from '../repositories/interfaces/dataservice.interface';
-import { Role as RoleEnum } from '../role/enums/role.enum';
-import { RoleService } from '../role/role.service';
-import { CreateStudentDto } from './dto/create-student.dto';
-import { StudentPaginationDto } from './dto/student-pagination.dto';
-import { StudentResponseDto } from './dto/student-response.dto';
-import { UpdateStudentDto } from './dto/update-student.dto';
-import { StudentEntity } from './entities/student.entity';
+import { PageMetaDto } from "../common/pagination/page-meta";
+import { PaginationResultDto } from "../common/pagination/pagination-result.dto";
+import { IDataService } from "../repositories/interfaces/dataservice.interface";
+import { Role as RoleEnum } from "../role/enums/role.enum";
+import { RoleService } from "../role/role.service";
+import { CreateStudentDto } from "./dto/create-student.dto";
+import { StudentPaginationDto } from "./dto/student-pagination.dto";
+import { StudentResponseDto } from "./dto/student-response.dto";
+import { UpdateStudentDto } from "./dto/update-student.dto";
+import { StudentEntity } from "./entities/student.entity";
 
 @Injectable()
 export class StudentService {
@@ -25,7 +25,7 @@ export class StudentService {
   async findPaginatedStudents(
     filter: StudentPaginationDto,
   ): Promise<PaginationResultDto<StudentResponseDto>> {
-    const qb = this.dataService.students.createQueryBuilder('student');
+    const qb = this.dataService.students.createQueryBuilder("student");
 
     if (filter.name) {
       qb.andWhere(
@@ -35,11 +35,11 @@ export class StudentService {
     }
 
     if (filter.email) {
-      qb.andWhere('student.email ILIKE :email', { email: `%${filter.email}%` });
+      qb.andWhere("student.email ILIKE :email", { email: `%${filter.email}%` });
     }
 
     const [students, itemCount] = await qb
-      .orderBy('student.createdAt', filter.order)
+      .orderBy("student.createdAt", filter.order)
       .skip(filter.skip)
       .take(filter.take)
       .getManyAndCount();
@@ -72,7 +72,7 @@ export class StudentService {
 
     const studentRole = await this.roleService.findByName(RoleEnum.STUDENT);
     if (!studentRole) {
-      throw new NotFoundException('Student role not found');
+      throw new NotFoundException("Student role not found");
     }
 
     const { password, ...studentData } = student;
@@ -119,7 +119,7 @@ export class StudentService {
     const updatedStudent = Object.assign(existingStudent, student);
 
     await this.dataService.students.save(updatedStudent);
-    return { message: 'Student updated successfully', student: updatedStudent };
+    return { message: "Student updated successfully", student: updatedStudent };
   }
 
   async deleteStudent(id: string): Promise<{ message: string }> {
@@ -132,6 +132,6 @@ export class StudentService {
     }
 
     await this.dataService.students.remove(existingStudent);
-    return { message: 'Student deleted successfully' };
+    return { message: "Student deleted successfully" };
   }
 }

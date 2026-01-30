@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
-import { ChevronRight, MailIcon, PlusCircleIcon } from 'lucide-react';
+import { ChevronRight, MailIcon, PlusCircleIcon } from "lucide-react";
 
-import { Button } from '@repo/ui/components/ui-kit/button';
+import { Button } from "@repo/ui/components/ui-kit/button";
 
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@repo/ui/components/ui-kit/dropdown-menu';
+} from "@repo/ui/components/ui-kit/dropdown-menu";
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -24,13 +24,13 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   useSidebar,
-} from '@repo/ui/components/ui-kit/sidebar';
-import { NavGroup, NavMainItem } from '@/config/navigation';
+} from "@repo/ui/components/ui-kit/sidebar";
+import { NavGroup, NavMainItem } from "@/config/navigation";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from '@repo/ui/components/ui-kit/collapsible';
+} from "@repo/ui/components/ui-kit/collapsible";
 
 interface NavMainProps {
   readonly items: readonly NavGroup[];
@@ -48,8 +48,8 @@ const NavItemExpanded = ({
   isSubmenuOpen,
 }: {
   item: NavMainItem;
-  isActive: (url: string, subItems?: NavMainItem['subItems']) => boolean;
-  isSubmenuOpen: (subItems?: NavMainItem['subItems']) => boolean;
+  isActive: (url: string, subItems?: NavMainItem["subItems"]) => boolean;
+  isSubmenuOpen: (subItems?: NavMainItem["subItems"]) => boolean;
 }) => {
   return (
     <Collapsible
@@ -81,7 +81,7 @@ const NavItemExpanded = ({
               <Link
                 prefetch={false}
                 href={item.url}
-                target={item.newTab ? '_blank' : undefined}
+                target={item.newTab ? "_blank" : undefined}
               >
                 {item.icon && <item.icon />}
                 <span>{item.title}</span>
@@ -103,7 +103,7 @@ const NavItemExpanded = ({
                     <Link
                       prefetch={false}
                       href={subItem.url}
-                      target={subItem.newTab ? '_blank' : undefined}
+                      target={subItem.newTab ? "_blank" : undefined}
                     >
                       {subItem.icon && <subItem.icon />}
                       <span>{subItem.title}</span>
@@ -125,7 +125,7 @@ const NavItemCollapsed = ({
   isActive,
 }: {
   item: NavMainItem;
-  isActive: (url: string, subItems?: NavMainItem['subItems']) => boolean;
+  isActive: (url: string, subItems?: NavMainItem["subItems"]) => boolean;
 }) => {
   return (
     <SidebarMenuItem key={item.title}>
@@ -158,7 +158,7 @@ const NavItemCollapsed = ({
                 <Link
                   prefetch={false}
                   href={subItem.url}
-                  target={subItem.newTab ? '_blank' : undefined}
+                  target={subItem.newTab ? "_blank" : undefined}
                 >
                   {subItem.icon && (
                     <subItem.icon className="[&>svg]:text-sidebar-foreground" />
@@ -179,14 +179,14 @@ export function NavMain({ items }: NavMainProps) {
   const path = usePathname();
   const { state, isMobile } = useSidebar();
 
-  const isItemActive = (url: string, subItems?: NavMainItem['subItems']) => {
+  const isItemActive = (url: string, subItems?: NavMainItem["subItems"]) => {
     if (subItems?.length) {
       return subItems.some((sub) => path.startsWith(sub.url));
     }
     return path === url;
   };
 
-  const isSubmenuOpen = (subItems?: NavMainItem['subItems']) => {
+  const isSubmenuOpen = (subItems?: NavMainItem["subItems"]) => {
     return subItems?.some((sub) => path.startsWith(sub.url)) ?? false;
   };
 
@@ -221,7 +221,7 @@ export function NavMain({ items }: NavMainProps) {
           <SidebarGroupContent className="flex flex-col gap-2">
             <SidebarMenu>
               {group.items.map((item) => {
-                if (state === 'collapsed' && !isMobile) {
+                if (state === "collapsed" && !isMobile) {
                   // If no subItems, just render the button as a link
                   if (!item.subItems) {
                     return (
@@ -235,7 +235,7 @@ export function NavMain({ items }: NavMainProps) {
                           <Link
                             prefetch={false}
                             href={item.url}
-                            target={item.newTab ? '_blank' : undefined}
+                            target={item.newTab ? "_blank" : undefined}
                           >
                             {item.icon && <item.icon />}
                             <span>{item.title}</span>

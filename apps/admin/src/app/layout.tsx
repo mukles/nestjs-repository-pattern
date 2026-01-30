@@ -1,10 +1,10 @@
-import type { Metadata } from 'next';
-import { APP_CONFIG } from '@/config/app-config';
-import { fontVars } from '@/lib/fonts/registry';
-import { PREFERENCE_DEFAULTS } from '@/lib/preferences/preferences-config';
-import { PreferencesStoreProvider } from '@/stores/preferences/preferences-provider';
-import { ThemeBootScript } from '@/scripts/theme-boot';
-import '@/styles/globals.css';
+import type { Metadata } from "next";
+import { APP_CONFIG } from "@/config/app-config";
+import { fontVars } from "@/lib/fonts/registry";
+import { PREFERENCE_DEFAULTS } from "@/lib/preferences/preferences-config";
+import { PreferencesStoreProvider } from "@/stores/preferences/preferences-provider";
+import { ThemeBootScript } from "@/scripts/theme-boot";
+import "@/styles/globals.css";
 
 export const metadata: Metadata = {
   title: APP_CONFIG.meta.title,

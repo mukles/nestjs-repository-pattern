@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
 import {
   IsEnum,
   IsInt,
@@ -8,13 +8,13 @@ import {
   IsString,
   MaxLength,
   Min,
-} from 'class-validator';
+} from "class-validator";
 
-import { ResultType } from '../enum/result-type.enum';
+import { ResultType } from "../enum/result-type.enum";
 
 export class CreateResultDto {
   @ApiProperty({
-    description: 'Enrollment ID (student enrolled in a batch)',
+    description: "Enrollment ID (student enrolled in a batch)",
     example: 12,
   })
   @IsInt()
@@ -23,14 +23,14 @@ export class CreateResultDto {
 
   @ApiProperty({
     enum: ResultType,
-    description: 'Type of assessment',
+    description: "Type of assessment",
     example: ResultType.FINAL,
   })
   @IsEnum(ResultType)
   type: ResultType;
 
   @ApiProperty({
-    description: 'Obtained score',
+    description: "Obtained score",
     example: 78,
   })
   @IsNumber()
@@ -38,7 +38,7 @@ export class CreateResultDto {
   score: number;
 
   @ApiProperty({
-    description: 'Maximum possible score',
+    description: "Maximum possible score",
     example: 100,
   })
   @IsNumber()
@@ -46,8 +46,8 @@ export class CreateResultDto {
   maxScore: number;
 
   @ApiProperty({
-    description: 'Grade (optional)',
-    example: 'A-',
+    description: "Grade (optional)",
+    example: "A-",
     required: false,
   })
   @IsOptional()
@@ -56,8 +56,8 @@ export class CreateResultDto {
   grade?: string;
 
   @ApiProperty({
-    description: 'Teacher remarks (optional)',
-    example: 'Good performance',
+    description: "Teacher remarks (optional)",
+    example: "Good performance",
     required: false,
   })
   @IsOptional()

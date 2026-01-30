@@ -1,5 +1,5 @@
-'use client';
-import * as React from 'react';
+"use client";
+import * as React from "react";
 
 import {
   ChartBar,
@@ -9,9 +9,9 @@ import {
   LayoutDashboard,
   Search,
   ShoppingBag,
-} from 'lucide-react';
+} from "lucide-react";
 
-import { Button } from '@repo/ui/components/ui-kit/button';
+import { Button } from "@repo/ui/components/ui-kit/button";
 import {
   CommandDialog,
   CommandEmpty,
@@ -20,42 +20,42 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
-} from '@repo/ui/components/ui-kit/command';
+} from "@repo/ui/components/ui-kit/command";
 
 const searchItems = [
-  { group: 'Dashboards', icon: LayoutDashboard, label: 'Default' },
-  { group: 'Dashboards', icon: ChartBar, label: 'CRM', disabled: true },
-  { group: 'Dashboards', icon: Gauge, label: 'Analytics', disabled: true },
+  { group: "Dashboards", icon: LayoutDashboard, label: "Default" },
+  { group: "Dashboards", icon: ChartBar, label: "CRM", disabled: true },
+  { group: "Dashboards", icon: Gauge, label: "Analytics", disabled: true },
   {
-    group: 'Dashboards',
+    group: "Dashboards",
     icon: ShoppingBag,
-    label: 'E-Commerce',
+    label: "E-Commerce",
     disabled: true,
   },
   {
-    group: 'Dashboards',
+    group: "Dashboards",
     icon: GraduationCap,
-    label: 'Academy',
+    label: "Academy",
     disabled: true,
   },
-  { group: 'Dashboards', icon: Forklift, label: 'Logistics', disabled: true },
-  { group: 'Authentication', label: 'Login v1' },
-  { group: 'Authentication', label: 'Login v2' },
-  { group: 'Authentication', label: 'Register v1' },
-  { group: 'Authentication', label: 'Register v2' },
+  { group: "Dashboards", icon: Forklift, label: "Logistics", disabled: true },
+  { group: "Authentication", label: "Login v1" },
+  { group: "Authentication", label: "Login v2" },
+  { group: "Authentication", label: "Register v1" },
+  { group: "Authentication", label: "Register v2" },
 ];
 
 export function SearchDialog() {
   const [open, setOpen] = React.useState(false);
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      if (e.key === 'j' && (e.metaKey || e.ctrlKey)) {
+      if (e.key === "j" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
         setOpen((open) => !open);
       }
     };
-    document.addEventListener('keydown', down);
-    return () => document.removeEventListener('keydown', down);
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
   }, []);
 
   return (

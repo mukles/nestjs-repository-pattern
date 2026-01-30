@@ -1,32 +1,32 @@
-import { AnimatedTooltip } from '@repo/ui/components/ui-kit/animated-tooltip';
-import { Logo } from '../components/logo';
-import { Borders } from './login/_components/borders';
-import { ProductFeatures } from './login/_components/product-features';
+import { AnimatedTooltip } from "@repo/ui/components/ui-kit/animated-tooltip";
+import { Logo } from "../components/logo";
+import { Borders } from "./login/_components/borders";
+import { ProductFeatures } from "./login/_components/product-features";
 
 const people = [
   {
     id: 1,
-    name: 'Ava Thompson',
-    designation: 'Product Manager',
-    image: '/images/educators/educator_avatar_1_1769667282209.png',
+    name: "Ava Thompson",
+    designation: "Product Manager",
+    image: "/images/educators/educator_avatar_1_1769667282209.png",
   },
   {
     id: 2,
-    name: 'Liam Carter',
-    designation: 'Lead Designer',
-    image: '/images/educators/educator_avatar_2_1769667301297.png',
+    name: "Liam Carter",
+    designation: "Lead Designer",
+    image: "/images/educators/educator_avatar_2_1769667301297.png",
   },
   {
     id: 3,
-    name: 'Sophia Lee',
-    designation: 'Frontend Engineer',
-    image: '/images/educators/educator_avatar_3_1769667316538.png',
+    name: "Sophia Lee",
+    designation: "Frontend Engineer",
+    image: "/images/educators/educator_avatar_3_1769667316538.png",
   },
   {
     id: 4,
-    name: 'Noah Patel',
-    designation: 'Backend Developer',
-    image: '/images/educators/educator_avatar_4_1769667335754.png',
+    name: "Noah Patel",
+    designation: "Backend Developer",
+    image: "/images/educators/educator_avatar_4_1769667335754.png",
   },
 ];
 

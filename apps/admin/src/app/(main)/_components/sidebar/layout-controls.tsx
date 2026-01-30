@@ -1,48 +1,48 @@
-'use client';
+"use client";
 
-import { Settings } from 'lucide-react';
+import { Settings } from "lucide-react";
 
-import { Button } from '@repo/ui/components/ui-kit/button';
-import { Label } from '@repo/ui/components/ui-kit/label';
+import { Button } from "@repo/ui/components/ui-kit/button";
+import { Label } from "@repo/ui/components/ui-kit/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@repo/ui/components/ui-kit/popover';
+} from "@repo/ui/components/ui-kit/popover";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@repo/ui/components/ui-kit/select';
+} from "@repo/ui/components/ui-kit/select";
 import {
   ToggleGroup,
   ToggleGroupItem,
-} from '@repo/ui/components/ui-kit/toggle-group';
-import { type FontKey, fontOptions } from '@/lib/fonts/registry';
+} from "@repo/ui/components/ui-kit/toggle-group";
+import { type FontKey, fontOptions } from "@/lib/fonts/registry";
 import type {
   ContentLayout,
   NavbarStyle,
   SidebarCollapsible,
   SidebarVariant,
-} from '@/lib/preferences/layout';
+} from "@/lib/preferences/layout";
 import {
   applyContentLayout,
   applyFont,
   applyNavbarStyle,
   applySidebarCollapsible,
   applySidebarVariant,
-} from '@/lib/preferences/layout-utils';
-import { PREFERENCE_DEFAULTS } from '@/lib/preferences/preferences-config';
-import { persistPreference } from '@/lib/preferences/preferences-storage';
+} from "@/lib/preferences/layout-utils";
+import { PREFERENCE_DEFAULTS } from "@/lib/preferences/preferences-config";
+import { persistPreference } from "@/lib/preferences/preferences-storage";
 import {
   THEME_PRESET_OPTIONS,
   type ThemeMode,
   type ThemePreset,
-} from '@/lib/preferences/theme';
-import { applyThemePreset } from '@/lib/preferences/theme-utils';
-import { usePreferencesStore } from '@/stores/preferences/preferences-provider';
+} from "@/lib/preferences/theme";
+import { applyThemePreset } from "@/lib/preferences/theme-utils";
+import { usePreferencesStore } from "@/stores/preferences/preferences-provider";
 
 export function LayoutControls() {
   const themeMode = usePreferencesStore((s) => s.themeMode);
@@ -66,50 +66,50 @@ export function LayoutControls() {
   const onThemePresetChange = async (preset: ThemePreset) => {
     applyThemePreset(preset);
     setThemePreset(preset);
-    persistPreference('theme_preset', preset);
+    persistPreference("theme_preset", preset);
   };
 
-  const onThemeModeChange = async (mode: ThemeMode | '') => {
+  const onThemeModeChange = async (mode: ThemeMode | "") => {
     if (!mode) return;
     setThemeMode(mode);
-    persistPreference('theme_mode', mode);
+    persistPreference("theme_mode", mode);
   };
 
-  const onContentLayoutChange = async (layout: ContentLayout | '') => {
+  const onContentLayoutChange = async (layout: ContentLayout | "") => {
     if (!layout) return;
     applyContentLayout(layout);
     setContentLayout(layout);
-    persistPreference('content_layout', layout);
+    persistPreference("content_layout", layout);
   };
 
-  const onNavbarStyleChange = async (style: NavbarStyle | '') => {
+  const onNavbarStyleChange = async (style: NavbarStyle | "") => {
     if (!style) return;
     applyNavbarStyle(style);
     setNavbarStyle(style);
-    persistPreference('navbar_style', style);
+    persistPreference("navbar_style", style);
   };
 
-  const onSidebarStyleChange = async (value: SidebarVariant | '') => {
+  const onSidebarStyleChange = async (value: SidebarVariant | "") => {
     if (!value) return;
     setSidebarVariant(value);
     applySidebarVariant(value);
-    persistPreference('sidebar_variant', value);
+    persistPreference("sidebar_variant", value);
   };
 
   const onSidebarCollapseModeChange = async (
-    value: SidebarCollapsible | '',
+    value: SidebarCollapsible | "",
   ) => {
     if (!value) return;
     setSidebarCollapsible(value);
     applySidebarCollapsible(value);
-    persistPreference('sidebar_collapsible', value);
+    persistPreference("sidebar_collapsible", value);
   };
 
-  const onFontChange = async (value: FontKey | '') => {
+  const onFontChange = async (value: FontKey | "") => {
     if (!value) return;
     applyFont(value);
     setFont(value);
-    persistPreference('font', value);
+    persistPreference("font", value);
   };
 
   const handleRestore = () => {
@@ -159,7 +159,7 @@ export function LayoutControls() {
                         className="size-2.5 rounded-full"
                         style={{
                           backgroundColor:
-                            (resolvedThemeMode ?? 'light') === 'dark'
+                            (resolvedThemeMode ?? "light") === "dark"
                               ? preset.primary.dark
                               : preset.primary.light,
                         }}

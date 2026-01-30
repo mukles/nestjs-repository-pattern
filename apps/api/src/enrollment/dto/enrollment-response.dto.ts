@@ -1,83 +1,83 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
 
-import { EnrollmentStatus } from '../enum/enrolllment-status.enum';
+import { EnrollmentStatus } from "../enum/enrolllment-status.enum";
 
 class StudentInfo {
-  @ApiProperty({ description: 'Student ID' })
+  @ApiProperty({ description: "Student ID" })
   id: number;
 
-  @ApiProperty({ description: 'Student name' })
+  @ApiProperty({ description: "Student name" })
   name: string;
 
-  @ApiProperty({ description: 'Student email' })
+  @ApiProperty({ description: "Student email" })
   email: string;
 }
 
 class CourseInfo {
-  @ApiProperty({ description: 'Course ID' })
+  @ApiProperty({ description: "Course ID" })
   id: number;
 
-  @ApiProperty({ description: 'Course title' })
+  @ApiProperty({ description: "Course title" })
   title: string;
 
-  @ApiProperty({ description: 'Teacher name' })
+  @ApiProperty({ description: "Teacher name" })
   teacherName: string;
 }
 
 class BatchInfo {
-  @ApiProperty({ description: 'Batch ID' })
+  @ApiProperty({ description: "Batch ID" })
   id: number;
 
-  @ApiProperty({ description: 'Batch name' })
+  @ApiProperty({ description: "Batch name" })
   name: string;
 }
 
 export class EnrollResponseDto {
-  @ApiProperty({ description: 'Enrollment ID' })
+  @ApiProperty({ description: "Enrollment ID" })
   id: number;
 
-  @ApiProperty({ description: 'Student information', type: () => StudentInfo })
+  @ApiProperty({ description: "Student information", type: () => StudentInfo })
   student: StudentInfo;
 
-  @ApiProperty({ description: 'Course information', type: () => CourseInfo })
+  @ApiProperty({ description: "Course information", type: () => CourseInfo })
   course: CourseInfo;
 
   @ApiProperty({ type: BatchInfo })
   batch: BatchInfo;
 
   @ApiProperty({
-    description: 'Status of the enrollment',
+    description: "Status of the enrollment",
     enum: EnrollmentStatus,
   })
   status: EnrollmentStatus;
 
   @ApiProperty({
-    description: 'Reason for suspension',
+    description: "Reason for suspension",
     required: false,
     nullable: true,
   })
   suspensionReason?: string | null;
 
   @ApiProperty({
-    description: 'Date when enrollment was suspended',
+    description: "Date when enrollment was suspended",
     type: String,
-    format: 'date-time',
+    format: "date-time",
     required: false,
     nullable: true,
   })
   suspendedAt?: Date | null;
 
   @ApiProperty({
-    description: 'Date when enrollment was created',
+    description: "Date when enrollment was created",
     type: String,
-    format: 'date-time',
+    format: "date-time",
   })
   createdAt: Date;
 
   @ApiProperty({
-    description: 'Date when enrollment was last updated',
+    description: "Date when enrollment was last updated",
     type: String,
-    format: 'date-time',
+    format: "date-time",
   })
   updatedAt: Date;
 }

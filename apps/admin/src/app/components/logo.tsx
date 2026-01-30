@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { APP_CONFIG } from '@/config/app-config';
-import { motion } from 'motion/react';
-import Image from 'next/image';
-import Link from 'next/link';
+import { APP_CONFIG } from "@/config/app-config";
+import { motion } from "motion/react";
+import Image from "next/image";
+import Link from "next/link";
 
 interface LogoProps {
   src?: string;
@@ -18,12 +18,12 @@ interface LogoProps {
 }
 
 export function Logo({
-  src = '/images/logo.png',
+  src = "/images/logo.png",
   alt = APP_CONFIG.name,
   title = APP_CONFIG.name,
   width = 32,
   height = 32,
-  url = '/',
+  url = "/",
   withText = true,
   className,
   showTitle = false,
@@ -33,7 +33,7 @@ export function Logo({
       <motion.div
         whileHover={{ scale: 1.05, rotate: -5 }}
         whileTap={{ scale: 0.95 }}
-        transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+        transition={{ type: "spring", stiffness: 400, damping: 17 }}
         className="relative flex items-center justify-center overflow-hidden rounded-lg shadow-sm ring-1 ring-neutral-200 transition-all group-hover:shadow-md dark:ring-neutral-800"
       >
         <Image

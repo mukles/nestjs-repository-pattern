@@ -28,7 +28,7 @@ export interface User {
 
 export interface CreateUserDto extends Omit<
   User,
-  'id' | 'role' | 'isActive' | 'createdAt' | 'updatedAt'
+  "id" | "role" | "isActive" | "createdAt" | "updatedAt"
 > {
   password?: string;
   roleId: number;

@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { Monitor, Moon, Sun } from 'lucide-react';
+import { Monitor, Moon, Sun } from "lucide-react";
 
-import { Button } from '@repo/ui/components/ui-kit/button';
-import { persistPreference } from '@/lib/preferences/preferences-storage';
-import { usePreferencesStore } from '@/stores/preferences/preferences-provider';
+import { Button } from "@repo/ui/components/ui-kit/button";
+import { persistPreference } from "@/lib/preferences/preferences-storage";
+import { usePreferencesStore } from "@/stores/preferences/preferences-provider";
 
-const THEME_CYCLE = ['light', 'dark', 'system'] as const;
+const THEME_CYCLE = ["light", "dark", "system"] as const;
 
 export function ThemeSwitcher() {
   const themeMode = usePreferencesStore((s) => s.themeMode);
@@ -17,7 +17,7 @@ export function ThemeSwitcher() {
     const nextTheme = THEME_CYCLE[(currentIndex + 1) % THEME_CYCLE.length];
 
     setThemeMode(nextTheme!);
-    persistPreference('theme_mode', nextTheme!);
+    persistPreference("theme_mode", nextTheme!);
   };
 
   return (

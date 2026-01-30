@@ -1,4 +1,4 @@
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from "bcrypt";
 import {
   BaseEntity,
   BeforeInsert,
@@ -9,48 +9,48 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from 'typeorm';
+} from "typeorm";
 
-import { RoleEntity } from '../../role/entities/role.entity';
+import { RoleEntity } from "../../role/entities/role.entity";
 
-@Entity('users')
+@Entity("users")
 export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({
-    type: 'varchar',
+    type: "varchar",
     length: 100,
   })
   firstName: string;
 
   @Column({
-    type: 'varchar',
+    type: "varchar",
     length: 100,
   })
   lastName: string;
 
   @Column({
-    type: 'varchar',
+    type: "varchar",
     length: 255,
     unique: true,
   })
   email: string;
 
   @Column({
-    type: 'varchar',
+    type: "varchar",
     length: 255,
   })
   password: string;
 
   @Column({
-    type: 'boolean',
+    type: "boolean",
     default: true,
   })
   isActive: boolean;
 
   @Column({
-    type: 'varchar',
+    type: "varchar",
     nullable: true,
   })
   refreshToken: string | null;

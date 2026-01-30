@@ -1,42 +1,42 @@
-'use client';
+"use client";
 
-import { Button } from '@repo/ui/components/ui-kit/button';
+import { Button } from "@repo/ui/components/ui-kit/button";
 import {
   Field,
   FieldError,
   FieldGroup,
   FieldLabel,
-} from '@repo/ui/components/ui-kit/field';
-import { Input } from '@repo/ui/components/ui-kit/input';
-import Link from 'next/link';
-import { PasswordInput } from '@repo/ui/components/password-input';
-import { Controller, useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
+} from "@repo/ui/components/ui-kit/field";
+import { Input } from "@repo/ui/components/ui-kit/input";
+import Link from "next/link";
+import { PasswordInput } from "@repo/ui/components/password-input";
+import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export const registerSchema = z.object({
-  fullName: z.string().min(2, 'Full name is required'),
+  fullName: z.string().min(2, "Full name is required"),
   email: z
     .string()
     .trim()
     .refine((val) => z.string().email().safeParse(val).success, {
-      message: 'Invalid email address',
+      message: "Invalid email address",
     }),
-  password: z.string().min(1, 'Password is required'),
+  password: z.string().min(1, "Password is required"),
 });
 
 export function RegisterForm() {
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      fullName: '',
-      email: '',
-      password: '',
+      fullName: "",
+      email: "",
+      password: "",
     },
   });
 
   function onSubmit(data: z.infer<typeof registerSchema>) {
-    console.log('Register Data:', data);
+    console.log("Register Data:", data);
   }
 
   return (
@@ -51,7 +51,7 @@ export function RegisterForm() {
                 htmlFor="fullName"
                 className="text-neutral-700 capitalize"
               >
-                {field.name.replace('fullName', 'Full Name')}
+                {field.name.replace("fullName", "Full Name")}
               </FieldLabel>
               <Input
                 className="placeholder:text-gray-400"
@@ -109,7 +109,7 @@ export function RegisterForm() {
             Register
           </Button>
           <p className="dark:text-muted-dark mt-4 text-center text-sm text-neutral-600">
-            Already have an account?{' '}
+            Already have an account?{" "}
             <Link href="/login" className="text-black dark:text-white">
               Sign in
             </Link>

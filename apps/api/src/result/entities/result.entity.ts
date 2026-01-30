@@ -7,35 +7,35 @@ import {
   PrimaryGeneratedColumn,
   Unique,
   UpdateDateColumn,
-} from 'typeorm';
+} from "typeorm";
 
-import { EnrollmentEntity } from '../../enrollment/entities/enrollment.entity';
-import { ResultType } from '../enum/result-type.enum';
+import { EnrollmentEntity } from "../../enrollment/entities/enrollment.entity";
+import { ResultType } from "../enum/result-type.enum";
 
-@Entity('results')
-@Unique(['enrollment', 'type'])
+@Entity("results")
+@Unique(["enrollment", "type"])
 export class ResultEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'enum', enum: ResultType })
+  @Column({ type: "enum", enum: ResultType })
   type: ResultType;
 
-  @Column({ type: 'float' })
+  @Column({ type: "float" })
   score: number;
 
-  @Column({ type: 'varchar', length: 5, nullable: true })
+  @Column({ type: "varchar", length: 5, nullable: true })
   grade: string;
 
-  @Column({ type: 'float' })
+  @Column({ type: "float" })
   maxScore: number;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: "text", nullable: true })
   remarks: string;
 
   @ManyToOne(() => EnrollmentEntity, {
     nullable: false,
-    onDelete: 'CASCADE',
+    onDelete: "CASCADE",
   })
   enrollment: EnrollmentEntity;
   @CreateDateColumn()

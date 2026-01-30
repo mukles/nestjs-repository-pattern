@@ -12,7 +12,7 @@ import {
   Shield,
   UserCheck,
   Users,
-} from 'lucide-react';
+} from "lucide-react";
 
 export interface NavSubItem {
   title: string;
@@ -42,16 +42,16 @@ export interface NavGroup {
 export const sidebarItems: NavGroup[] = [
   {
     id: 1,
-    label: 'Overview',
+    label: "Overview",
     items: [
       {
-        title: 'Dashboard',
-        url: '/dashboard',
+        title: "Dashboard",
+        url: "/dashboard",
         icon: LayoutDashboard,
       },
       {
-        title: 'Analytics',
-        url: '/analytics',
+        title: "Analytics",
+        url: "/analytics",
         icon: ChartBar,
         comingSoon: true,
       },
@@ -59,48 +59,48 @@ export const sidebarItems: NavGroup[] = [
   },
   {
     id: 2,
-    label: 'Student Management',
+    label: "Student Management",
     items: [
       {
-        title: 'Students',
-        url: '/students',
+        title: "Students",
+        url: "/students",
         icon: GraduationCap,
         subItems: [
-          { title: 'All Students', url: '/students/list', comingSoon: true },
-          { title: 'Add Student', url: '/students/create', comingSoon: true },
-          { title: 'Bulk Import', url: '/students/import', comingSoon: true },
+          { title: "All Students", url: "/students/list", comingSoon: true },
+          { title: "Add Student", url: "/students/create", comingSoon: true },
+          { title: "Bulk Import", url: "/students/import", comingSoon: true },
           {
-            title: 'Student Groups',
-            url: '/students/groups',
+            title: "Student Groups",
+            url: "/students/groups",
             comingSoon: true,
           },
         ],
       },
       {
-        title: 'Enrollments',
-        url: '/enrollments',
+        title: "Enrollments",
+        url: "/enrollments",
         icon: BookOpen,
         subItems: [
           {
-            title: 'All Enrollments',
-            url: '/enrollments/list',
+            title: "All Enrollments",
+            url: "/enrollments/list",
             comingSoon: true,
           },
           {
-            title: 'Enroll Student',
-            url: '/enrollments/create',
+            title: "Enroll Student",
+            url: "/enrollments/create",
             comingSoon: true,
           },
           {
-            title: 'Transfer Requests',
-            url: '/enrollments/transfers',
+            title: "Transfer Requests",
+            url: "/enrollments/transfers",
             comingSoon: true,
           },
         ],
       },
       {
-        title: 'Attendance',
-        url: '/attendance',
+        title: "Attendance",
+        url: "/attendance",
         icon: Calendar,
         comingSoon: true,
         isNew: true,
@@ -109,59 +109,59 @@ export const sidebarItems: NavGroup[] = [
   },
   {
     id: 3,
-    label: 'Academic',
+    label: "Academic",
     items: [
       {
-        title: 'Courses',
-        url: '/courses',
+        title: "Courses",
+        url: "/courses",
         icon: BookText,
         subItems: [
-          { title: 'All Courses', url: '/courses/list', comingSoon: true },
-          { title: 'Create Course', url: '/courses/create', comingSoon: true },
+          { title: "All Courses", url: "/courses/list", comingSoon: true },
+          { title: "Create Course", url: "/courses/create", comingSoon: true },
           {
-            title: 'Course Categories',
-            url: '/courses/categories',
+            title: "Course Categories",
+            url: "/courses/categories",
             comingSoon: true,
           },
         ],
       },
       {
-        title: 'Batches',
-        url: '/batches',
+        title: "Batches",
+        url: "/batches",
         icon: Users,
         comingSoon: true,
       },
       {
-        title: 'Results',
-        url: '/results',
+        title: "Results",
+        url: "/results",
         icon: Award,
         subItems: [
-          { title: 'All Results', url: '/results/list', comingSoon: true },
-          { title: 'Grade Entry', url: '/results/entry', comingSoon: true },
-          { title: 'Report Cards', url: '/results/reports', comingSoon: true },
+          { title: "All Results", url: "/results/list", comingSoon: true },
+          { title: "Grade Entry", url: "/results/entry", comingSoon: true },
+          { title: "Report Cards", url: "/results/reports", comingSoon: true },
         ],
       },
     ],
   },
   {
     id: 4,
-    label: 'Staff',
+    label: "Staff",
     items: [
       {
-        title: 'Teachers',
-        url: '/teachers',
+        title: "Teachers",
+        url: "/teachers",
         icon: UserCheck,
         comingSoon: true,
       },
       {
-        title: 'Users & Roles',
-        url: '/users',
+        title: "Users & Roles",
+        url: "/users",
         icon: Shield,
         subItems: [
-          { title: 'All Users', url: '/users/list', comingSoon: true },
+          { title: "All Users", url: "/users/list", comingSoon: true },
           {
-            title: 'Roles & Permissions',
-            url: '/users/roles',
+            title: "Roles & Permissions",
+            url: "/users/roles",
             comingSoon: true,
           },
         ],
@@ -170,18 +170,18 @@ export const sidebarItems: NavGroup[] = [
   },
   {
     id: 5,
-    label: 'Communication',
+    label: "Communication",
     items: [
       {
-        title: 'Messages',
-        url: '/messages',
+        title: "Messages",
+        url: "/messages",
         icon: MessageSquare,
         comingSoon: true,
         isNew: true,
       },
       {
-        title: 'Announcements',
-        url: '/announcements',
+        title: "Announcements",
+        url: "/announcements",
         icon: Megaphone,
         comingSoon: true,
         isNew: true,
