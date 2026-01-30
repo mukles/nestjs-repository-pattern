@@ -1,13 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import { plainToInstance } from 'class-transformer';
-import { PageMetaDto } from '../common/pagination/page-meta';
+import { Injectable } from "@nestjs/common";
+import { plainToInstance } from "class-transformer";
+import { PageMetaDto } from "../common/pagination/page-meta";
 
-import { PaginationResultDto } from '../common/pagination/pagination-result.dto';
-import { IDataService } from '../repositories/interfaces/dataservice.interface';
-import { CreateTeacherDto } from './dto/create-teacher.dto';
-import { TeacherPaginationDto } from './dto/teacher-pagination.dto';
-import { TeacherResponseDto } from './dto/teacher-response.dto';
-import { UpdateTeacherDto } from './dto/update-teacher.dto';
+import { PaginationResultDto } from "../common/pagination/pagination-result.dto";
+import { IDataService } from "../repositories/interfaces/dataservice.interface";
+import { CreateTeacherDto } from "./dto/create-teacher.dto";
+import { TeacherPaginationDto } from "./dto/teacher-pagination.dto";
+import { TeacherResponseDto } from "./dto/teacher-response.dto";
+import { UpdateTeacherDto } from "./dto/update-teacher.dto";
 
 @Injectable()
 export class TeacherService {
@@ -16,7 +16,7 @@ export class TeacherService {
   async findPaginatedTeachers(
     filter: TeacherPaginationDto,
   ): Promise<PaginationResultDto<TeacherResponseDto>> {
-    const qb = this.dataService.teachers.createQueryBuilder('teacher');
+    const qb = this.dataService.teachers.createQueryBuilder("teacher");
 
     if (filter.name) {
       qb.andWhere(
@@ -26,11 +26,11 @@ export class TeacherService {
     }
 
     if (filter.email) {
-      qb.andWhere('teacher.email ILIKE :email', { email: `%${filter.email}%` });
+      qb.andWhere("teacher.email ILIKE :email", { email: `%${filter.email}%` });
     }
 
     const [teachers, itemCount] = await qb
-      .orderBy('teacher.createdAt', filter.order)
+      .orderBy("teacher.createdAt", filter.order)
       .skip(filter.skip)
       .take(filter.take)
       .getManyAndCount();
@@ -56,7 +56,7 @@ export class TeacherService {
   async findOne(id: number): Promise<TeacherResponseDto | null> {
     const teacher = await this.dataService.teachers.findOne({
       where: { id },
-      relations: ['courses'],
+      relations: ["courses"],
     });
     if (!teacher) return null;
     return plainToInstance(TeacherResponseDto, teacher, {
@@ -67,7 +67,7 @@ export class TeacherService {
   async findOneWithCourses(id: number): Promise<TeacherResponseDto | null> {
     const teacher = await this.dataService.teachers.findOne({
       where: { id },
-      relations: ['courses'],
+      relations: ["courses"],
     });
     if (!teacher) return null;
     return plainToInstance(TeacherResponseDto, teacher, {

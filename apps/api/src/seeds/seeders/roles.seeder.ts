@@ -1,9 +1,9 @@
-import { DataSource } from 'typeorm';
+import { DataSource } from "typeorm";
 
-import { PermissionEntity } from '../../role/entities/permission.entity';
-import { RoleEntity } from '../../role/entities/role.entity';
-import { Permission } from '../../role/enums/permission.enum';
-import { Role as RoleEnum } from '../../role/enums/role.enum';
+import { PermissionEntity } from "../../role/entities/permission.entity";
+import { RoleEntity } from "../../role/entities/role.entity";
+import { Permission } from "../../role/enums/permission.enum";
+import { Role as RoleEnum } from "../../role/enums/role.enum";
 
 // Define permissions for each role
 const rolePermissions: Record<RoleEnum, Permission[]> = {
@@ -73,10 +73,10 @@ const rolePermissions: Record<RoleEnum, Permission[]> = {
 };
 
 const roleDescriptions: Record<RoleEnum, string> = {
-  [RoleEnum.SUPER_ADMIN]: 'Super Administrator with full system access',
-  [RoleEnum.ADMIN]: 'Administrator with management capabilities',
-  [RoleEnum.TEACHER]: 'Teacher with course and result management',
-  [RoleEnum.STUDENT]: 'Student with limited read access',
+  [RoleEnum.SUPER_ADMIN]: "Super Administrator with full system access",
+  [RoleEnum.ADMIN]: "Administrator with management capabilities",
+  [RoleEnum.TEACHER]: "Teacher with course and result management",
+  [RoleEnum.STUDENT]: "Student with limited read access",
 };
 
 export async function seedRoles(dataSource: DataSource): Promise<void> {
@@ -90,7 +90,7 @@ export async function seedRoles(dataSource: DataSource): Promise<void> {
   for (const roleName of allRoles) {
     let role = await roleRepository.findOne({
       where: { name: roleName },
-      relations: ['permissions'],
+      relations: ["permissions"],
     });
 
     // Get permissions for this role

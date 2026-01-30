@@ -6,32 +6,32 @@ import {
   ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from 'typeorm';
+} from "typeorm";
 
-import { Permission } from '../enums/permission.enum';
-import { RoleEntity } from './role.entity';
+import { Permission } from "../enums/permission.enum";
+import { RoleEntity } from "./role.entity";
 
-@Entity('permissions')
+@Entity("permissions")
 export class PermissionEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({
-    type: 'enum',
+    type: "enum",
     enum: Permission,
     unique: true,
   })
   name: Permission;
 
   @Column({
-    type: 'varchar',
+    type: "varchar",
     length: 255,
     nullable: true,
   })
   description: string;
 
   @Column({
-    type: 'boolean',
+    type: "boolean",
     default: true,
   })
   isActive: boolean;

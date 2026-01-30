@@ -7,6 +7,7 @@ import {
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { Request } from "express";
+
 import { IDataService } from "../repositories/interfaces/dataservice.interface";
 import { LoginDto } from "./dto/login.dto";
 import { RefreshTokenDto } from "./dto/refresh-token.dto";
@@ -34,8 +35,6 @@ export class AuthService {
     const user = await this.dataService.users.findOne({
       where: { email },
     });
-
-    console.log({ user });
 
     if (!user) {
       throw new NotFoundException("User not found");

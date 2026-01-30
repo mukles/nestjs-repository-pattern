@@ -5,25 +5,25 @@ import {
   HttpStatus,
   Post,
   Req,
-} from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
-import type { Request } from 'express';
+} from "@nestjs/common";
+import { ApiBearerAuth, ApiBody, ApiTags } from "@nestjs/swagger";
+import type { Request } from "express";
 
-import { AuthService } from './auth.service';
-import { Public } from './decorators/public.decorator';
-import { LoginDto } from './dto/login.dto';
-import { RefreshTokenDto } from './dto/refresh-token.dto';
-import { RegisterDto } from './dto/register.dto';
-import { ApiResponse } from '../common/response';
-import { AuthResponseDto } from './dto/auth-response.dto';
+import { AuthService } from "./auth.service";
+import { Public } from "./decorators/public.decorator";
+import { LoginDto } from "./dto/login.dto";
+import { RefreshTokenDto } from "./dto/refresh-token.dto";
+import { RegisterDto } from "./dto/register.dto";
+import { ApiResponse } from "../common/response";
+import { AuthResponseDto } from "./dto/auth-response.dto";
 
-@ApiTags('Auth')
-@Controller('auth')
+@ApiTags("Auth")
+@Controller("auth")
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Public()
-  @Post('login')
+  @Post("login")
   @HttpCode(HttpStatus.OK)
   @ApiBody({ type: LoginDto })
   @ApiResponse(AuthResponseDto)
@@ -32,7 +32,7 @@ export class AuthController {
   }
 
   @Public()
-  @Post('register')
+  @Post("register")
   @ApiBody({ type: RegisterDto })
   @ApiResponse(AuthResponseDto)
   register(@Body() registerDto: RegisterDto, @Req() req: Request) {
@@ -40,14 +40,14 @@ export class AuthController {
   }
 
   @Public()
-  @Post('refresh')
+  @Post("refresh")
   @ApiBody({ type: RefreshTokenDto })
   refreshTokens(@Body() refreshTokenDto: RefreshTokenDto) {
     return this.authService.refreshTokens(refreshTokenDto);
   }
 
   @ApiBearerAuth()
-  @Post('logout')
+  @Post("logout")
   logout(@Body() refreshTokenDto: RefreshTokenDto) {
     return this.authService.logout(refreshTokenDto);
   }

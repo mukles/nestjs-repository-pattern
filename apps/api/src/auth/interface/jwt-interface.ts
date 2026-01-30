@@ -1,5 +1,5 @@
-import { Permission } from '../../role/enums/permission.enum';
-import { Role } from '../../role/enums/role.enum';
+import { Permission } from "../../role/enums/permission.enum";
+import { Role } from "../../role/enums/role.enum";
 
 export interface JwtPayload {
   id: string; // user id

@@ -1,20 +1,20 @@
-import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
-import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
-import { EntityManager } from 'typeorm';
+import { Injectable, OnApplicationBootstrap } from "@nestjs/common";
+import { InjectEntityManager, InjectRepository } from "@nestjs/typeorm";
+import { EntityManager } from "typeorm";
 
-import { BatchEntity } from '../../batch/entities/batch.entity';
-import { CourseEntity } from '../../course/entities/course.entity';
-import { EnrollmentEntity } from '../../enrollment/entities/enrollment.entity';
-import { ResultEntity } from '../../result/entities/result.entity';
-import { PermissionEntity } from '../../role/entities/permission.entity';
-import { RoleEntity } from '../../role/entities/role.entity';
-import { StudentEntity } from '../../student/entities/student.entity';
-import { TeacherEntity } from '../../teacher/entities/teacher.entity';
-import { UserEntity } from '../../user/entities/user.entity';
-import { IDataService } from '../interfaces/dataservice.interface';
-import { IGenericRepository } from '../interfaces/repository.interface';
-import { GenericRepository } from './repository.implementation';
-import { SessionEntry } from '../../session/entities/session.entry';
+import { BatchEntity } from "../../batch/entities/batch.entity";
+import { CourseEntity } from "../../course/entities/course.entity";
+import { EnrollmentEntity } from "../../enrollment/entities/enrollment.entity";
+import { ResultEntity } from "../../result/entities/result.entity";
+import { PermissionEntity } from "../../role/entities/permission.entity";
+import { RoleEntity } from "../../role/entities/role.entity";
+import { StudentEntity } from "../../student/entities/student.entity";
+import { TeacherEntity } from "../../teacher/entities/teacher.entity";
+import { UserEntity } from "../../user/entities/user.entity";
+import { IDataService } from "../interfaces/dataservice.interface";
+import { IGenericRepository } from "../interfaces/repository.interface";
+import { GenericRepository } from "./repository.implementation";
+import { SessionEntry } from "../../session/entities/session.entry";
 
 @Injectable()
 export class GenericDataService
