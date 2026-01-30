@@ -18,7 +18,7 @@ export class SessionService {
     ipAddress?: string,
   ): Promise<SessionDto> {
     const refreshTTL =
-      this.configService.get<number>("security.jwtRefreshTTL") ?? 86400;
+      this.configService.get<number>("JWT_REFRESH_EXPIRES_IN") ?? 86400;
     const expiresAt = new Date(Date.now() + refreshTTL * 1000);
 
     const sessionId = randomUUID();
