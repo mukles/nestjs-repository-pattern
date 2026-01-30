@@ -1,9 +1,9 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config/dist/config.service';
-import { IDataService } from 'repositories/interfaces/dataservice.interface';
-import { SessionDto } from './dto/session.dto';
-import { randomUUID } from 'crypto';
-import { UserEntity } from 'user/entities/user.entity';
+import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config/dist/config.service";
+import { IDataService } from "repositories/interfaces/dataservice.interface";
+import { SessionDto } from "./dto/session.dto";
+import { randomUUID } from "crypto";
+import { UserEntity } from "user/entities/user.entity";
 
 @Injectable()
 export class SessionService {
@@ -18,7 +18,7 @@ export class SessionService {
     ipAddress?: string,
   ): Promise<SessionDto> {
     const refreshTTL =
-      this.configService.get<number>('security.jwtRefreshTTL') ?? 86400;
+      this.configService.get<number>("security.jwtRefreshTTL") ?? 86400;
     const expiresAt = new Date(Date.now() + refreshTTL * 1000);
 
     const sessionId = randomUUID();
@@ -39,18 +39,18 @@ export class SessionService {
       sessionId: sessionId,
       userId,
       refreshToken,
-      userAgent: userAgent || '',
-      ipAddress: ipAddress || '',
+      userAgent: userAgent || "",
+      ipAddress: ipAddress || "",
     };
   }
 
   async validateSession(sessionId: string) {
     const session = await this.dataService.sessions.findOne({
       where: { sessionId },
-      relations: ['user'],
+      relations: ["user"],
     });
     if (!session || session.expiresAt < new Date()) {
-      throw new UnauthorizedException('Invalid or expired session');
+      throw new UnauthorizedException("Invalid or expired session");
     }
     return session;
   }
@@ -58,21 +58,20 @@ export class SessionService {
   async updateSession(sessionId: string): Promise<SessionDto> {
     const session = await this.dataService.sessions.findOne({
       where: { sessionId },
-      relations: ['user'],
+      relations: ["user"],
     });
 
     if (!session || session.expiresAt < new Date()) {
-      throw new UnauthorizedException('Invalid or expired session');
+      throw new UnauthorizedException("Invalid or expired session");
     }
 
     const refreshTTL =
-      this.configService.get<number>('JWT_REFRESH_EXPIRES_IN') ?? 86400;
+      this.configService.get<number>("JWT_REFRESH_EXPIRES_IN") ?? 86400;
     const newExpiresAt = new Date(Date.now() + refreshTTL * 1000);
     const newRefreshToken = randomUUID();
 
     session.expiresAt = newExpiresAt;
     session.refreshToken = newRefreshToken;
-    session.updatedAt = new Date();
 
     await this.dataService.sessions.save(session);
 
@@ -90,10 +89,10 @@ export class SessionService {
       where: { sessionId },
     });
     if (!session) {
-      throw new UnauthorizedException('Invalid session');
+      throw new UnauthorizedException("Invalid session");
     }
 
     await this.dataService.sessions.remove(session);
-    return { message: 'Session deleted successfully' };
+    return { message: "Session deleted successfully" };
   }
 }

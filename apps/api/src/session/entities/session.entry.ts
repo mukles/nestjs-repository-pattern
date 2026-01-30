@@ -1,9 +1,11 @@
 import {
   BaseEntity,
   Column,
+  CreateDateColumn,
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { UserEntity } from "../../user/entities/user.entity";
 
@@ -27,10 +29,10 @@ export class SessionEntry extends BaseEntity {
   @Column({ type: "timestamp" })
   expiresAt: Date;
 
-  @Column({ type: "timestamp" })
+  @CreateDateColumn({ type: "timestamp" })
   createdAt: Date;
 
-  @Column({
+  @UpdateDateColumn({
     type: "timestamp",
   })
   updatedAt: Date;
