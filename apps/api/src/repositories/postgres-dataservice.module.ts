@@ -8,12 +8,12 @@ import { EnrollmentEntity } from "../enrollment/entities/enrollment.entity";
 import { ResultEntity } from "../result/entities/result.entity";
 import { PermissionEntity } from "../role/entities/permission.entity";
 import { RoleEntity } from "../role/entities/role.entity";
+import { SessionEntry } from "../session/entities/session.entry";
 import { StudentEntity } from "../student/entities/student.entity";
 import { TeacherEntity } from "../teacher/entities/teacher.entity";
 import { UserEntity } from "../user/entities/user.entity";
 import { GenericDataService } from "./implementation/dataservice.implementation";
 import { IDataService } from "./interfaces/dataservice.interface";
-import { SessionEntry } from "../session/entities/session.entry";
 
 @Module({
   imports: [

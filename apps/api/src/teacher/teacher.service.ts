@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { plainToInstance } from "class-transformer";
-import { PageMetaDto } from "../common/pagination/page-meta";
 
+import { PageMetaDto } from "../common/pagination/page-meta";
 import { PaginationResultDto } from "../common/pagination/pagination-result.dto";
 import { IDataService } from "../repositories/interfaces/dataservice.interface";
 import { CreateTeacherDto } from "./dto/create-teacher.dto";

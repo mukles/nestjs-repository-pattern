@@ -12,6 +12,8 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "typescript": "catalog:"
-  }
+    "typescript": "catalog:",
+    "eslint": "catalog:"
+  },
+  "type": "module"
 }

@@ -1,9 +1,10 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config/dist/config.service";
-import { IDataService } from "repositories/interfaces/dataservice.interface";
-import { SessionDto } from "./dto/session.dto";
 import { randomUUID } from "crypto";
+import { IDataService } from "repositories/interfaces/dataservice.interface";
 import { UserEntity } from "user/entities/user.entity";
+
+import { SessionDto } from "./dto/session.dto";
 
 @Injectable()
 export class SessionService {

@@ -9,13 +9,13 @@ import {
 import { ApiBearerAuth, ApiBody, ApiTags } from "@nestjs/swagger";
 import type { Request } from "express";
 
+import { ApiResponse } from "../common/response";
 import { AuthService } from "./auth.service";
 import { Public } from "./decorators/public.decorator";
+import { AuthResponseDto } from "./dto/auth-response.dto";
 import { LoginDto } from "./dto/login.dto";
 import { RefreshTokenDto } from "./dto/refresh-token.dto";
 import { RegisterDto } from "./dto/register.dto";
-import { ApiResponse } from "../common/response";
-import { AuthResponseDto } from "./dto/auth-response.dto";
 
 @ApiTags("Auth")
 @Controller("auth")

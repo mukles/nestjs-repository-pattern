@@ -1,7 +1,6 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { APP_GUARD } from "@nestjs/core";
-import { SessionModule } from "./session/session.module";
 
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
@@ -13,6 +12,7 @@ import { EnrollmentModule } from "./enrollment/enrollment.module";
 import { DataServiceModule } from "./repositories/dataservice.module";
 import { ResultModule } from "./result/result.module";
 import { RoleModule } from "./role/role.module";
+import { SessionModule } from "./session/session.module";
 import { StudentModule } from "./student/student.module";
 import { TeacherModule } from "./teacher/teacher.module";
 import { UserModule } from "./user/user.module";
