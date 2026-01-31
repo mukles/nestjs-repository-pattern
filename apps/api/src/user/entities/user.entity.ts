@@ -1,4 +1,5 @@
 import * as bcrypt from "bcrypt";
+import type { Relation } from "typeorm";
 import {
   BaseEntity,
   BeforeInsert,
@@ -6,6 +7,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
   ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -41,6 +43,7 @@ export class UserEntity extends BaseEntity {
   @Column({
     type: "varchar",
     length: 255,
+    select: false,
   })
   password: string;
 
@@ -58,7 +61,12 @@ export class UserEntity extends BaseEntity {
   banReason?: string;
 
   @ManyToMany(() => RoleEntity, (role) => role.users, { nullable: false })
-  roles: RoleEntity[];
+  @JoinTable({
+    name: "user_roles",
+    joinColumn: { name: "userId", referencedColumnName: "id" },
+    inverseJoinColumn: { name: "roleId", referencedColumnName: "id" },
+  })
+  roles: Relation<RoleEntity[]>;
 
   @CreateDateColumn()
   createdAt: Date;

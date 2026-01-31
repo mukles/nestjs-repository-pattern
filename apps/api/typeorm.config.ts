@@ -6,8 +6,8 @@ import { DataSource } from "typeorm";
 import { BatchEntity } from "./src/batch/entities/batch.entity";
 import { CourseEntity } from "./src/course/entities/course.entity";
 import { EnrollmentEntity } from "./src/enrollment/entities/enrollment.entity";
-import { PermissionEntity } from "./src/role/entities/permission.entity";
 import { ResultEntity } from "./src/result/entities/result.entity";
+import { PermissionEntity } from "./src/role/entities/permission.entity";
 import { RoleEntity } from "./src/role/entities/role.entity";
 import { StudentEntity } from "./src/student/entities/student.entity";
 import { TeacherEntity } from "./src/teacher/entities/teacher.entity";
@@ -17,9 +17,6 @@ import { UserEntity } from "./src/user/entities/user.entity";
 config({ path: join(__dirname, "../../apps/api/.env") });
 
 const configService = new ConfigService();
-console.log({
-  dbUrl: configService.get<string>("DATABASE_URL"),
-});
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -37,6 +34,6 @@ export const AppDataSource = new DataSource({
   ],
   logging: true,
   migrations: ["src/migrations/*.ts"],
-  migrationsRun: true,
-  synchronize: configService.get<boolean>("SYNCHRONIZE", false),
+  // migrationsRun: true,
+  synchronize: true,
 });
