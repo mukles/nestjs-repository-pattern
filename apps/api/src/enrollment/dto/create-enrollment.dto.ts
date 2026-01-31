@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsEnum, IsNotEmpty, IsNumber, IsOptional } from "class-validator";
 
-import { EnrollmentStatus } from "../enum/enrolllment-status.enum";
+import { EnrollmentStatus } from "../enum/enrollment-status.enum";
 
 export class CreateEnrollmentDto {
   @ApiProperty({ description: "ID of the student enrolling" })

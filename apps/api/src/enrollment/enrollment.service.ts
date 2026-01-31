@@ -15,7 +15,7 @@ import { EnrollmentPaginationDto } from "./dto/enrollment-pagination.dto";
 import { EnrollResponseDto } from "./dto/enrollment-response.dto";
 import { UpdateEnrollmentStatusDto } from "./dto/update-enrollment-status.dto";
 import { EnrollmentEntity } from "./entities/enrollment.entity";
-import { EnrollmentStatus } from "./enum/enrolllment-status.enum";
+import { EnrollmentStatus } from "./enum/enrollment-status.enum";
 
 @Injectable()
 export class EnrollmentService {
@@ -32,7 +32,7 @@ export class EnrollmentService {
       .leftJoinAndSelect("batch.course", "course")
       .leftJoinAndSelect("course.teacher", "teacher");
 
-    if (user && user.role?.includes(Role.TEACHER)) {
+    if (user && user.roles?.includes(Role.TEACHER)) {
       const teacher = await this.dataService.teachers.findOne({
         where: { email: user.id },
       });

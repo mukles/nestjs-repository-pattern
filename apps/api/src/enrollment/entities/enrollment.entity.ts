@@ -1,4 +1,3 @@
-import { ResultEntity } from "../../result/entities/result.entity";
 import {
   BaseEntity,
   Column,
@@ -13,8 +12,9 @@ import {
 } from "typeorm";
 
 import { BatchEntity } from "../../batch/entities/batch.entity";
+import { ResultEntity } from "../../result/entities/result.entity";
 import { StudentEntity } from "../../student/entities/student.entity";
-import { EnrollmentStatus } from "../enum/enrolllment-status.enum";
+import { EnrollmentStatus } from "../enum/enrollment-status.enum";
 @Unique(["student", "batch"])
 @Entity("enrollments")
 export class EnrollmentEntity extends BaseEntity {

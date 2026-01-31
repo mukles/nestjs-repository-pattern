@@ -3,7 +3,7 @@ import { Type } from "class-transformer";
 import { IsDateString, IsNumber, IsOptional, IsString } from "class-validator";
 
 import { PaginationDto } from "../../common/pagination/pagination.dto";
-import { EnrollmentStatus } from "../enum/enrolllment-status.enum";
+import { EnrollmentStatus } from "../enum/enrollment-status.enum";
 
 export class EnrollmentPaginationDto extends PaginationDto {
   @ApiPropertyOptional({

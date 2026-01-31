@@ -38,7 +38,7 @@ export async function seedSuperAdmin(dataSource: DataSource): Promise<void> {
     email: "superadmin@example.com",
     password: "SuperAdmin@123",
     status: UserStatus.ACTIVE,
-    role: superAdminRole,
+    roles: [superAdminRole],
   });
 
   console.log("Creating Super Admin user with email:", superAdmin.email);

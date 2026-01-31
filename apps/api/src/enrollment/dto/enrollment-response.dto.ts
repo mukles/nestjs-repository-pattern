@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-import { EnrollmentStatus } from "../enum/enrolllment-status.enum";
+import { EnrollmentStatus } from "../enum/enrollment-status.enum";
 
 class StudentInfo {
   @ApiProperty({ description: "Student ID" })
