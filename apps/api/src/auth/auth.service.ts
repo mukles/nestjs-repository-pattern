@@ -33,9 +33,13 @@ export class AuthService {
   async login(loginDto: LoginDto, req: Request): Promise<AuthResponseDto> {
     const { email, password } = loginDto;
 
-    const user = await this.dataService.users.findOne({
-      where: { email },
-    });
+    const user = await this.dataService.users
+      .createQueryBuilder("user")
+      .addSelect("user.password")
+      .leftJoinAndSelect("user.roles", "roles")
+      .leftJoinAndSelect("roles.permissions", "permissions")
+      .where("user.email = :email", { email })
+      .getOne();
 
     if (!user) {
       throw new NotFoundException("User not found");
@@ -241,9 +245,9 @@ export class AuthService {
   }
 
   public async validateToken(jwtPayload: JwtPayload) {
-    const user = this.dataService.users.findOne({
+    const user = await this.dataService.users.findOne({
       where: { id: parseInt(jwtPayload.id, 10) },
-      relations: ["role", "role.permissions"],
+      relations: ["roles"],
     });
 
     if (!user) {
