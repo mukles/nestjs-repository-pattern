@@ -8,6 +8,13 @@ import {
   MessageSquareDot,
 } from "lucide-react";
 
+import { logout } from "@/actions/auth";
+import { getInitials } from "@/lib/utils";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@repo/ui/components/ui-kit/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,12 +30,6 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@repo/ui/components/ui-kit/sidebar";
-import { getInitials } from "@/lib/utils";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@repo/ui/components/ui-kit/avatar";
 
 export function NavUser({
   user,
@@ -103,7 +104,7 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={logout}>
               <LogOut />
               Log out
             </DropdownMenuItem>

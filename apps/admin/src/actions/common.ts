@@ -77,13 +77,11 @@ export async function safeAction<T>(fn: () => Promise<T>): Promise<Result<T>> {
   }
 }
 
-// Generic API call wrapper for actions
 export async function apiAction<T>(
   url: string,
   options?: RequestInit,
-): Promise<Result<T>> {
+): Promise<T> {
   const fullUrl = `${process.env.API_BASE_URL}${url}`;
-  console.log({ fullUrl });
   const res = await fetch(fullUrl, {
     credentials: "include",
     ...options,
@@ -101,14 +99,8 @@ export async function apiAction<T>(
     } catch {
       throw new Error(errorMsg);
     }
+    throw new Error(errorMsg);
   }
-  return res.json();
+  const result = await res.json();
+  return result.data ? result.data : result;
 }
-
-// Example usage:
-// export async function login({ email, password }: { email: string; password: string }) {
-//   return apiAction<AuthResponse>(process.env.NEXT_PUBLIC_API_URL + "/auth/login", {
-//     method: "POST",
-//     body: JSON.stringify({ email, password }),
-//   });
-// }

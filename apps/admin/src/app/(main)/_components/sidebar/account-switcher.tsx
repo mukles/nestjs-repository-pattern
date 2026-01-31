@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { BadgeCheck, Bell, CreditCard, LogOut } from "lucide-react";
 
+import { logout } from "@/actions/auth";
 import { getInitials } from "@/lib/utils";
 import {
   Avatar,
@@ -92,7 +93,7 @@ export function AccountSwitcher({
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={logout}>
           <LogOut />
           Log out
         </DropdownMenuItem>

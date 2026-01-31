@@ -1,5 +1,9 @@
 "use client";
 
+import { loginUser } from "@/actions/auth";
+import { useMutation } from "@/hooks/use-mutation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { PasswordInput } from "@repo/ui/components/password-input";
 import { Button } from "@repo/ui/components/ui-kit/button";
 import {
   Field,
@@ -9,12 +13,9 @@ import {
 } from "@repo/ui/components/ui-kit/field";
 import { Input } from "@repo/ui/components/ui-kit/input";
 import Link from "next/link";
-import { PasswordInput } from "@repo/ui/components/password-input";
+import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useActionState } from "react";
-import { loginUser } from "@/actions/auth";
 
 export const loginSchema = z.object({
   email: z
@@ -27,6 +28,7 @@ export const loginSchema = z.object({
 });
 
 export function LoginForm() {
+  const router = useRouter();
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -35,7 +37,11 @@ export function LoginForm() {
     },
   });
 
-  const [state, action, pending] = useActionState(loginUser, undefined);
+  const { action, isPending } = useMutation(loginUser, {
+    onSuccess() {
+      router.refresh();
+    },
+  });
 
   return (
     <form className="space-y-6" action={action}>
@@ -90,7 +96,7 @@ export function LoginForm() {
         </div>
 
         <Field>
-          <Button disabled={pending} className="rounded-full" type="submit">
+          <Button disabled={isPending} className="rounded-full" type="submit">
             Login
           </Button>
           <p className="dark:text-muted-dark mt-4 text-center text-sm text-neutral-600">
