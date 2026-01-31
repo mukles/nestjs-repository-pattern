@@ -1,5 +1,5 @@
-import { ErrorType, Result } from '@/actions/common';
-import { useActionState, useEffect } from 'react';
+import { ErrorType, Result } from "@/actions/common";
+import { useActionState, useEffect } from "react";
 
 type MutationCallbacks<T> = {
   onSuccess?: (result: T) => void;

@@ -84,7 +84,7 @@ export class StudentService {
       lastName: student.lastName,
       email: student.email,
       password: password,
-      role: studentRole,
+      roles: [studentRole],
     });
 
     await this.dataService.users.save(newUser);

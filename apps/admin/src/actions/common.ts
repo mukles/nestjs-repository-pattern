@@ -1,19 +1,19 @@
-'use server';
+"use server";
 
-import 'server-only';
-import { z } from 'zod';
+import "server-only";
+import { z } from "zod";
 
 export type ExtractVariables<T> = T extends { variables: object }
-  ? T['variables']
+  ? T["variables"]
   : never;
 
 export type ErrorType =
-  | 'NOT_FOUND'
-  | 'VALIDATION_ERROR'
-  | 'UNIQUE_CONSTRAINT'
-  | 'FOREIGN_KEY_CONSTRAINT'
-  | 'SERVER_ERROR'
-  | 'AUTH_ERROR';
+  | "NOT_FOUND"
+  | "VALIDATION_ERROR"
+  | "UNIQUE_CONSTRAINT"
+  | "FOREIGN_KEY_CONSTRAINT"
+  | "SERVER_ERROR"
+  | "AUTH_ERROR";
 
 export type Result<T> =
   | { success: true; data: T }
@@ -31,7 +31,7 @@ function formatZodErrors(error: z.ZodError): Record<string, string> {
   return Object.fromEntries(
     Object.entries(error.flatten().fieldErrors).map(([field, messages]) => [
       field,
-      (messages as string[] | undefined)?.[0] || 'Invalid input',
+      (messages as string[] | undefined)?.[0] || "Invalid input",
     ]),
   );
 }
@@ -48,8 +48,8 @@ export async function safeAction<T>(fn: () => Promise<T>): Promise<Result<T>> {
       return {
         success: false,
         error: {
-          type: 'VALIDATION_ERROR',
-          message: 'Invalid user data',
+          type: "VALIDATION_ERROR",
+          message: "Invalid user data",
           details: formatZodErrors(error),
         },
       };
@@ -58,7 +58,7 @@ export async function safeAction<T>(fn: () => Promise<T>): Promise<Result<T>> {
     if (error instanceof Error) {
       return {
         error: {
-          type: 'SERVER_ERROR',
+          type: "SERVER_ERROR",
           message: error.message,
           details: {
             originalError: error.stack,
@@ -70,8 +70,8 @@ export async function safeAction<T>(fn: () => Promise<T>): Promise<Result<T>> {
     return {
       success: false,
       error: {
-        type: 'SERVER_ERROR',
-        message: 'An unknown error occurred',
+        type: "SERVER_ERROR",
+        message: "An unknown error occurred",
       },
     };
   }
@@ -85,16 +85,16 @@ export async function apiAction<T>(
   const fullUrl = `${process.env.API_BASE_URL}${url}`;
   console.log({ fullUrl });
   const res = await fetch(fullUrl, {
-    credentials: 'include',
+    credentials: "include",
     ...options,
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       ...(options?.headers || {}),
     },
   });
 
   if (!res.ok) {
-    let errorMsg = 'Request failed';
+    let errorMsg = "Request failed";
     try {
       const error = await res.json();
       errorMsg = error.message || errorMsg;

@@ -6,7 +6,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToOne,
+  ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
@@ -57,8 +57,8 @@ export class UserEntity extends BaseEntity {
   })
   banReason?: string;
 
-  @ManyToOne(() => RoleEntity, (role) => role.users, { nullable: false })
-  role: RoleEntity;
+  @ManyToMany(() => RoleEntity, (role) => role.users, { nullable: false })
+  roles: RoleEntity[];
 
   @CreateDateColumn()
   createdAt: Date;

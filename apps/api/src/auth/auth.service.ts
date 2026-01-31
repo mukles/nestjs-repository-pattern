@@ -7,17 +7,18 @@ import {
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { Request } from "express";
+import { Role } from "role/enums/role.enum";
+import { UserEntity } from "user/entities/user.entity";
 
 import { IDataService } from "../repositories/interfaces/dataservice.interface";
+import { SessionService } from "../session/session.service";
+import { UserStatus } from "../user/enums/user-status.enum";
+import { UserService } from "../user/user.service";
+import { AuthResponseDto } from "./dto/auth-response.dto";
 import { LoginDto } from "./dto/login.dto";
 import { RefreshTokenDto } from "./dto/refresh-token.dto";
 import { RegisterDto } from "./dto/register.dto";
 import { JwtPayload } from "./interface/jwt-interface";
-import { AuthResponseDto } from "./dto/auth-response.dto";
-import { SessionService } from "../session/session.service";
-import { UserService } from "../user/user.service";
-import { UserStatus } from "../user/enums/user-status.enum";
-import { UserEntity } from "user/entities/user.entity";
 
 @Injectable()
 export class AuthService {
@@ -79,7 +80,7 @@ export class AuthService {
     registerDto: RegisterDto,
     req: Request,
   ): Promise<AuthResponseDto> {
-    const { email, password, firstName, lastName, roleId } = registerDto;
+    const { email, password, firstName, lastName } = registerDto;
 
     const existingUser = await this.dataService.users.findOne({
       where: { email },
@@ -89,12 +90,12 @@ export class AuthService {
       throw new UnauthorizedException("User with this email already exists");
     }
 
-    const role = await this.dataService.roles.findOne({
-      where: { id: roleId },
+    const studentRole = await this.dataService.roles.findOne({
+      where: { name: Role.STUDENT },
     });
 
-    if (!role) {
-      throw new NotFoundException("Role not found");
+    if (!studentRole) {
+      throw new NotFoundException("Student role not found");
     }
 
     const user = this.dataService.users.create({
@@ -102,7 +103,7 @@ export class AuthService {
       password,
       firstName,
       lastName,
-      role,
+      roles: [studentRole],
     });
 
     const savedUser = await this.dataService.users.save(user);
@@ -166,9 +167,16 @@ export class AuthService {
       id: user.id.toString(),
       sessionId,
       email: user.email,
-      // @TODO: Populate actual roles and permissions
-      role: [],
-      permissions: [],
+      roles: user.roles.map((role) => role.name),
+      permissions: Array.from(
+        new Set(
+          user.roles.flatMap((role) =>
+            role.permissions
+              .filter((perm) => perm.isActive)
+              .map((perm) => perm.name),
+          ),
+        ),
+      ),
     };
 
     const accessTokenExpiry = parseInt(

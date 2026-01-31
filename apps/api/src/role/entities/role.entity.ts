@@ -6,7 +6,6 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
-  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
@@ -51,7 +50,7 @@ export class RoleEntity extends BaseEntity {
   })
   permissions: Relation<PermissionEntity[]>;
 
-  @OneToMany(() => UserEntity, (user) => user.role)
+  @ManyToMany(() => UserEntity, (user) => user.roles)
   users: Relation<UserEntity[]>;
 
   @CreateDateColumn()
