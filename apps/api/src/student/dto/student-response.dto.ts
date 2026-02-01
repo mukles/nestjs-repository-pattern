@@ -1,9 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Gender, StudentDto, StudentStatus } from "@repo/shared-types";
 
-import { Gender } from "../enum/student.gender.enum";
-import { StudentStatus } from "../enum/student.status.enum";
-
-export class StudentResponseDto {
+export class StudentResponseDto implements StudentDto {
   @ApiProperty()
   id: number;
 

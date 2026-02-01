@@ -9,7 +9,5 @@ export interface ApiResponse<T = any> {
   message?: string;
 }
 
-export * from "./course";
-export * from "./enrollment";
-export * from "./student";
-export * from "./user";
+export * from "./core/index";
+export * from "./student/index";

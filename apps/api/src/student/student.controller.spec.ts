@@ -1,7 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing";
+import { Gender, StudentStatus } from "@repo/shared-types";
 
-import { Gender } from "./enum/student.gender.enum";
-import { StudentStatus } from "./enum/student.status.enum";
 import { StudentController } from "./student.controller";
 import { StudentService } from "./student.service";
 

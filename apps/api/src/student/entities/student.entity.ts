@@ -1,3 +1,4 @@
+import { Gender, StudentStatus } from "@repo/shared-types";
 import {
   BaseEntity,
   Column,
@@ -9,8 +10,6 @@ import {
 } from "typeorm";
 
 import { EnrollmentEntity } from "../../enrollment/entities/enrollment.entity";
-import { Gender } from "../enum/student.gender.enum";
-import { StudentStatus } from "../enum/student.status.enum";
 
 @Entity("students")
 export class StudentEntity extends BaseEntity {

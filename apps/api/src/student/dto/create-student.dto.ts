@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Gender, StudentStatus } from "@repo/shared-types";
 import {
   IsDate,
   IsEmail,
@@ -7,9 +8,6 @@ import {
   IsOptional,
   MinLength,
 } from "class-validator";
-
-import { Gender } from "../enum/student.gender.enum";
-import { StudentStatus } from "../enum/student.status.enum";
 
 export class CreateStudentDto {
   @ApiProperty()
