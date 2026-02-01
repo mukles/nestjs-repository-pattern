@@ -1,4 +1,5 @@
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from "bcrypt";
+import type { Relation } from "typeorm";
 import {
   BaseEntity,
   BeforeInsert,
@@ -6,57 +7,66 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToOne,
+  JoinTable,
+  ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from 'typeorm';
+} from "typeorm";
 
-import { RoleEntity } from '../../role/entities/role.entity';
+import { RoleEntity } from "../../role/entities/role.entity";
+import { UserStatus } from "../enums/user-status.enum";
 
-@Entity('users')
+@Entity("users")
 export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({
-    type: 'varchar',
+    type: "varchar",
     length: 100,
   })
   firstName: string;
 
   @Column({
-    type: 'varchar',
+    type: "varchar",
     length: 100,
   })
   lastName: string;
 
   @Column({
-    type: 'varchar',
+    type: "varchar",
     length: 255,
     unique: true,
   })
   email: string;
 
   @Column({
-    type: 'varchar',
+    type: "varchar",
     length: 255,
+    select: false,
   })
   password: string;
 
   @Column({
-    type: 'boolean',
-    default: true,
+    type: "enum",
+    enum: UserStatus,
+    default: UserStatus.ACTIVE,
   })
-  isActive: boolean;
+  status: UserStatus;
 
   @Column({
-    type: 'varchar',
+    type: "text",
     nullable: true,
   })
-  refreshToken: string | null;
+  banReason?: string;
 
-  @ManyToOne(() => RoleEntity, (role) => role.users, { nullable: false })
-  role: RoleEntity;
+  @ManyToMany(() => RoleEntity, (role) => role.users, { nullable: false })
+  @JoinTable({
+    name: "user_roles",
+    joinColumn: { name: "userId", referencedColumnName: "id" },
+    inverseJoinColumn: { name: "roleId", referencedColumnName: "id" },
+  })
+  roles: Relation<RoleEntity[]>;
 
   @CreateDateColumn()
   createdAt: Date;

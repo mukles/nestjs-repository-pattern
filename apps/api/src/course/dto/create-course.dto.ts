@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
 import {
   IsArray,
   IsEnum,
@@ -6,9 +6,9 @@ import {
   IsOptional,
   IsString,
   MaxLength,
-} from 'class-validator';
+} from "class-validator";
 
-import { CourseStatus } from '../enum/course.status.enum';
+import { CourseStatus } from "../enum/course.status.enum";
 
 export class CreateCourseDto {
   @ApiProperty()

@@ -6,38 +6,38 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from 'typeorm';
+} from "typeorm";
 
-import { EnrollmentEntity } from '../../enrollment/entities/enrollment.entity';
-import { Gender } from '../enum/student.gender.enum';
-import { StudentStatus } from '../enum/student.status.enum';
+import { EnrollmentEntity } from "../../enrollment/entities/enrollment.entity";
+import { Gender } from "../enum/student.gender.enum";
+import { StudentStatus } from "../enum/student.status.enum";
 
-@Entity('students')
+@Entity("students")
 export class StudentEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({
-    type: 'varchar',
+    type: "varchar",
     length: 100,
   })
   firstName: string;
 
   @Column({
-    type: 'varchar',
+    type: "varchar",
     length: 100,
   })
   lastName: string;
 
   @Column({
-    type: 'varchar',
+    type: "varchar",
     length: 100,
     unique: true,
   })
   email: string;
 
   @Column({
-    type: 'timestamp',
+    type: "timestamp",
   })
   dateOfBirth: Date;
 
@@ -45,21 +45,21 @@ export class StudentEntity extends BaseEntity {
   enrollments: EnrollmentEntity[];
 
   @Column({
-    type: 'enum',
+    type: "enum",
     enum: Gender,
   })
   gender: Gender;
 
   @Column({
-    type: 'enum',
+    type: "enum",
     enum: StudentStatus,
     default: StudentStatus.ACTIVE,
   })
   status: StudentStatus;
 
-  @CreateDateColumn({ type: 'timestamp' })
+  @CreateDateColumn({ type: "timestamp" })
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp' })
+  @UpdateDateColumn({ type: "timestamp" })
   updatedAt: Date;
 }

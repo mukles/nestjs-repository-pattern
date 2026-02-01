@@ -9,23 +9,23 @@ import {
   Patch,
   Post,
   Query,
-} from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
+} from "@nestjs/common";
+import { ApiBearerAuth, ApiBody, ApiTags } from "@nestjs/swagger";
 
-import { Permissions } from '../auth/decorators/permissions.decorator';
-import { ApiPaginatedResponse } from '../common/pagination/pagination.service';
-import { PaginationResultDto } from '../common/pagination/pagination-result.dto';
-import { ApiResponse } from '../common/response';
-import { Permission } from '../role/enums/permission.enum';
-import { CreateTeacherDto } from './dto/create-teacher.dto';
-import { TeacherPaginationDto } from './dto/teacher-pagination.dto';
-import { TeacherResponseDto } from './dto/teacher-response.dto';
-import { UpdateTeacherDto } from './dto/update-teacher.dto';
-import { TeacherService } from './teacher.service';
+import { Permissions } from "../auth/decorators/permissions.decorator";
+import { ApiPaginatedResponse } from "../common/pagination/pagination.service";
+import { PaginationResultDto } from "../common/pagination/pagination-result.dto";
+import { ApiResponse } from "../common/response";
+import { Permission } from "../role/enums/permission.enum";
+import { CreateTeacherDto } from "./dto/create-teacher.dto";
+import { TeacherPaginationDto } from "./dto/teacher-pagination.dto";
+import { TeacherResponseDto } from "./dto/teacher-response.dto";
+import { UpdateTeacherDto } from "./dto/update-teacher.dto";
+import { TeacherService } from "./teacher.service";
 
-@ApiBearerAuth('JWT-auth')
-@ApiTags('Teacher')
-@Controller('teachers')
+@ApiBearerAuth("JWT-auth")
+@ApiTags("Teacher")
+@Controller("teachers")
 export class TeacherController {
   constructor(private readonly teacherService: TeacherService) {}
 
@@ -41,7 +41,7 @@ export class TeacherController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @ApiBody({ type: CreateTeacherDto, description: 'Teacher data' })
+  @ApiBody({ type: CreateTeacherDto, description: "Teacher data" })
   @ApiResponse(TeacherResponseDto)
   @Permissions(Permission.CREATE_TEACHER)
   create(
@@ -50,27 +50,27 @@ export class TeacherController {
     return this.teacherService.create(createTeacherDto);
   }
 
-  @Get(':id')
+  @Get(":id")
   @HttpCode(HttpStatus.OK)
   @ApiResponse(TeacherResponseDto)
   @Permissions(Permission.READ_TEACHER)
-  findOne(@Param('id') id: string) {
+  findOne(@Param("id") id: string) {
     return this.teacherService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Patch(":id")
   @HttpCode(HttpStatus.OK)
   @ApiResponse(TeacherResponseDto)
   @Permissions(Permission.UPDATE_TEACHER)
-  update(@Param('id') id: string, @Body() updateTeacherDto: UpdateTeacherDto) {
+  update(@Param("id") id: string, @Body() updateTeacherDto: UpdateTeacherDto) {
     return this.teacherService.update(+id, updateTeacherDto);
   }
 
-  @Delete(':id')
+  @Delete(":id")
   @HttpCode(HttpStatus.OK)
   @ApiResponse(TeacherResponseDto)
   @Permissions(Permission.DELETE_TEACHER)
-  remove(@Param('id') id: string) {
+  remove(@Param("id") id: string) {
     return this.teacherService.remove(+id);
   }
 }

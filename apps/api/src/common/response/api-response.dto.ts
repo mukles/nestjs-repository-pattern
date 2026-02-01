@@ -1,20 +1,20 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 
 export class ApiResponseDto<T = any> {
-  @ApiProperty({ description: 'Response data' })
+  @ApiProperty({ description: "Response data" })
   data: T;
 
-  @ApiProperty({ description: 'Response message', example: 'Success' })
+  @ApiProperty({ description: "Response message", example: "Success" })
   message: string;
 
   @ApiProperty({
-    description: 'Response timestamp',
-    example: '2025-12-24T10:00:00.000Z',
-    format: 'date-time',
+    description: "Response timestamp",
+    example: "2025-12-24T10:00:00.000Z",
+    format: "date-time",
   })
   timestamp: string;
 
-  @ApiProperty({ description: 'HTTP status code', example: 200 })
+  @ApiProperty({ description: "HTTP status code", example: 200 })
   statusCode: number;
 
   constructor(data: T, message: string, statusCode: number) {
@@ -26,37 +26,37 @@ export class ApiResponseDto<T = any> {
 }
 
 export class ApiErrorResponseDto {
-  @ApiProperty({ description: 'HTTP status code', example: 400 })
+  @ApiProperty({ description: "HTTP status code", example: 400 })
   statusCode: number;
 
   @ApiProperty({
-    description: 'Error message',
-    example: 'Bad Request',
+    description: "Error message",
+    example: "Bad Request",
   })
   message: string;
 
   @ApiProperty({
-    description: 'Response timestamp',
-    example: '2025-12-24T10:00:00.000Z',
-    format: 'date-time',
+    description: "Response timestamp",
+    example: "2025-12-24T10:00:00.000Z",
+    format: "date-time",
   })
   timestamp: string;
 
   @ApiPropertyOptional({
-    description: 'Request path',
-    example: '/api/v1/students',
+    description: "Request path",
+    example: "/api/v1/students",
   })
   path?: string;
 
   @ApiPropertyOptional({
-    description: 'Error type',
-    example: 'Bad Request',
+    description: "Error type",
+    example: "Bad Request",
   })
   error?: string;
 
   @ApiPropertyOptional({
-    description: 'Detailed error messages',
-    example: ['Field name is required', 'Email must be valid'],
+    description: "Detailed error messages",
+    example: ["Field name is required", "Email must be valid"],
     type: [String],
   })
   details?: string[];

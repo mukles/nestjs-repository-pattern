@@ -1,6 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
 
-import { TeacherGender } from '../enum/teacher.gender.enum';
+import { TeacherGender } from "../enum/teacher.gender.enum";
 
 export class TeacherResponseDto {
   @ApiProperty()

@@ -1,10 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from "@nestjs/common";
 
-import { IDataService } from '../repositories/interfaces/dataservice.interface';
-import { BatchResponseDto } from './dto/batch-response.dto';
-import { CreateBatchDto } from './dto/create-batch.dto';
-import { UpdateBatchDto } from './dto/update-batch.dto';
-import { BatchEntity } from './entities/batch.entity';
+import { IDataService } from "../repositories/interfaces/dataservice.interface";
+import { BatchResponseDto } from "./dto/batch-response.dto";
+import { CreateBatchDto } from "./dto/create-batch.dto";
+import { UpdateBatchDto } from "./dto/update-batch.dto";
+import { BatchEntity } from "./entities/batch.entity";
 
 @Injectable()
 export class BatchService {
@@ -35,8 +35,8 @@ export class BatchService {
   async findAll(courseId: number): Promise<BatchResponseDto[]> {
     const batches = await this.dataService.batches.find({
       where: { course: { id: courseId } },
-      relations: ['course', 'enrollments'],
-      order: { startDate: 'DESC' },
+      relations: ["course", "enrollments"],
+      order: { startDate: "DESC" },
     });
 
     return batches.map((batch) =>
@@ -47,7 +47,7 @@ export class BatchService {
   async findOne(courseId: number, id: number): Promise<BatchResponseDto> {
     const batch = await this.dataService.batches.findOne({
       where: { id, course: { id: courseId } },
-      relations: ['course', 'enrollments'],
+      relations: ["course", "enrollments"],
     });
 
     if (!batch) {
@@ -65,7 +65,7 @@ export class BatchService {
   ): Promise<BatchResponseDto> {
     const batch = await this.dataService.batches.findOne({
       where: { id },
-      relations: ['course', 'enrollments'],
+      relations: ["course", "enrollments"],
     });
 
     if (!batch) {

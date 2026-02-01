@@ -3,9 +3,9 @@ import {
   EntityTarget,
   ObjectLiteral,
   QueryRunner,
-} from 'typeorm';
+} from "typeorm";
 
-import { IGenericRepository } from '../interfaces/repository.interface';
+import { IGenericRepository } from "../interfaces/repository.interface";
 
 export class GenericRepository<
   T extends ObjectLiteral,

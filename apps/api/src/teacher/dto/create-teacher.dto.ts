@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer';
+import { Type } from "class-transformer";
 import {
   IsDate,
   IsEmail,
@@ -7,9 +7,9 @@ import {
   IsString,
   MaxLength,
   MinLength,
-} from 'class-validator';
+} from "class-validator";
 
-import { TeacherGender } from '../enum/teacher.gender.enum';
+import { TeacherGender } from "../enum/teacher.gender.enum";
 
 export class CreateTeacherDto {
   @IsString()

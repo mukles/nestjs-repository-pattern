@@ -1,8 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test, TestingModule } from "@nestjs/testing";
 
-import { BatchController } from './batch.controller';
+import { BatchController } from "./batch.controller";
 
-describe('BatchController', () => {
+describe("BatchController", () => {
   let controller: BatchController;
 
   beforeEach(async () => {
@@ -13,7 +13,7 @@ describe('BatchController', () => {
     controller = module.get<BatchController>(BatchController);
   });
 
-  it('should be defined', () => {
+  it("should be defined", () => {
     expect(controller).toBeDefined();
   });
 });

@@ -1,10 +1,11 @@
-import { Permission } from '../../role/enums/permission.enum';
-import { Role } from '../../role/enums/role.enum';
+import { Permission } from "../../role/enums/permission.enum";
+import { Role } from "../../role/enums/role.enum";
 
 export interface JwtPayload {
-  sub: number;
+  id: string; // user id
   email: string;
-  role: Role[];
+  sessionId: string;
+  roles: Role[];
   permissions: Permission[];
 }
 

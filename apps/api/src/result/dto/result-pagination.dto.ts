@@ -1,4 +1,4 @@
-import { PaginationDto } from '../../common/pagination/pagination.dto';
+import { PaginationDto } from "../../common/pagination/pagination.dto";
 
 export class ResultPaginationDto extends PaginationDto {
   courseId?: number;

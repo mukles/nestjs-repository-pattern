@@ -1,0 +1,121 @@
+"use client";
+
+import { Button } from "@repo/ui/components/ui-kit/button";
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@repo/ui/components/ui-kit/field";
+import { Input } from "@repo/ui/components/ui-kit/input";
+import Link from "next/link";
+import { PasswordInput } from "@repo/ui/components/password-input";
+import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+export const registerSchema = z.object({
+  fullName: z.string().min(2, "Full name is required"),
+  email: z
+    .string()
+    .trim()
+    .refine((val) => z.string().email().safeParse(val).success, {
+      message: "Invalid email address",
+    }),
+  password: z.string().min(1, "Password is required"),
+});
+
+export function RegisterForm() {
+  const form = useForm<z.infer<typeof registerSchema>>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      fullName: "",
+      email: "",
+      password: "",
+    },
+  });
+
+  function onSubmit(data: z.infer<typeof registerSchema>) {
+    console.log("Register Data:", data);
+  }
+
+  return (
+    <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
+      <FieldGroup>
+        <Controller
+          name="fullName"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel
+                htmlFor="fullName"
+                className="text-neutral-700 capitalize"
+              >
+                {field.name.replace("fullName", "Full Name")}
+              </FieldLabel>
+              <Input
+                className="placeholder:text-gray-400"
+                id="fullName"
+                type="text"
+                placeholder="Your full name"
+                {...field}
+                aria-invalid={fieldState.invalid}
+              />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
+        <Controller
+          name="email"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel
+                htmlFor="email"
+                className="text-neutral-700 capitalize"
+              >
+                {field.name}
+              </FieldLabel>
+              <Input
+                className="placeholder:text-gray-400"
+                id="email"
+                type="email"
+                placeholder="m@example.com"
+                {...field}
+                aria-invalid={fieldState.invalid}
+              />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
+        <Controller
+          name="password"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel
+                htmlFor="password"
+                className="text-neutral-700 capitalize"
+              >
+                {field.name}
+              </FieldLabel>
+              <PasswordInput {...field} aria-invalid={fieldState.invalid} />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
+        <Field>
+          <Button className="rounded-full" type="submit">
+            Register
+          </Button>
+          <p className="dark:text-muted-dark mt-4 text-center text-sm text-neutral-600">
+            Already have an account?{" "}
+            <Link href="/login" className="text-black dark:text-white">
+              Sign in
+            </Link>
+          </p>
+        </Field>
+      </FieldGroup>
+    </form>
+  );
+}

@@ -8,45 +8,45 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from 'typeorm';
+} from "typeorm";
 
-import { CourseEntity } from '../../course/entities/course.entity';
-import { EnrollmentEntity } from '../../enrollment/entities/enrollment.entity';
-import { BatchStatus } from '../enum/batch-status.enum';
+import { CourseEntity } from "../../course/entities/course.entity";
+import { EnrollmentEntity } from "../../enrollment/entities/enrollment.entity";
+import { BatchStatus } from "../enum/batch-status.enum";
 
-@Entity('batches')
+@Entity("batches")
 export class BatchEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', length: 200 })
+  @Column({ type: "varchar", length: 200 })
   name: string;
 
-  @Column({ type: 'int' })
+  @Column({ type: "int" })
   maxStudents: number;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: "timestamp" })
   startDate: Date;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: "timestamp" })
   endDate: Date;
 
-  @Column({ type: 'enum', enum: BatchStatus, default: BatchStatus.DRAFT })
+  @Column({ type: "enum", enum: BatchStatus, default: BatchStatus.DRAFT })
   status: BatchStatus;
 
   @ManyToOne(() => CourseEntity, (course) => course.batches, {
     nullable: false,
-    onDelete: 'CASCADE',
+    onDelete: "CASCADE",
   })
-  @JoinColumn({ name: 'courseId' })
+  @JoinColumn({ name: "courseId" })
   course: CourseEntity;
 
   @OneToMany(() => EnrollmentEntity, (enrollment) => enrollment.batch)
   enrollments: EnrollmentEntity[];
 
-  @CreateDateColumn({ type: 'timestamp' })
+  @CreateDateColumn({ type: "timestamp" })
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp' })
+  @UpdateDateColumn({ type: "timestamp" })
   updatedAt: Date;
 }

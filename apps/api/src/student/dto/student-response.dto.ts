@@ -1,7 +1,7 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
 
-import { Gender } from '../enum/student.gender.enum';
-import { StudentStatus } from '../enum/student.status.enum';
+import { Gender } from "../enum/student.gender.enum";
+import { StudentStatus } from "../enum/student.status.enum";
 
 export class StudentResponseDto {
   @ApiProperty()
@@ -16,7 +16,7 @@ export class StudentResponseDto {
   @ApiProperty()
   email: string;
 
-  @ApiProperty({ type: String, format: 'date-time' })
+  @ApiProperty({ type: String, format: "date-time" })
   dateOfBirth: Date;
 
   @ApiProperty({ enum: Gender })
@@ -25,9 +25,9 @@ export class StudentResponseDto {
   @ApiProperty({ enum: StudentStatus })
   status: StudentStatus;
 
-  @ApiProperty({ type: String, format: 'date-time' })
+  @ApiProperty({ type: String, format: "date-time" })
   createdAt: Date;
 
-  @ApiProperty({ type: String, format: 'date-time' })
+  @ApiProperty({ type: String, format: "date-time" })
   updatedAt: Date;
 }

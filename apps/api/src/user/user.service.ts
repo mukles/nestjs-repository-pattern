@@ -1,9 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
 
-import { RoleEntity } from '../role/entities/role.entity';
-import { UserEntity } from './entities/user.entity';
+import { UserEntity } from "./entities/user.entity";
 
 @Injectable()
 export class UserService {
@@ -13,25 +12,23 @@ export class UserService {
   ) {}
 
   async findByEmail(email: string): Promise<UserEntity | null> {
-    return this.userRepository.findOne({ where: { email } });
+    const user = await this.userRepository.findOne({ where: { email } });
+    if (!user) {
+      throw new NotFoundException(`User with email ${email} not found`);
+    }
+    return user;
   }
 
-  async findById(id: number): Promise<UserEntity | null> {
-    return this.userRepository.findOne({ where: { id } });
+  async findById(id: number): Promise<UserEntity> {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+    return user;
   }
 
-  async create(
-    userData: Partial<UserEntity>,
-    role: RoleEntity,
-  ): Promise<UserEntity> {
-    const user = this.userRepository.create({ ...userData, role });
+  async create(userData: Partial<UserEntity>): Promise<UserEntity> {
+    const user = this.userRepository.create({ ...userData });
     return this.userRepository.save(user);
-  }
-
-  async updateRefreshToken(
-    userId: number,
-    refreshToken: string | null,
-  ): Promise<void> {
-    await this.userRepository.update(userId, { refreshToken });
   }
 }

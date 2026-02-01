@@ -1,4 +1,4 @@
-import { ObjectLiteral, Repository } from 'typeorm';
+import { ObjectLiteral, Repository } from "typeorm";
 
 export abstract class IGenericRepository<
   T extends ObjectLiteral,

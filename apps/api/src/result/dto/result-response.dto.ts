@@ -1,6 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
 
-import { ResultType } from '../enum/result-type.enum';
+import { ResultType } from "../enum/result-type.enum";
 
 class StudentInfoDto {
   @ApiProperty()
@@ -27,25 +27,25 @@ class CourseInfoDto {
 }
 
 export class ResultResponseDto {
-  @ApiProperty({ description: 'Result ID' })
+  @ApiProperty({ description: "Result ID" })
   id: number;
 
   @ApiProperty({ enum: ResultType })
   type: ResultType;
 
-  @ApiProperty({ description: 'Obtained score' })
+  @ApiProperty({ description: "Obtained score" })
   score: number;
 
-  @ApiProperty({ description: 'Maximum possible score' })
+  @ApiProperty({ description: "Maximum possible score" })
   maxScore: number;
 
-  @ApiProperty({ description: 'Calculated percentage' })
+  @ApiProperty({ description: "Calculated percentage" })
   percentage: number;
 
-  @ApiProperty({ description: 'Grade (A, B+, C, etc)', nullable: true })
+  @ApiProperty({ description: "Grade (A, B+, C, etc)", nullable: true })
   grade?: string;
 
-  @ApiProperty({ description: 'Teacher remarks', nullable: true })
+  @ApiProperty({ description: "Teacher remarks", nullable: true })
   remarks?: string;
 
   @ApiProperty({ type: StudentInfoDto })
@@ -57,9 +57,9 @@ export class ResultResponseDto {
   @ApiProperty({ type: CourseInfoDto })
   course: CourseInfoDto;
 
-  @ApiProperty({ type: String, format: 'date-time' })
+  @ApiProperty({ type: String, format: "date-time" })
   createdAt: Date;
 
-  @ApiProperty({ type: String, format: 'date-time' })
+  @ApiProperty({ type: String, format: "date-time" })
   updatedAt: Date;
 }

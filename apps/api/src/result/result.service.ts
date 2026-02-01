@@ -2,15 +2,15 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
-} from '@nestjs/common';
+} from "@nestjs/common";
 
-import { PageMetaDto } from '../common/pagination/page-meta';
-import { PaginationResultDto } from '../common/pagination/pagination-result.dto';
-import { IDataService } from '../repositories/interfaces/dataservice.interface';
-import { CreateResultDto } from './dto/create-result.dto';
-import { ResultPaginationDto } from './dto/result-pagination.dto';
-import { ResultResponseDto } from './dto/result-response.dto';
-import { UpdateResultDto } from './dto/update-result.dto';
+import { PageMetaDto } from "../common/pagination/page-meta";
+import { PaginationResultDto } from "../common/pagination/pagination-result.dto";
+import { IDataService } from "../repositories/interfaces/dataservice.interface";
+import { CreateResultDto } from "./dto/create-result.dto";
+import { ResultPaginationDto } from "./dto/result-pagination.dto";
+import { ResultResponseDto } from "./dto/result-response.dto";
+import { UpdateResultDto } from "./dto/update-result.dto";
 
 @Injectable()
 export class ResultService {
@@ -19,36 +19,36 @@ export class ResultService {
   async findPaginatedResults(
     filter: ResultPaginationDto,
   ): Promise<PaginationResultDto<ResultResponseDto>> {
-    const qb = this.dataService.results.createQueryBuilder('result');
+    const qb = this.dataService.results.createQueryBuilder("result");
 
     if (filter.courseId) {
-      qb.innerJoinAndSelect('result.enrollment', 'enrollment')
-        .innerJoinAndSelect('enrollment.batch', 'batch')
-        .innerJoinAndSelect('batch.course', 'course')
-        .andWhere('course.id = :courseId', { courseId: filter.courseId });
+      qb.innerJoinAndSelect("result.enrollment", "enrollment")
+        .innerJoinAndSelect("enrollment.batch", "batch")
+        .innerJoinAndSelect("batch.course", "course")
+        .andWhere("course.id = :courseId", { courseId: filter.courseId });
     }
 
     if (filter.batchId) {
-      qb.innerJoinAndSelect('result.enrollment', 'enrollment')
-        .innerJoinAndSelect('enrollment.batch', 'batch')
-        .andWhere('batch.id = :batchId', { batchId: filter.batchId });
+      qb.innerJoinAndSelect("result.enrollment", "enrollment")
+        .innerJoinAndSelect("enrollment.batch", "batch")
+        .andWhere("batch.id = :batchId", { batchId: filter.batchId });
     }
 
     if (filter.studentId) {
-      qb.innerJoinAndSelect('result.enrollment', 'enrollment')
-        .innerJoinAndSelect('enrollment.student', 'student')
-        .andWhere('student.id = :studentId', { studentId: filter.studentId });
+      qb.innerJoinAndSelect("result.enrollment", "enrollment")
+        .innerJoinAndSelect("enrollment.student", "student")
+        .andWhere("student.id = :studentId", { studentId: filter.studentId });
     }
 
     if (filter.enrollmentId) {
-      qb.innerJoinAndSelect('result.enrollment', 'enrollment').andWhere(
-        'enrollment.id = :enrollmentId',
+      qb.innerJoinAndSelect("result.enrollment", "enrollment").andWhere(
+        "enrollment.id = :enrollmentId",
         { enrollmentId: filter.enrollmentId },
       );
     }
 
     const [results, itemCount] = await qb
-      .orderBy('result.createdAt', filter.order)
+      .orderBy("result.createdAt", filter.order)
       .skip(filter.skip)
       .take(filter.take)
       .getManyAndCount();
@@ -90,12 +90,12 @@ export class ResultService {
       createResultDto;
 
     if (score > maxScore) {
-      throw new BadRequestException('Score cannot be greater than maxScore');
+      throw new BadRequestException("Score cannot be greater than maxScore");
     }
 
     const enrollment = await this.dataService.enrollments.findOne({
       where: { id: enrollmentId },
-      relations: ['student', 'batch', 'batch.course'],
+      relations: ["student", "batch", "batch.course"],
     });
 
     if (!enrollment) {
@@ -144,10 +144,10 @@ export class ResultService {
     const saved = await this.dataService.results.findOne({
       where: { id },
       relations: [
-        'enrollment',
-        'enrollment.student',
-        'enrollment.batch',
-        'enrollment.batch.course',
+        "enrollment",
+        "enrollment.student",
+        "enrollment.batch",
+        "enrollment.batch.course",
       ],
     });
     if (!saved) {
@@ -186,10 +186,10 @@ export class ResultService {
     const saved = await this.dataService.results.findOne({
       where: { id },
       relations: [
-        'enrollment',
-        'enrollment.student',
-        'enrollment.batch',
-        'enrollment.batch.course',
+        "enrollment",
+        "enrollment.student",
+        "enrollment.batch",
+        "enrollment.batch.course",
       ],
     });
     if (!saved) {
@@ -198,7 +198,7 @@ export class ResultService {
     // Only update allowed fields
     Object.assign(saved, updateResultDto);
     if (saved.score > saved.maxScore) {
-      throw new BadRequestException('Score cannot be greater than maxScore');
+      throw new BadRequestException("Score cannot be greater than maxScore");
     }
     const updated = await this.dataService.results.save(saved);
     const percentage = (updated.score / updated.maxScore) * 100;

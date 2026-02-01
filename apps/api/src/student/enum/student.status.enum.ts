@@ -1,5 +1,5 @@
 export enum StudentStatus {
-  ACTIVE = 'active',
-  BANNED = 'banned',
-  SUSPENDED = 'suspended',
+  ACTIVE = "active",
+  BANNED = "banned",
+  SUSPENDED = "suspended",
 }

@@ -2,15 +2,15 @@ import {
   ExecutionContext,
   Injectable,
   UnauthorizedException,
-} from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
-import { AuthGuard as PassportAuthGuard } from '@nestjs/passport';
+} from "@nestjs/common";
+import { Reflector } from "@nestjs/core";
+import { AuthGuard as PassportAuthGuard } from "@nestjs/passport";
 
-import { UserEntity } from '../../user/entities/user.entity';
-import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
+import { UserEntity } from "../../user/entities/user.entity";
+import { IS_PUBLIC_KEY } from "../decorators/public.decorator";
 
 @Injectable()
-export class AuthGuard extends PassportAuthGuard('jwt') {
+export class AuthGuard extends PassportAuthGuard("jwt") {
   constructor(private readonly reflector: Reflector) {
     super();
   }
