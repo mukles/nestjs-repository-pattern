@@ -1,6 +1,7 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Role } from '../../role/enums/role.enum';
-export class UserResponseDto {
+import { ApiProperty } from "@nestjs/swagger";
+import { Role, User } from "@repo/shared-types";
+
+export class UserResponseDto implements User {
   @ApiProperty()
   id: number;
 

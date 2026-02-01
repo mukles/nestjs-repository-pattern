@@ -1,3 +1,4 @@
+import { Role as RoleEnum } from "@repo/shared-types";
 import type { Relation } from "typeorm";
 import {
   BaseEntity,
@@ -11,7 +12,6 @@ import {
 } from "typeorm";
 
 import { UserEntity } from "../../user/entities/user.entity";
-import { Role as RoleEnum } from "../enums/role.enum";
 import { PermissionEntity } from "./permission.entity";
 
 @Entity("roles")
