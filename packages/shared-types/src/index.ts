@@ -1,13 +1,3 @@
-export interface LoginResponse {
-  access_token: string;
-  user: any;
-}
-
-export interface ApiResponse<T = any> {
-  success: boolean;
-  data?: T;
-  message?: string;
-}
-
-export * from "./core/index";
+export * from "./core/pagination/index";
+export * from "./core/response";
 export * from "./student/index";
