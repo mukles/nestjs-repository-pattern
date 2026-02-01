@@ -1,7 +1,7 @@
 "use server";
 
+import { GetStudentsParams, StudentDto } from "@repo/shared-types";
 import { apiAction, safeAction } from "../common";
-import { GetStudentsParams } from "./type";
 
 export async function getStudents(params: GetStudentsParams) {
   const urlParams = new URLSearchParams(
@@ -10,9 +10,7 @@ export async function getStudents(params: GetStudentsParams) {
       .map(([k, v]) => [k, String(v)]),
   );
 
-  console.log("Fetching students with params:", urlParams.toString());
-
-  return safeAction(() => {
+  return safeAction<StudentDto[]>(() => {
     return apiAction(`/students?${urlParams.toString()}`, {
       method: "GET",
     });

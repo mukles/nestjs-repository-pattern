@@ -1,3 +1,4 @@
+import { Pagination } from "../core/pagination/pagination.interface.js";
 import { Gender } from "./student-gender.enum.js";
 import { StudentStatus } from "./student-status.enum.js";
 
@@ -11,4 +12,10 @@ export interface StudentDto {
   status: StudentStatus;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface GetStudentsParams extends Pagination {
+  email?: string;
+  name?: string;
+  sortBy?: keyof StudentDto;
 }
