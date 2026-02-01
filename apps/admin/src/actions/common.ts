@@ -1,5 +1,7 @@
 'use server';
 
+import { decrypt } from '@/lib/session';
+import { cookies } from 'next/headers';
 import 'server-only';
 import { z } from 'zod';
 
@@ -81,6 +83,10 @@ export async function apiAction<T>(
   url: string,
   options?: RequestInit,
 ): Promise<T> {
+  const cookieStore = await cookies();
+  const session = cookieStore.get('session')?.value;
+  const { accessToken } = (await decrypt(session)) || {};
+
   const fullUrl = `${process.env.API_BASE_URL}${url}`;
   const res = await fetch(fullUrl, {
     credentials: 'include',
@@ -88,6 +94,7 @@ export async function apiAction<T>(
     headers: {
       'Content-Type': 'application/json',
       ...(options?.headers || {}),
+      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
     },
   });
 
