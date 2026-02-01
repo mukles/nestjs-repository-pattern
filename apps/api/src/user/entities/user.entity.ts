@@ -1,5 +1,5 @@
-import * as bcrypt from "bcrypt";
-import type { Relation } from "typeorm";
+import * as bcrypt from 'bcrypt';
+import type { Relation } from 'typeorm';
 import {
   BaseEntity,
   BeforeInsert,
@@ -11,60 +11,67 @@ import {
   ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from "typeorm";
+} from 'typeorm';
 
-import { RoleEntity } from "../../role/entities/role.entity";
-import { UserStatus } from "../enums/user-status.enum";
+import { RoleEntity } from '../../role/entities/role.entity';
+import { UserStatus } from '../enums/user-status.enum';
 
-@Entity("users")
+@Entity('users')
 export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({
-    type: "varchar",
+    type: 'varchar',
     length: 100,
   })
   firstName: string;
 
   @Column({
-    type: "varchar",
+    type: 'varchar',
     length: 100,
   })
   lastName: string;
 
   @Column({
-    type: "varchar",
+    type: 'varchar',
+    length: 255,
+    nullable: true,
+  })
+  avatar: string;
+
+  @Column({
+    type: 'varchar',
     length: 255,
     unique: true,
   })
   email: string;
 
   @Column({
-    type: "varchar",
+    type: 'varchar',
     length: 255,
     select: false,
   })
   password: string;
 
   @Column({
-    type: "enum",
+    type: 'enum',
     enum: UserStatus,
     default: UserStatus.ACTIVE,
   })
   status: UserStatus;
 
   @Column({
-    type: "text",
+    type: 'text',
     nullable: true,
   })
   banReason?: string;
 
   @ManyToMany(() => RoleEntity, (role) => role.users, { nullable: false })
   @JoinTable({
-    name: "user_roles",
-    joinColumn: { name: "userId", referencedColumnName: "id" },
-    inverseJoinColumn: { name: "roleId", referencedColumnName: "id" },
+    name: 'user_roles',
+    joinColumn: { name: 'userId', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'roleId', referencedColumnName: 'id' },
   })
   roles: Relation<RoleEntity[]>;
 

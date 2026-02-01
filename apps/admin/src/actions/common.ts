@@ -109,5 +109,6 @@ export async function apiAction<T>(
     throw new Error(errorMsg);
   }
   const result = await res.json();
-  return result.data ? result.data : result;
+  const finalResult = result.data ? result.data : result;
+  return finalResult;
 }

@@ -5,26 +5,34 @@ import {
   HttpStatus,
   Param,
   ParseIntPipe,
-} from "@nestjs/common";
-import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
-import { ApiResponse } from "../common/response";
-import { UserResponseDto } from "./dto/user-response.dto";
-import { UserService } from "./user.service";
+import { ApiResponse } from '../common/response';
+import { UserResponseDto } from './dto/user-response.dto';
+import { UserService } from './user.service';
 
-@ApiBearerAuth("JWT-auth")
-@ApiTags("User")
-@Controller("user")
+@ApiBearerAuth('JWT-auth')
+@ApiTags('User')
+@Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get(":userId/profile")
+  @Get(':userId/profile')
   @HttpCode(HttpStatus.OK)
   @ApiResponse(UserResponseDto)
   async findOne(
-    @Param("userId", ParseIntPipe) userId: number,
+    @Param('userId', ParseIntPipe) userId: number,
   ): Promise<UserResponseDto> {
     const user = await this.userService.findById(userId);
-    return UserResponseDto.fromEntity(user);
+    const userResponse: UserResponseDto = {
+      id: user.id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      avatar: user.avatar,
+      roles: user.roles.map((role) => role.name),
+    };
+    return userResponse;
   }
 }

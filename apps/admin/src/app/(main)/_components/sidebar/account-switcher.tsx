@@ -1,16 +1,13 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-
-import { BadgeCheck, Bell, CreditCard, LogOut } from "lucide-react";
-
-import { logout } from "@/actions/auth";
-import { getInitials } from "@/lib/utils";
+import { logout } from '@/actions/auth';
+import { User } from '@/actions/auth/user/types';
+import { getInitials } from '@/lib/utils';
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@repo/ui/components/ui-kit/avatar";
+} from '@repo/ui/components/ui-kit/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,32 +15,20 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@repo/ui/components/ui-kit/dropdown-menu";
-import { cn } from "@repo/ui/lib/utils";
+} from '@repo/ui/components/ui-kit/dropdown-menu';
+import { BadgeCheck, Bell, CreditCard, LogOut } from 'lucide-react';
 
-export function AccountSwitcher({
-  users,
-}: {
-  readonly users: ReadonlyArray<{
-    readonly id: string;
-    readonly name: string;
-    readonly email: string;
-    readonly avatar: string;
-    readonly role: string;
-  }>;
-}) {
-  const [activeUser, setActiveUser] = useState(users[0]);
-
+export function AccountSwitcher({ user }: { readonly user: User }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Avatar className="size-9 rounded-lg">
           <AvatarImage
-            src={activeUser!.avatar || undefined}
-            alt={activeUser!.name}
+            src={user.avatar || undefined}
+            alt={`${user.firstName} ${user.lastName}`}
           />
           <AvatarFallback className="rounded-lg">
-            {getInitials(activeUser!.name)}
+            {getInitials(`${user.firstName} ${user.lastName}`)}
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
@@ -53,30 +38,23 @@ export function AccountSwitcher({
         align="end"
         sideOffset={4}
       >
-        {users.map((user) => (
-          <DropdownMenuItem
-            key={user.email}
-            className={cn(
-              "p-0",
-              user.id === activeUser!.id &&
-                "border-l-primary bg-accent/50 border-l-2",
-            )}
-            onClick={() => setActiveUser(user)}
-          >
-            <div className="flex w-full items-center justify-between gap-2 px-1 py-1.5">
-              <Avatar className="size-9 rounded-lg">
-                <AvatarImage src={user.avatar || undefined} alt={user.name} />
-                <AvatarFallback className="rounded-lg">
-                  {getInitials(user.name)}
-                </AvatarFallback>
-              </Avatar>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">{user.name}</span>
-                <span className="truncate text-xs capitalize">{user.role}</span>
-              </div>
-            </div>
-          </DropdownMenuItem>
-        ))}
+        <div className="flex w-full items-center gap-2 px-1 py-1.5">
+          <Avatar className="size-9 rounded-lg">
+            <AvatarImage
+              src={user.avatar || undefined}
+              alt={`${user.firstName} ${user.lastName}`}
+            />
+            <AvatarFallback className="rounded-lg">
+              {getInitials(`${user.firstName} ${user.lastName}`)}
+            </AvatarFallback>
+          </Avatar>
+          <div className="grid flex-1 text-left text-sm leading-tight">
+            <span className="truncate font-semibold">{`${user.firstName} ${user.lastName}`}</span>
+            <span className="truncate text-xs capitalize">
+              {user.roles.join(', ')}
+            </span>
+          </div>
+        </div>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>

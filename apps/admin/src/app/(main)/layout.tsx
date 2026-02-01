@@ -2,7 +2,6 @@ import type { ReactNode } from 'react';
 
 import { cookies } from 'next/headers';
 
-import { users } from '@/data/users';
 import {
   SIDEBAR_COLLAPSIBLE_VALUES,
   SIDEBAR_VARIANT_VALUES,
@@ -18,6 +17,7 @@ import {
   SidebarTrigger,
 } from '@repo/ui/components/ui-kit/sidebar';
 import { cn } from '@repo/ui/lib/utils';
+import { AccountSwitcher } from './_components/sidebar/account-switcher';
 import { AppSidebar } from './_components/sidebar/app-sidebar';
 import { LayoutControls } from './_components/sidebar/layout-controls';
 import { SearchDialog } from './_components/sidebar/search-dialog';
@@ -34,11 +34,19 @@ export default async function Layout({
   ]);
 
   const { userId } = await verifySession();
-  const user = await getUserProfile(userId);
+  const userResponse = await getUserProfile(userId);
+
+  if (!userResponse?.success) {
+    throw new Error('Failed to fetch user profile');
+  }
 
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
-      <AppSidebar variant={variant} collapsible={collapsible} />
+      <AppSidebar
+        user={userResponse.data}
+        variant={variant}
+        collapsible={collapsible}
+      />
       <SidebarInset
         className={cn(
           '[html[data-content-layout=centered]_&]:mx-auto! [html[data-content-layout=centered]_&]:max-w-screen-2xl!',
@@ -66,6 +74,7 @@ export default async function Layout({
             <div className="flex items-center gap-2">
               <LayoutControls />
               <ThemeSwitcher />
+              <AccountSwitcher user={userResponse.data!} />
             </div>
           </div>
         </header>

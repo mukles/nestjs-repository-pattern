@@ -1,7 +1,5 @@
-import { ApiProperty } from "@nestjs/swagger";
-
-import { UserEntity } from "../entities/user.entity";
-
+import { ApiProperty } from '@nestjs/swagger';
+import { Role } from '../../role/enums/role.enum';
 export class UserResponseDto {
   @ApiProperty()
   id: number;
@@ -10,13 +8,14 @@ export class UserResponseDto {
   email: string;
 
   @ApiProperty()
-  name: string;
+  firstName: string;
 
-  static fromEntity(entity: UserEntity): UserResponseDto {
-    const dto = new UserResponseDto();
-    dto.id = entity.id;
-    dto.email = entity.email;
-    dto.name = `${entity.firstName} ${entity.lastName}`;
-    return dto;
-  }
+  @ApiProperty()
+  lastName: string;
+
+  @ApiProperty()
+  avatar: string;
+
+  @ApiProperty()
+  roles: Role[];
 }
