@@ -11,11 +11,11 @@ import {
   Query,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiBody, ApiTags } from "@nestjs/swagger";
+import { Permission } from "@repo/shared-types";
 
 import { Permissions } from "../auth/decorators/permissions.decorator";
 import { PaginationResultDto } from "../common/pagination/pagination-result.dto";
 import { ApiResponse } from "../common/response/api-response.decorator";
-import { Permission } from "../role/enums/permission.enum";
 import { CourseService } from "./course.service";
 import { CoursePaginationDto } from "./dto/course-pagination.dto";
 import { CourseResponseDto } from "./dto/course-response.dto";

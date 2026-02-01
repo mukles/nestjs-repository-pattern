@@ -1,9 +1,8 @@
+import { Permission, Role as RoleEnum } from "@repo/shared-types";
 import { DataSource } from "typeorm";
 
 import { PermissionEntity } from "../../role/entities/permission.entity";
 import { RoleEntity } from "../../role/entities/role.entity";
-import { Permission } from "../../role/enums/permission.enum";
-import { Role as RoleEnum } from "../../role/enums/role.enum";
 
 // Define permissions for each role
 const rolePermissions: Record<RoleEnum, Permission[]> = {

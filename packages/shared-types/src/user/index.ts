@@ -1,2 +1,2 @@
-export * from "./user-status.enum";
-export * from "./user.interface";
+export * from "./user-status.enum.js";
+export * from "./user.interface.js";

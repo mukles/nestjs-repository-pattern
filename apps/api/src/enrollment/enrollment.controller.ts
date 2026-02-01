@@ -10,14 +10,14 @@ import {
   Query,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
+import { Permission } from "@repo/shared-types";
 
 import { CurrentUser } from "../auth/decorators/current-user.decorator";
 import { Permissions } from "../auth/decorators/permissions.decorator";
 import type { JwtPayload } from "../auth/interface/jwt-interface";
-import { ApiPaginatedResponse } from "../common/pagination/pagination.service";
 import { PaginationResultDto } from "../common/pagination/pagination-result.dto";
+import { ApiPaginatedResponse } from "../common/pagination/pagination.service";
 import { ApiResponse } from "../common/response";
-import { Permission } from "../role/enums/permission.enum";
 import { CreateEnrollmentDto } from "./dto/create-enrollment.dto";
 import { EnrollmentPaginationDto } from "./dto/enrollment-pagination.dto";
 import { EnrollResponseDto } from "./dto/enrollment-response.dto";

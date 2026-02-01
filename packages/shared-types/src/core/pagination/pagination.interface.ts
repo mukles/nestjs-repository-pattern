@@ -1,4 +1,4 @@
-import { Order } from "./pagination-order.enum";
+import { Order } from "./pagination-order.enum.js";
 
 export interface Pagination {
   order?: Order;

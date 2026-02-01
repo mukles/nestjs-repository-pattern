@@ -1,7 +1,7 @@
+import { Permission } from "@repo/shared-types";
 import { DataSource } from "typeorm";
 
 import { PermissionEntity } from "../../role/entities/permission.entity";
-import { Permission } from "../../role/enums/permission.enum";
 
 // Permission descriptions mapping
 const permissionDescriptions: Record<Permission, string> = {

@@ -1,2 +1,2 @@
-export * from "./pagination-order.enum";
-export * from "./pagination.inteface";
+export * from "./pagination-order.enum.js";
+export * from "./pagination.interface.js";
