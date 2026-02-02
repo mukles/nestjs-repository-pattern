@@ -1,4 +1,4 @@
-import { ErrorType, Result } from "@/actions/common";
+import { ApiResponse, ErrorType } from "@repo/shared-types";
 import { useActionState, useEffect } from "react";
 
 type MutationCallbacks<T> = {
@@ -14,12 +14,15 @@ type MutationCallbacks<T> = {
 };
 
 export function useMutation<T>(
-  actionFunction: (state: Result<T>, formData: FormData) => Promise<Result<T>>,
+  actionFunction: (
+    state: ApiResponse<T>,
+    formData: FormData,
+  ) => Promise<ApiResponse<T>>,
   props?: MutationCallbacks<T>,
 ): {
   action: (formData: FormData) => void;
   isPending: boolean;
-  state: Result<T>;
+  state: ApiResponse<T>;
 } {
   const [state, action, isPending] = useActionState(actionFunction, null);
 

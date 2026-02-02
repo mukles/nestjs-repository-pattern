@@ -13,23 +13,19 @@ export const loginUser = async (
   formData: FormData,
 ) => {
   return safeAction(async () => {
-    try {
-      const data = Object.fromEntries(formData);
-      const validatedData = loginUserSchema.parse(data);
-      const response = await apiAction<AuthResponse>("/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(validatedData),
-      });
+    const data = Object.fromEntries(formData);
+    const validatedData = loginUserSchema.parse(data);
+    const response = await apiAction<AuthResponse>("/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(validatedData),
+    });
 
-      await createSession(response.accessToken, response.refreshToken);
+    await createSession(response.accessToken, response.refreshToken);
 
-      return response;
-    } catch (error) {
-      console.error("Login Error:", error);
-    }
+    return response;
   });
 };
 
