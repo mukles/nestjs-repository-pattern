@@ -24,7 +24,13 @@ export async function createRole(
 ) {
   return safeAction<RoleDto>(async () => {
     const data = Object.fromEntries(formData);
-    const validatedData = createRoleSchema.parse(data);
+    const permissionIds = formData.getAll("permissionIds").map(Number);
+    const isActive = formData.get("isActive") === "true";
+    const validatedData = createRoleSchema.parse({
+      ...data,
+      permissionIds,
+      isActive,
+    });
     const result = await apiAction<RoleDto>("/roles", {
       method: "POST",
       body: JSON.stringify(validatedData),
@@ -39,14 +45,21 @@ export async function updateRole(
   _state: ApiResponse<RoleDto> | null,
   formData: FormData,
 ) {
+  console.log("FromData", { formData });
+
   return safeAction<RoleDto>(async () => {
     const data = Object.fromEntries(formData);
-    console.log("Received data for updateRole:", data);
-    const validatedData = updateRoleSchema.parse(data);
-    console.log("Updating role with data:", validatedData);
-    const result = await apiAction<RoleDto>(`/roles/${validatedData.id}`, {
+    const permissionIds = formData.getAll("permissionIds").map(Number);
+    const isActive = formData.get("isActive") === "true";
+    const validatedData = updateRoleSchema.parse({
+      ...data,
+      permissionIds,
+      isActive,
+    });
+    const { id, ...updateData } = validatedData;
+    const result = await apiAction<RoleDto>(`/roles/${id}`, {
       method: "PATCH",
-      body: JSON.stringify(validatedData),
+      body: JSON.stringify(updateData),
       next: { tags: ["roles", "permissions"] },
     });
     updateTag("roles");

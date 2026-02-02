@@ -18,6 +18,15 @@ export const getRoleTableColumns = (
     cell: ({ row }) => row.original.description || "-",
   },
   {
+    accessorKey: "totalUsers",
+    header: "Users",
+    cell: ({ row }) => (
+      <Badge variant="secondary" className="rounded-full">
+        {row.original.totalUsers || 0}
+      </Badge>
+    ),
+  },
+  {
     accessorKey: "permissions",
     header: "Permissions",
     cell: ({ row }) => {

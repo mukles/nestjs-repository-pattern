@@ -90,6 +90,9 @@ export function RoleForm({
     },
   );
 
+  const permissionIds = form.watch("permissionIds");
+  const isActive = form.watch("isActive");
+
   return (
     <form className="space-y-8" action={action}>
       <motion.div
@@ -100,6 +103,15 @@ export function RoleForm({
         {initialData?.id && (
           <input type="hidden" name="id" value={initialData.id} />
         )}
+        <input
+          type="hidden"
+          name="isActive"
+          value={isActive ? "true" : "false"}
+        />
+        {permissionIds.length > 0 &&
+          permissionIds.map((id) => (
+            <input key={id} type="hidden" name="permissionIds" value={id} />
+          ))}
 
         <FieldGroup className="space-y-8">
           {/* Header Section */}
