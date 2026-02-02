@@ -2,6 +2,7 @@
 
 import { createRole, updateRole } from "@/actions/roles";
 import { useMutation } from "@/hooks/use-mutation";
+import { revalidateTag } from "@/lib/revalidate";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PermissionDto, RoleDto } from "@repo/shared-types";
 import { Button } from "@repo/ui/components/ui-kit/button";
@@ -18,6 +19,7 @@ import { Switch } from "@repo/ui/components/ui-kit/switch";
 import { cn } from "@repo/ui/lib/utils";
 import { Activity, CheckCircle2, Info, LayoutGrid, Shield } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -44,6 +46,7 @@ export function RoleForm({
   permissions,
   onOpenChange,
 }: RoleFormProps) {
+  const router = useRouter();
   const form = useForm<RoleFormValues>({
     resolver: zodResolver(roleSchema),
     defaultValues: {
@@ -67,13 +70,15 @@ export function RoleForm({
   const { action, isPending } = useMutation(
     initialData?.id ? updateRole : createRole,
     {
-      onSuccess() {
+      onSuccess: async () => {
         toast.success(
           initialData?.id
             ? "Role updated successfully"
             : "Role created successfully",
         );
         onOpenChange?.(false);
+        await revalidateTag("roles");
+        router.refresh();
       },
 
       onError({ error }) {

@@ -7,7 +7,6 @@ import {
   updateRoleSchema,
 } from "@/lib/validation/role.schema";
 import { ApiResponse, PermissionDto, RoleDto } from "@repo/shared-types";
-import { updateTag } from "next/cache";
 
 export async function getRoles() {
   return safeAction<RoleDto[]>(async () => {
@@ -36,7 +35,6 @@ export async function createRole(
       body: JSON.stringify(validatedData),
       next: { tags: ["roles", "permissions"] },
     });
-    updateTag("roles");
     return result;
   });
 }
@@ -45,8 +43,6 @@ export async function updateRole(
   _state: ApiResponse<RoleDto> | null,
   formData: FormData,
 ) {
-  console.log("FromData", { formData });
-
   return safeAction<RoleDto>(async () => {
     const data = Object.fromEntries(formData);
     const permissionIds = formData.getAll("permissionIds").map(Number);
@@ -62,7 +58,6 @@ export async function updateRole(
       body: JSON.stringify(updateData),
       next: { tags: ["roles", "permissions"] },
     });
-    updateTag("roles");
     return result;
   });
 }
@@ -77,7 +72,6 @@ export async function deleteRole(
       method: "DELETE",
       next: { tags: ["roles", "permissions"] },
     });
-    updateTag("roles");
     return result;
   });
 }

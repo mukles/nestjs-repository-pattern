@@ -2,6 +2,7 @@
 
 import { deleteRole } from "@/actions/roles";
 import { useMutation } from "@/hooks/use-mutation";
+import { revalidateTag } from "@/lib/revalidate";
 import { RoleDto } from "@repo/shared-types";
 import { Button } from "@repo/ui/components/ui-kit/button";
 import {
@@ -20,6 +21,7 @@ import {
 } from "@repo/ui/components/ui-kit/tooltip";
 import { useDialog } from "@repo/ui/hooks/use-dialog";
 import { Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 interface DeleteRoleDialogProps {
@@ -31,11 +33,14 @@ export function DeleteRoleDialog({
   role,
   isSystemRole,
 }: DeleteRoleDialogProps) {
+  const router = useRouter();
   const { isOpen, openChange } = useDialog();
   const { action, isPending } = useMutation(deleteRole, {
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success(`Role "${role.name}" has been deleted.`);
       openChange(false);
+      await revalidateTag("roles");
+      router.refresh();
     },
     onError: () => {
       toast.error(`Failed to delete role "${role.name}". Please try again.`);
