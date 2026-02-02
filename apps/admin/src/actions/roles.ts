@@ -1,22 +1,13 @@
 "use server";
 
 import { apiAction, safeAction } from "@/actions/common";
-import { createRoleSchema } from "@/lib/validation/role.schema";
+import {
+  createRoleSchema,
+  deleteRoleSchema,
+  updateRoleSchema,
+} from "@/lib/validation/role.schema";
 import { ApiResponse, PermissionDto, RoleDto } from "@repo/shared-types";
 import { revalidateTag } from "next/cache";
-
-export interface CreateRoleDto {
-  name: string;
-  description?: string;
-  permissionIds: number[];
-}
-
-export interface UpdateRoleDto {
-  name?: string;
-  description?: string;
-  isActive?: boolean;
-  permissionIds?: number[];
-}
 
 export async function getRoles() {
   return safeAction<RoleDto[]>(async () => {
@@ -34,28 +25,41 @@ export async function createRole(
   return safeAction<RoleDto>(async () => {
     const data = Object.fromEntries(formData);
     const validatedData = createRoleSchema.parse(data);
-    console.log(validatedData);
     return await apiAction("/roles", {
       method: "POST",
       body: JSON.stringify(validatedData),
-      next: { tags: ["roles", "page"] },
+      next: { tags: ["roles", "permissions"] },
     });
   });
 }
 
-export async function updateRole(id: number, data: UpdateRoleDto) {
+export async function updateRole(
+  _state: ApiResponse<RoleDto> | null,
+  formData: FormData,
+) {
   return safeAction<RoleDto>(async () => {
-    console.log("Mock Update Role:", id, data);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    return {} as RoleDto;
+    const data = Object.fromEntries(formData);
+    const validatedData = updateRoleSchema.parse(data);
+    return apiAction(`/roles/${validatedData.id}`, {
+      method: "PATCH",
+      body: JSON.stringify(validatedData),
+      next: { tags: ["roles", "permissions"] },
+    });
   });
 }
 
-export async function deleteRole(id: number) {
-  return safeAction<void>(async () => {
-    console.log("Mock Delete Role:", id);
-    await new Promise((resolve) => setTimeout(resolve, 800));
+export async function deleteRole(
+  _state: ApiResponse<RoleDto> | null,
+  formData: FormData,
+) {
+  return safeAction<RoleDto>(async () => {
+    const validatedData = deleteRoleSchema.parse(Object.fromEntries(formData));
+    const result = await apiAction<RoleDto>(`/roles/${validatedData.id}`, {
+      method: "DELETE",
+      next: { tags: ["roles", "permissions"] },
+    });
     revalidateTag("roles", "page");
+    return result;
   });
 }
 

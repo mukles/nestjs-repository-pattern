@@ -1,42 +1,25 @@
 "use client";
 
-import { createRole, PermissionData } from "@/actions/roles";
+import { PermissionDto } from "@repo/shared-types";
 import { Button } from "@repo/ui/components/ui-kit/button";
 import {
+  Dialog,
+  DialogContent,
   DialogDescription,
+  DialogHeader,
+  DialogTitle,
   DialogTrigger,
 } from "@repo/ui/components/ui-kit/dialog";
 import { Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { RoleForm } from "./role-form";
 
 interface CreateRoleModalProps {
-  permissions: PermissionData[];
+  permissions: PermissionDto[];
 }
 
 export function CreateRoleModal({ permissions }: CreateRoleModalProps) {
   const [open, setOpen] = useState(false);
-  const [isPending, setIsPending] = useState(false);
-  const router = useRouter();
-
-  const handleSubmit = async (data: any) => {
-    setIsPending(true);
-    try {
-      const result = await createRole(data);
-      if (result.success) {
-        setOpen(false);
-        router.refresh();
-      } else {
-        alert(result.error?.message || "Failed to create role");
-      }
-    } catch (error) {
-      console.error(error);
-      alert("An unexpected error occurred");
-    } finally {
-      setIsPending(false);
-    }
-  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -59,11 +42,7 @@ export function CreateRoleModal({ permissions }: CreateRoleModalProps) {
           </DialogDescription>
         </DialogHeader>
         <div className="py-4">
-          <RoleForm
-            permissions={permissions}
-            onSubmit={handleSubmit}
-            isPending={isPending}
-          />
+          <RoleForm permissions={permissions} />
         </div>
       </DialogContent>
     </Dialog>

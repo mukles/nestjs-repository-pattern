@@ -1,6 +1,6 @@
 "use client";
 
-import { createRole } from "@/actions/roles";
+import { createRole, updateRole } from "@/actions/roles";
 import { useMutation } from "@/hooks/use-mutation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PermissionDto, RoleDto } from "@repo/shared-types";
@@ -59,17 +59,23 @@ export function RoleForm({ initialData, permissions }: RoleFormProps) {
     {} as Record<string, PermissionDto[]>,
   );
 
-  const { action, isPending } = useMutation(createRole, {
-    onError({ error }) {
-      if (error?.type === "VALIDATION_ERROR") {
-        toast.error("Please fix the validation errors and try again.");
-        form.trigger();
-        return;
-      }
+  const { action, isPending } = useMutation(
+    initialData?.id ? updateRole : createRole,
+    {
+      onError({ error }) {
+        console.error("Role Form Error:", error);
+        if (error?.type === "VALIDATION_ERROR") {
+          toast.error("Please fix the validation errors and try again.");
+          form.trigger();
+          return;
+        }
 
-      toast.error("Failed to create role");
+        toast.error(
+          initialData?.id ? "Failed to update role" : "Failed to create role",
+        );
+      },
     },
-  });
+  );
 
   return (
     <form className="space-y-8" action={action}>
@@ -78,6 +84,10 @@ export function RoleForm({ initialData, permissions }: RoleFormProps) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
       >
+        {initialData?.id && (
+          <input type="hidden" name="id" value={initialData.id} />
+        )}
+
         <FieldGroup className="space-y-8">
           {/* Header Section */}
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">

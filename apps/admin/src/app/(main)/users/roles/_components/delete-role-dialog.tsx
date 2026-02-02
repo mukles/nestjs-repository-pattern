@@ -1,6 +1,8 @@
 "use client";
 
-import { deleteRole, Role } from "@/actions/roles";
+import { deleteRole } from "@/actions/roles";
+import { useMutation } from "@/hooks/use-mutation";
+import { RoleDto } from "@repo/shared-types";
 import { Button } from "@repo/ui/components/ui-kit/button";
 import {
   Dialog,
@@ -12,35 +14,21 @@ import {
   DialogTrigger,
 } from "@repo/ui/components/ui-kit/dialog";
 import { Trash2 } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 
 interface DeleteRoleDialogProps {
-  role: Role;
+  role: RoleDto;
 }
 
 export function DeleteRoleDialog({ role }: DeleteRoleDialogProps) {
   const [open, setOpen] = useState(false);
-  const [isPending, setIsPending] = useState(false);
-  const router = useRouter();
-
-  const handleDelete = async () => {
-    setIsPending(true);
-    try {
-      const result = await deleteRole(role.id);
-      if (result.success) {
-        setOpen(false);
-        router.refresh();
-      } else {
-        alert(result.error?.message || "Failed to delete role");
-      }
-    } catch (error) {
-      console.error(error);
-      alert("An unexpected error occurred");
-    } finally {
-      setIsPending(false);
-    }
-  };
+  const { action, isPending } = useMutation(deleteRole, {
+    onSuccess: () => {
+      toast.success(`Role "${role.name}" has been deleted.`);
+      setOpen(false);
+    },
+  });
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -66,20 +54,21 @@ export function DeleteRoleDialog({ role }: DeleteRoleDialogProps) {
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="gap-2 sm:gap-0">
-          <Button
-            variant="outline"
-            onClick={() => setOpen(false)}
-            disabled={isPending}
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="destructive"
-            onClick={handleDelete}
-            disabled={isPending}
-          >
-            {isPending ? "Deleting..." : "Delete Role"}
-          </Button>
+          <form action={action}>
+            <input type="hidden" name="id" value={role.id} />
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setOpen(false)}
+              disabled={isPending}
+              className="mr-3"
+            >
+              Cancel
+            </Button>
+            <Button type="submit" variant="destructive" disabled={isPending}>
+              {isPending ? "Deleting..." : "Delete Role"}
+            </Button>
+          </form>
         </DialogFooter>
       </DialogContent>
     </Dialog>

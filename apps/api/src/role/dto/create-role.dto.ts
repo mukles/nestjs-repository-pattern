@@ -1,4 +1,3 @@
-import { Role } from "@repo/shared-types";
 import {
   IsArray,
   IsBoolean,
@@ -9,7 +8,7 @@ import {
 
 export class CreateRoleDto {
   @IsString()
-  name: Role;
+  name: string;
 
   @IsString()
   description: string;
