@@ -15,14 +15,14 @@ type MutationCallbacks<T> = {
 
 export function useMutation<T>(
   actionFunction: (
-    state: ApiResponse<T>,
+    state: ApiResponse<T> | null,
     formData: FormData,
   ) => Promise<ApiResponse<T>>,
   props?: MutationCallbacks<T>,
 ): {
   action: (formData: FormData) => void;
   isPending: boolean;
-  state: ApiResponse<T>;
+  state: ApiResponse<T> | null;
 } {
   const [state, action, isPending] = useActionState(actionFunction, null);
 

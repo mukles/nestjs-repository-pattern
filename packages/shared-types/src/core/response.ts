@@ -15,5 +15,4 @@ export type ApiResponse<T = any> =
         message: string;
         details?: Record<string, any>;
       } | null;
-    }
-  | null;
+    };

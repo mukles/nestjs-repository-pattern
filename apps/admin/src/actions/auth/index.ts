@@ -9,7 +9,7 @@ import { apiAction, safeAction } from "../common";
 import { AuthResponse } from "./types";
 
 export const loginUser = async (
-  _state: ApiResponse<AuthResponse>,
+  _state: ApiResponse<AuthResponse> | null,
   formData: FormData,
 ) => {
   return safeAction(async () => {

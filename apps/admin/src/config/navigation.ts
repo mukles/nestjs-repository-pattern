@@ -161,7 +161,6 @@ export const sidebarItems: NavGroup[] = [
           {
             title: "Roles & Permissions",
             url: "/users/roles",
-            comingSoon: true,
           },
         ],
       },
