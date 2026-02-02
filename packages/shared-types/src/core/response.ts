@@ -6,8 +6,14 @@ export type ErrorType =
   | "SERVER_ERROR"
   | "AUTH_ERROR";
 
-export interface ApiResponse<T = any> {
-  success: boolean;
-  data?: T;
-  message?: string;
-}
+export type ApiResponse<T = any> =
+  | { success: true; data: T; meta?: Record<string, any> }
+  | {
+      success: false;
+      error: {
+        type: ErrorType;
+        message: string;
+        details?: Record<string, any>;
+      } | null;
+    }
+  | null;

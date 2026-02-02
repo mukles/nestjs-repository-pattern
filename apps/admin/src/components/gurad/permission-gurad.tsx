@@ -13,7 +13,11 @@ export function PermissionGuard({
   requireAll = false,
   fallback = null,
 }: PermissionGuardProps) {
-  const { hasAnyRole, hasAnyPermission, hasRole, hasPermission } = {};
+  // TODO: Replace these stub implementations with your actual logic or import them from your auth/context/hooks
+  const hasAnyRole = (roles: string[]) => false;
+  const hasAnyPermission = (permissions: string[]) => false;
+  const hasRole = (role: string) => false;
+  const hasPermission = (permission: string) => false;
 
   const hasRequiredRoles =
     roles.length === 0 ||

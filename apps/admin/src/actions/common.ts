@@ -1,7 +1,7 @@
 "use server";
 
 import { decrypt } from "@/lib/session";
-import { ErrorType } from "@repo/shared-types";
+import { ApiResponse } from "@repo/shared-types";
 import { cookies } from "next/headers";
 import "server-only";
 import { z } from "zod";
@@ -9,18 +9,6 @@ import { z } from "zod";
 export type ExtractVariables<T> = T extends { variables: object }
   ? T["variables"]
   : never;
-
-export type Result<T> =
-  | { success: true; data: T }
-  | {
-      success: false;
-      error: {
-        type: ErrorType;
-        message: string;
-        details?: Record<string, any>;
-      } | null;
-    }
-  | null;
 
 function formatZodErrors(error: z.ZodError): Record<string, string> {
   return Object.fromEntries(
@@ -31,7 +19,9 @@ function formatZodErrors(error: z.ZodError): Record<string, string> {
   );
 }
 
-export async function safeAction<T>(fn: () => Promise<T>): Promise<Result<T>> {
+export async function safeAction<T>(
+  fn: () => Promise<T>,
+): Promise<ApiResponse<T>> {
   try {
     const response = await fn();
     return {
@@ -81,14 +71,21 @@ export async function apiAction<T>(
   const { accessToken } = (await decrypt(session)) || {};
 
   const fullUrl = `${process.env.API_BASE_URL}${url}`;
+
+  // Don't set Content-Type for FormData, let the browser handle it
+  const headers: Record<string, string> = {
+    ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+    ...((options?.headers as Record<string, string>) || {}),
+  };
+
+  if (!(options?.body instanceof FormData) && !headers["Content-Type"]) {
+    headers["Content-Type"] = "application/json";
+  }
+
   const res = await fetch(fullUrl, {
     credentials: "include",
     ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...(options?.headers || {}),
-      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
-    },
+    headers,
   });
 
   if (!res.ok) {
@@ -101,7 +98,9 @@ export async function apiAction<T>(
     }
     throw new Error(errorMsg);
   }
+
   const result = await res.json();
-  const finalResult = result.data ? result.data : result;
-  return finalResult;
+  return result && typeof result === "object" && "data" in result
+    ? result.data
+    : result;
 }
