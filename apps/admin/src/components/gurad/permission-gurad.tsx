@@ -1,3 +1,4 @@
+import { useAuth } from "@/providers/auth-provider";
 import { Permission, Role } from "@repo/shared-types";
 
 interface PermissionGuardProps {
@@ -15,11 +16,7 @@ export function PermissionGuard({
   requireAll = false,
   fallback = null,
 }: PermissionGuardProps) {
-  // TODO: Replace these stub implementations with your actual logic or import them from your auth/context/hooks
-  const hasAnyRole = (_roles: Role[]) => false;
-  const hasAnyPermission = (_permissions: Permission[]) => false;
-  const hasRole = (_role: Role) => false;
-  const hasPermission = (_permission: Permission) => false;
+  const { hasAnyRole, hasAnyPermission, hasRole, hasPermission } = useAuth();
 
   const hasRequiredRoles =
     roles.length === 0 ||
