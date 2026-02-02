@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { logout } from '@/actions/auth';
-import { User } from '@/actions/auth/user/types';
-import { getInitials } from '@/lib/utils';
+import { logout } from "@/actions/auth";
+import { User } from "@/actions/auth/user/types";
+import { getInitials } from "@/lib/utils";
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from '@repo/ui/components/ui-kit/avatar';
+} from "@repo/ui/components/ui-kit/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,8 +15,8 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@repo/ui/components/ui-kit/dropdown-menu';
-import { BadgeCheck, Bell, CreditCard, LogOut } from 'lucide-react';
+} from "@repo/ui/components/ui-kit/dropdown-menu";
+import { BadgeCheck, Bell, CreditCard, LogOut } from "lucide-react";
 
 export function AccountSwitcher({ user }: { readonly user: User }) {
   return (
@@ -51,7 +51,7 @@ export function AccountSwitcher({ user }: { readonly user: User }) {
           <div className="grid flex-1 text-left text-sm leading-tight">
             <span className="truncate font-semibold">{`${user.firstName} ${user.lastName}`}</span>
             <span className="truncate text-xs capitalize">
-              {user.roles.join(', ')}
+              {user.roles.map((r) => r.name).join(", ")}
             </span>
           </div>
         </div>

@@ -78,7 +78,6 @@ export const getRoleTableColumns = (
     id: "actions",
     header: () => <div className="text-right">Actions</div>,
     cell: ({ row }) => {
-      console.log("Row data:", row.original);
       return (
         <div className="flex justify-end gap-2">
           <EditRoleModal

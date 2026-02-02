@@ -1,7 +1,7 @@
 import { Permission, Role } from "@repo/shared-types";
 
 export interface JwtPayload {
-  id: string; // user id
+  id: string;
   email: string;
   sessionId: string;
   roles: Role[];
