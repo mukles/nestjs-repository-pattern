@@ -13,8 +13,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@repo/ui/components/ui-kit/dialog";
+import { useDialog } from "@repo/ui/hooks/use-dialog";
 import { Trash2 } from "lucide-react";
-import { useState } from "react";
 import { toast } from "sonner";
 
 interface DeleteRoleDialogProps {
@@ -22,16 +22,19 @@ interface DeleteRoleDialogProps {
 }
 
 export function DeleteRoleDialog({ role }: DeleteRoleDialogProps) {
-  const [open, setOpen] = useState(false);
+  const { isOpen, openChange } = useDialog();
   const { action, isPending } = useMutation(deleteRole, {
     onSuccess: () => {
       toast.success(`Role "${role.name}" has been deleted.`);
-      setOpen(false);
+      openChange(false);
+    },
+    onError: () => {
+      toast.error(`Failed to delete role "${role.name}". Please try again.`);
     },
   });
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={isOpen} onOpenChange={openChange}>
       <DialogTrigger asChild>
         <Button
           variant="outline"
@@ -59,7 +62,7 @@ export function DeleteRoleDialog({ role }: DeleteRoleDialogProps) {
             <Button
               type="button"
               variant="outline"
-              onClick={() => setOpen(false)}
+              onClick={() => openChange(false)}
               disabled={isPending}
               className="mr-3"
             >

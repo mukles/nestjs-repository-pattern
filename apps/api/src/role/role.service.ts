@@ -132,7 +132,7 @@ export class RoleService {
     return this.mapToResponse(updatedRole);
   }
 
-  async deleteRole(id: number): Promise<void> {
+  async deleteRole(id: number): Promise<RoleEntity> {
     const role = await this.dataService.roles.findOne({
       where: { id },
     });
@@ -141,7 +141,7 @@ export class RoleService {
       throw new NotFoundException(`Role with ID ${id} not found`);
     }
 
-    await this.dataService.roles.remove(role);
+    return await this.dataService.roles.remove(role);
   }
 
   async findByName(name: RoleEnum): Promise<RoleEntity | null> {

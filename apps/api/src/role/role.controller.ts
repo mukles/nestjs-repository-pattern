@@ -16,6 +16,7 @@ import { CreateRoleDto } from "./dto/create-role.dto";
 import { PermissionResponseDto } from "./dto/permission-response.dto";
 import { RoleResponseDto } from "./dto/role-response.dto";
 import { UpdateRoleDto } from "./dto/update-role.dto";
+import { RoleEntity } from "./entities/role.entity";
 import { RoleService } from "./role.service";
 
 @ApiBearerAuth("JWT-auth")
@@ -65,8 +66,10 @@ export class RoleController {
   }
 
   @Delete(":id")
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteRole(@Param("id") id: string): Promise<void> {
-    return this.roleService.deleteRole(+id);
+  @HttpCode(HttpStatus.OK)
+  @ApiResponse(RoleEntity)
+  async deleteRole(@Param("id") id: string): Promise<RoleEntity> {
+    const role = await this.roleService.deleteRole(+id);
+    return role;
   }
 }

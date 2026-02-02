@@ -10,8 +10,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@repo/ui/components/ui-kit/dialog";
+import { useDialog } from "@repo/ui/hooks/use-dialog";
 import { Plus } from "lucide-react";
-import { useState } from "react";
 import { RoleForm } from "./role-form";
 
 interface CreateRoleModalProps {
@@ -19,10 +19,10 @@ interface CreateRoleModalProps {
 }
 
 export function CreateRoleModal({ permissions }: CreateRoleModalProps) {
-  const [open, setOpen] = useState(false);
+  const { isOpen, openChange } = useDialog();
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={isOpen} onOpenChange={openChange}>
       <DialogTrigger asChild>
         <Button
           size={"lg"}
@@ -42,7 +42,7 @@ export function CreateRoleModal({ permissions }: CreateRoleModalProps) {
           </DialogDescription>
         </DialogHeader>
         <div className="py-4">
-          <RoleForm permissions={permissions} />
+          <RoleForm permissions={permissions} onOpenChange={openChange} />
         </div>
       </DialogContent>
     </Dialog>

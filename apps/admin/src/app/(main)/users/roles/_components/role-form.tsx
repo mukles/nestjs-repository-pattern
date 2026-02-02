@@ -36,9 +36,14 @@ type RoleFormValues = z.infer<typeof roleSchema>;
 interface RoleFormProps {
   initialData?: RoleDto;
   permissions: PermissionDto[];
+  onOpenChange?: (open: boolean) => void;
 }
 
-export function RoleForm({ initialData, permissions }: RoleFormProps) {
+export function RoleForm({
+  initialData,
+  permissions,
+  onOpenChange,
+}: RoleFormProps) {
   const form = useForm<RoleFormValues>({
     resolver: zodResolver(roleSchema),
     defaultValues: {
@@ -62,8 +67,16 @@ export function RoleForm({ initialData, permissions }: RoleFormProps) {
   const { action, isPending } = useMutation(
     initialData?.id ? updateRole : createRole,
     {
+      onSuccess() {
+        toast.success(
+          initialData?.id
+            ? "Role updated successfully"
+            : "Role created successfully",
+        );
+        onOpenChange?.(false);
+      },
+
       onError({ error }) {
-        console.error("Role Form Error:", error);
         if (error?.type === "VALIDATION_ERROR") {
           toast.error("Please fix the validation errors and try again.");
           form.trigger();
