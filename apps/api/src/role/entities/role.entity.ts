@@ -11,7 +11,6 @@ import {
 } from "typeorm";
 
 import { UserEntity } from "../../user/entities/user.entity";
-import { Role as RoleEnum } from "../enums/role.enum";
 import { PermissionEntity } from "./permission.entity";
 
 @Entity("roles")
@@ -20,17 +19,22 @@ export class RoleEntity extends BaseEntity {
   id: number;
 
   @Column({
-    type: "enum",
-    enum: RoleEnum,
+    type: "varchar",
     unique: true,
   })
-  name: RoleEnum;
+  name: string;
 
   @Column({
     type: "boolean",
     default: true,
   })
   isActive: boolean;
+
+  @Column({
+    type: "boolean",
+    default: false,
+  })
+  isSystem: boolean;
 
   @Column({
     type: "varchar",

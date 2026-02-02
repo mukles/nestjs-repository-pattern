@@ -1,8 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Role, User } from "@repo/shared-types";
 
-import { UserEntity } from "../entities/user.entity";
-
-export class UserResponseDto {
+export class UserResponseDto implements User {
   @ApiProperty()
   id: number;
 
@@ -10,13 +9,14 @@ export class UserResponseDto {
   email: string;
 
   @ApiProperty()
-  name: string;
+  firstName: string;
 
-  static fromEntity(entity: UserEntity): UserResponseDto {
-    const dto = new UserResponseDto();
-    dto.id = entity.id;
-    dto.email = entity.email;
-    dto.name = `${entity.firstName} ${entity.lastName}`;
-    return dto;
-  }
+  @ApiProperty()
+  lastName: string;
+
+  @ApiProperty()
+  avatar: string;
+
+  @ApiProperty()
+  roles: Role[];
 }

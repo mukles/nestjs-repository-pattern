@@ -1,3 +1,4 @@
+import { UserStatus } from "@repo/shared-types";
 import * as bcrypt from "bcrypt";
 import type { Relation } from "typeorm";
 import {
@@ -14,7 +15,6 @@ import {
 } from "typeorm";
 
 import { RoleEntity } from "../../role/entities/role.entity";
-import { UserStatus } from "../enums/user-status.enum";
 
 @Entity("users")
 export class UserEntity extends BaseEntity {
@@ -32,6 +32,13 @@ export class UserEntity extends BaseEntity {
     length: 100,
   })
   lastName: string;
+
+  @Column({
+    type: "varchar",
+    length: 255,
+    nullable: true,
+  })
+  avatar: string;
 
   @Column({
     type: "varchar",

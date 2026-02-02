@@ -4,12 +4,12 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
+import { Role } from "@repo/shared-types";
 
 import { JwtPayload } from "../auth/interface/jwt-interface";
 import { PageMetaDto } from "../common/pagination/page-meta";
 import { PaginationResultDto } from "../common/pagination/pagination-result.dto";
 import { IDataService } from "../repositories/interfaces/dataservice.interface";
-import { Role } from "../role/enums/role.enum";
 import { CreateEnrollmentDto } from "./dto/create-enrollment.dto";
 import { EnrollmentPaginationDto } from "./dto/enrollment-pagination.dto";
 import { EnrollResponseDto } from "./dto/enrollment-response.dto";

@@ -2,6 +2,7 @@
 
 import { loginUser } from "@/actions/auth";
 import { useMutation } from "@/hooks/use-mutation";
+import { loginUserSchema } from "@/lib/validation/user.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PasswordInput } from "@repo/ui/components/password-input";
 import { Button } from "@repo/ui/components/ui-kit/button";
@@ -15,22 +16,13 @@ import { Input } from "@repo/ui/components/ui-kit/input";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
-
-export const loginSchema = z.object({
-  email: z
-    .string()
-    .trim()
-    .refine((val) => z.string().email().safeParse(val).success, {
-      message: "Invalid email address",
-    }),
-  password: z.string().min(1, "Password is required"),
-});
 
 export function LoginForm() {
   const router = useRouter();
-  const form = useForm<z.infer<typeof loginSchema>>({
-    resolver: zodResolver(loginSchema),
+  const form = useForm<z.infer<typeof loginUserSchema>>({
+    resolver: zodResolver(loginUserSchema),
     defaultValues: {
       email: "superadmin@example.com",
       password: "SuperAdmin@123",
@@ -38,7 +30,15 @@ export function LoginForm() {
   });
 
   const { action, isPending } = useMutation(loginUser, {
+    onError({ error }) {
+      if (error.type === "VALIDATION_ERROR") {
+        form.trigger();
+        toast.error("Invalid input. Please check your data and try again.");
+        return;
+      }
+    },
     onSuccess() {
+      toast.success("Login successful!");
       router.refresh();
     },
   });

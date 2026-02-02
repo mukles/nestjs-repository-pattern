@@ -11,12 +11,12 @@ import {
   Query,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiBody, ApiTags } from "@nestjs/swagger";
+import { Permission } from "@repo/shared-types";
 
 import { Permissions } from "../auth/decorators/permissions.decorator";
-import { ApiPaginatedResponse } from "../common/pagination/pagination.service";
 import { PaginationResultDto } from "../common/pagination/pagination-result.dto";
+import { ApiPaginatedResponse } from "../common/pagination/pagination.service";
 import { ApiResponse } from "../common/response";
-import { Permission } from "../role/enums/permission.enum";
 import { CreateStudentDto } from "./dto/create-student.dto";
 import { StudentPaginationDto } from "./dto/student-pagination.dto";
 import { StudentResponseDto } from "./dto/student-response.dto";
@@ -50,7 +50,7 @@ export class StudentController {
   @HttpCode(HttpStatus.OK)
   @Permissions(Permission.READ_STUDENT)
   @ApiResponse(StudentResponseDto)
-  async findOne(@Param("id") id: string) {
+  async findOne(@Param("id") id: string): Promise<StudentResponseDto> {
     return await this.studentService.getSingleStudent(id);
   }
 

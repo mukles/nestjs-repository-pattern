@@ -1,8 +1,7 @@
-import { Permission } from "../../role/enums/permission.enum";
-import { Role } from "../../role/enums/role.enum";
+import { Permission, Role } from "@repo/shared-types";
 
 export interface JwtPayload {
-  id: string; // user id
+  id: string;
   email: string;
   sessionId: string;
   roles: Role[];

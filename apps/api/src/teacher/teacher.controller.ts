@@ -11,12 +11,12 @@ import {
   Query,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiBody, ApiTags } from "@nestjs/swagger";
+import { Permission } from "@repo/shared-types";
 
 import { Permissions } from "../auth/decorators/permissions.decorator";
-import { ApiPaginatedResponse } from "../common/pagination/pagination.service";
 import { PaginationResultDto } from "../common/pagination/pagination-result.dto";
+import { ApiPaginatedResponse } from "../common/pagination/pagination.service";
 import { ApiResponse } from "../common/response";
-import { Permission } from "../role/enums/permission.enum";
 import { CreateTeacherDto } from "./dto/create-teacher.dto";
 import { TeacherPaginationDto } from "./dto/teacher-pagination.dto";
 import { TeacherResponseDto } from "./dto/teacher-response.dto";

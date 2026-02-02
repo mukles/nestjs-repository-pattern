@@ -1,5 +1,8 @@
+import { Permission, Role } from "@repo/shared-types";
 import { SignJWT, decodeJwt, jwtVerify } from "jose";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { cache } from "react";
 import "server-only";
 
 const secretKey = process.env.SESSION_SECRET;
@@ -20,7 +23,9 @@ export async function encrypt(payload: SessionPayload) {
     .sign(encodedKey);
 }
 
-export async function decrypt(session: string | undefined) {
+export async function decrypt(
+  session: string | undefined,
+): Promise<SessionPayload | null> {
   if (!session) {
     return null;
   }
@@ -32,6 +37,7 @@ export async function decrypt(session: string | undefined) {
     return payload as unknown as SessionPayload;
   } catch (error) {
     console.log("Failed to verify session", error);
+    return null;
   }
 }
 
@@ -81,3 +87,23 @@ export async function deleteSession() {
   const cookieStore = await cookies();
   cookieStore.delete("session");
 }
+
+export const verifySession = cache(async () => {
+  const cookie = (await cookies()).get("session")?.value;
+  const session = await decrypt(cookie);
+
+  const { roles, permissions } = decodeJwt(session?.accessToken || "");
+
+  if (!session?.userId) {
+    redirect("/login");
+  }
+
+  return {
+    isAuth: true,
+    userId: session.userId,
+    accessToken: session.accessToken,
+    refreshToken: session.refreshToken,
+    roles: (roles as Role[]) || [],
+    permissions: (permissions as Permission[]) || [],
+  };
+});

@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { Role } from "@repo/shared-types";
 
 import { ApiResponse } from "../common/response";
 import { UserResponseDto } from "./dto/user-response.dto";
@@ -25,6 +26,14 @@ export class UserController {
     @Param("userId", ParseIntPipe) userId: number,
   ): Promise<UserResponseDto> {
     const user = await this.userService.findById(userId);
-    return UserResponseDto.fromEntity(user);
+    const userResponse: UserResponseDto = {
+      id: user.id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      avatar: user.avatar,
+      roles: user.roles.map((role) => role.name) as Role[],
+    };
+    return userResponse;
   }
 }

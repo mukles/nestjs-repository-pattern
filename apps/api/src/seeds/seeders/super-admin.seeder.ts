@@ -1,9 +1,8 @@
+import { Role as RoleEnum, UserStatus } from "@repo/shared-types";
 import { DataSource } from "typeorm";
 
 import { RoleEntity } from "../../role/entities/role.entity";
-import { Role as RoleEnum } from "../../role/enums/role.enum";
 import { UserEntity } from "../../user/entities/user.entity";
-import { UserStatus } from "../../user/enums/user-status.enum";
 
 export async function seedSuperAdmin(dataSource: DataSource): Promise<void> {
   const userRepository = dataSource.getRepository(UserEntity);

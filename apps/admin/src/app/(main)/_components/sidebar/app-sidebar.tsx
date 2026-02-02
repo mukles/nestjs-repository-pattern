@@ -1,9 +1,8 @@
-"use client";
+'use client';
 
-import { useShallow } from "zustand/react/shallow";
+import { useShallow } from 'zustand/react/shallow';
 
-import { rootUser } from "@/data/users";
-import { usePreferencesStore } from "@/stores/preferences/preferences-provider";
+import { usePreferencesStore } from '@/stores/preferences/preferences-provider';
 import {
   Sidebar,
   SidebarContent,
@@ -11,14 +10,19 @@ import {
   SidebarHeader,
   SidebarMenu,
   SidebarMenuItem,
-} from "@repo/ui/components/ui-kit/sidebar";
+} from '@repo/ui/components/ui-kit/sidebar';
 
-import { Logo } from "@/app/components/logo";
-import { sidebarItems } from "@/config/navigation";
-import { NavMain } from "./nav-main";
-import { NavUser } from "./nav-user";
+import { User } from '@/actions/auth/user/types';
+import { Logo } from '@/app/components/logo';
+import { sidebarItems } from '@/config/navigation';
+import { NavMain } from './nav-main';
+import { NavUser } from './nav-user';
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
+  user: User;
+}
+
+export function AppSidebar({ user, ...props }: AppSidebarProps) {
   const { sidebarVariant, sidebarCollapsible, isSynced } = usePreferencesStore(
     useShallow((s) => ({
       sidebarVariant: s.sidebarVariant,
@@ -45,7 +49,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavMain items={sidebarItems} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={rootUser!} />
+        <NavUser user={user} />
       </SidebarFooter>
     </Sidebar>
   );

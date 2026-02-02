@@ -15,10 +15,10 @@ import {
   ApiResponse as ApiSwaggerResponse,
   ApiTags,
 } from "@nestjs/swagger";
+import { Permission } from "@repo/shared-types";
 
 import { Permissions } from "../auth/decorators/permissions.decorator";
 import { ApiResponse } from "../common/response";
-import { Permission } from "../role/enums/permission.enum";
 import { BatchService } from "./batch.service";
 import { BatchResponseDto } from "./dto/batch-response.dto";
 import { CreateBatchDto } from "./dto/create-batch.dto";

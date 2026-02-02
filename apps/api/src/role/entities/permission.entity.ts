@@ -1,3 +1,4 @@
+import { Permission } from "@repo/shared-types";
 import {
   BaseEntity,
   Column,
@@ -8,7 +9,6 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 
-import { Permission } from "../enums/permission.enum";
 import { RoleEntity } from "./role.entity";
 
 @Entity("permissions")

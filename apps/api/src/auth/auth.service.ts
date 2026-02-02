@@ -6,13 +6,12 @@ import {
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
+import { Role, UserStatus } from "@repo/shared-types";
 import { Request } from "express";
-import { Role } from "role/enums/role.enum";
 import { UserEntity } from "user/entities/user.entity";
 
 import { IDataService } from "../repositories/interfaces/dataservice.interface";
 import { SessionService } from "../session/session.service";
-import { UserStatus } from "../user/enums/user-status.enum";
 import { UserService } from "../user/user.service";
 import { AuthResponseDto } from "./dto/auth-response.dto";
 import { LoginDto } from "./dto/login.dto";
@@ -171,7 +170,7 @@ export class AuthService {
       id: user.id.toString(),
       sessionId,
       email: user.email,
-      roles: user.roles.map((role) => role.name),
+      roles: user.roles.map((role) => role.name) as Role[],
       permissions: Array.from(
         new Set(
           user.roles.flatMap((role) =>

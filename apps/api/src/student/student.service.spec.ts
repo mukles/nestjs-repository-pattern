@@ -1,4 +1,5 @@
-import { Gender } from "./enum/student.gender.enum";
+import { Gender } from "@repo/shared-types";
+
 import { StudentService } from "./student.service";
 
 describe("StudentService", () => {

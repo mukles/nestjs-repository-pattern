@@ -3,11 +3,11 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
+import { Role as RoleEnum } from "@repo/shared-types";
 
 import { PageMetaDto } from "../common/pagination/page-meta";
 import { PaginationResultDto } from "../common/pagination/pagination-result.dto";
 import { IDataService } from "../repositories/interfaces/dataservice.interface";
-import { Role as RoleEnum } from "../role/enums/role.enum";
 import { RoleService } from "../role/role.service";
 import { CreateStudentDto } from "./dto/create-student.dto";
 import { StudentPaginationDto } from "./dto/student-pagination.dto";

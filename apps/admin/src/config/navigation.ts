@@ -66,8 +66,7 @@ export const sidebarItems: NavGroup[] = [
         url: "/students",
         icon: GraduationCap,
         subItems: [
-          { title: "All Students", url: "/students/list", comingSoon: true },
-          { title: "Add Student", url: "/students/create", comingSoon: true },
+          { title: "All Students", url: "/students/list" },
           { title: "Bulk Import", url: "/students/import", comingSoon: true },
           {
             title: "Student Groups",
@@ -162,7 +161,6 @@ export const sidebarItems: NavGroup[] = [
           {
             title: "Roles & Permissions",
             url: "/users/roles",
-            comingSoon: true,
           },
         ],
       },
