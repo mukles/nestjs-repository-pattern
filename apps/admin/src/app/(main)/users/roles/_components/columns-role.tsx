@@ -8,6 +8,13 @@ export const getRoleTableColumns = (
   permissions: PermissionDto[],
 ): ColumnDef<RoleDto>[] => [
   {
+    id: "serial",
+    header: "Serial",
+    cell: ({ row }) => (
+      <span className="font-medium text-neutral-700">{row.index + 1}</span>
+    ),
+  },
+  {
     accessorKey: "name",
     header: "Role Name",
     cell: ({ row }) => <span className="font-medium">{row.original.name}</span>,
@@ -68,11 +75,21 @@ export const getRoleTableColumns = (
   {
     id: "actions",
     header: () => <div className="text-right">Actions</div>,
-    cell: ({ row }) => (
-      <div className="flex justify-end gap-2">
-        <EditRoleModal role={row.original} permissions={permissions} />
-        <DeleteRoleDialog role={row.original} />
-      </div>
-    ),
+    cell: ({ row }) => {
+      console.log("Row data:", row.original);
+      return (
+        <div className="flex justify-end gap-2">
+          <EditRoleModal
+            role={row.original}
+            permissions={permissions}
+            isSystemRole={row.original.isSystem}
+          />
+          <DeleteRoleDialog
+            role={row.original}
+            isSystemRole={row.original.isSystem}
+          />
+        </div>
+      );
+    },
   },
 ];

@@ -35,6 +35,7 @@ export class RoleService {
       updatedAt: role.updatedAt,
       description: role.description,
       isActive: role.isActive,
+      isSystem: role.isSystem,
     };
   }
 
@@ -139,6 +140,12 @@ export class RoleService {
 
     if (!role) {
       throw new NotFoundException(`Role with ID ${id} not found`);
+    }
+
+    if (role.isSystem) {
+      throw new BadRequestException(
+        "System roles cannot be deleted. These are critical roles required for the application to function.",
+      );
     }
 
     return await this.dataService.roles.remove(role);

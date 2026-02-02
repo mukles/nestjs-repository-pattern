@@ -104,6 +104,7 @@ export async function seedRoles(dataSource: DataSource): Promise<void> {
         description: roleDescriptions[roleName],
         permissions,
         isActive: true,
+        isSystem: true,
       });
       await roleRepository.save(role);
       createdCount++;
@@ -112,6 +113,7 @@ export async function seedRoles(dataSource: DataSource): Promise<void> {
       role.permissions = permissions;
       role.description = roleDescriptions[roleName];
       role.isActive = true;
+      role.isSystem = true;
       await roleRepository.save(role);
       updatedCount++;
     }

@@ -13,6 +13,7 @@ export interface RoleDto {
   name: RoleEnum | string;
   description: string;
   isActive: boolean;
+  isSystem: boolean;
   permissions: PermissionDto[];
   createdAt: Date;
   updatedAt: Date;

@@ -13,15 +13,24 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@repo/ui/components/ui-kit/dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@repo/ui/components/ui-kit/tooltip";
 import { useDialog } from "@repo/ui/hooks/use-dialog";
 import { Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 interface DeleteRoleDialogProps {
   role: RoleDto;
+  isSystemRole?: boolean;
 }
 
-export function DeleteRoleDialog({ role }: DeleteRoleDialogProps) {
+export function DeleteRoleDialog({
+  role,
+  isSystemRole,
+}: DeleteRoleDialogProps) {
   const { isOpen, openChange } = useDialog();
   const { action, isPending } = useMutation(deleteRole, {
     onSuccess: () => {
@@ -33,6 +42,29 @@ export function DeleteRoleDialog({ role }: DeleteRoleDialogProps) {
     },
   });
 
+  if (isSystemRole) {
+    return (
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <span className="inline-block" tabIndex={0}>
+            <Button
+              disabled
+              variant="outline"
+              size="sm"
+              className="text-destructive hover:bg-destructive/10 hover:text-destructive h-8 w-8 p-0"
+            >
+              <Trash2 className="size-4" />
+              <span className="sr-only">Delete</span>
+            </Button>
+          </span>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>System generated roles cannot be deleted</p>
+        </TooltipContent>
+      </Tooltip>
+    );
+  }
+
   return (
     <Dialog open={isOpen} onOpenChange={openChange}>
       <DialogTrigger asChild>
@@ -40,6 +72,7 @@ export function DeleteRoleDialog({ role }: DeleteRoleDialogProps) {
           variant="outline"
           size="sm"
           className="text-destructive hover:bg-destructive/10 hover:text-destructive h-8 w-8 p-0"
+          disabled={isSystemRole}
         >
           <Trash2 className="size-4" />
           <span className="sr-only">Delete</span>

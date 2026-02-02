@@ -22,6 +22,9 @@ export class RoleResponseDto implements RoleDto {
   isActive: boolean;
 
   @ApiProperty()
+  isSystem: boolean;
+
+  @ApiProperty()
   createdAt: Date;
 
   @ApiProperty()

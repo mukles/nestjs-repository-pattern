@@ -31,6 +31,12 @@ export class RoleEntity extends BaseEntity {
   isActive: boolean;
 
   @Column({
+    type: "boolean",
+    default: false,
+  })
+  isSystem: boolean;
+
+  @Column({
     type: "varchar",
     length: 255,
     nullable: true,
