@@ -170,7 +170,7 @@ export class AuthService {
       id: user.id.toString(),
       sessionId,
       email: user.email,
-      roles: user.roles.map((role) => role.name),
+      roles: user.roles.map((role) => role.name) as Role[],
       permissions: Array.from(
         new Set(
           user.roles.flatMap((role) =>

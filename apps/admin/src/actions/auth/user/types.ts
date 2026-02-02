@@ -1,4 +1,4 @@
-import { Role } from '@/lib/constants/roles';
+import { Role } from "@repo/shared-types";
 
 export interface User {
   id: string;

@@ -50,7 +50,7 @@ export class StudentController {
   @HttpCode(HttpStatus.OK)
   @Permissions(Permission.READ_STUDENT)
   @ApiResponse(StudentResponseDto)
-  async findOne(@Param("id") id: string) {
+  async findOne(@Param("id") id: string): Promise<StudentResponseDto> {
     return await this.studentService.getSingleStudent(id);
   }
 

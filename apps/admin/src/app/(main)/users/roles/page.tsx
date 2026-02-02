@@ -1,6 +1,6 @@
 import { getPermissions, getRoles } from "@/actions/roles";
 import { CreateRoleModal } from "./_components/create-role-modal";
-import { RoleList } from "./_components/role-list";
+import { RoleDataTable } from "./_components/role-data-table";
 
 export default async function RolesPage() {
   const [rolesResult, permissionsResult] = await Promise.all([
@@ -40,8 +40,8 @@ export default async function RolesPage() {
         </div>
       </div>
       <div className="mt-8 flex-1">
-        <RoleList
-          roles={rolesResult.data!}
+        <RoleDataTable
+          data={rolesResult.data!}
           permissions={permissionsResult.data!}
         />
       </div>

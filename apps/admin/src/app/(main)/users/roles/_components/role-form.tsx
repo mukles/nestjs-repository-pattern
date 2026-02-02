@@ -1,7 +1,9 @@
 "use client";
 
-import { PermissionData, Role } from "@/actions/roles";
+import { createRole } from "@/actions/roles";
+import { useMutation } from "@/hooks/use-mutation";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { PermissionDto, RoleDto } from "@repo/shared-types";
 import { Button } from "@repo/ui/components/ui-kit/button";
 import { Checkbox } from "@repo/ui/components/ui-kit/checkbox";
 import {
@@ -17,6 +19,7 @@ import { cn } from "@repo/ui/lib/utils";
 import { Activity, CheckCircle2, Info, LayoutGrid, Shield } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 const roleSchema = z.object({
@@ -31,18 +34,11 @@ const roleSchema = z.object({
 type RoleFormValues = z.infer<typeof roleSchema>;
 
 interface RoleFormProps {
-  initialData?: Role;
-  permissions: PermissionData[];
-  onSubmit: (data: RoleFormValues) => void;
-  isPending: boolean;
+  initialData?: RoleDto;
+  permissions: PermissionDto[];
 }
 
-export function RoleForm({
-  initialData,
-  permissions,
-  onSubmit,
-  isPending,
-}: RoleFormProps) {
+export function RoleForm({ initialData, permissions }: RoleFormProps) {
   const form = useForm<RoleFormValues>({
     resolver: zodResolver(roleSchema),
     defaultValues: {
@@ -60,11 +56,23 @@ export function RoleForm({
       acc[category].push(p);
       return acc;
     },
-    {} as Record<string, PermissionData[]>,
+    {} as Record<string, PermissionDto[]>,
   );
 
+  const { action, isPending } = useMutation(createRole, {
+    onError({ error }) {
+      if (error?.type === "VALIDATION_ERROR") {
+        toast.error("Please fix the validation errors and try again.");
+        form.trigger();
+        return;
+      }
+
+      toast.error("Failed to create role");
+    },
+  });
+
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+    <form className="space-y-8" action={action}>
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -186,7 +194,7 @@ export function RoleForm({
           </div>
 
           <div>
-            <div className="flex items-center justify-between border-b pb-2">
+            <div className="flex items-center justify-between border-b pb-3.5">
               <div className="flex items-center gap-2">
                 <LayoutGrid className="text-primary size-5" />
                 <h3 className="text-lg font-semibold text-neutral-800">
@@ -198,7 +206,7 @@ export function RoleForm({
               </span>
             </div>
 
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2">
               {Object.entries(groupedPermissions).map(
                 ([category, perms], index) => (
                   <motion.div

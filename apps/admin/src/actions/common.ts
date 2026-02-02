@@ -72,7 +72,6 @@ export async function apiAction<T>(
 
   const fullUrl = `${process.env.API_BASE_URL}${url}`;
 
-  // Don't set Content-Type for FormData, let the browser handle it
   const headers: Record<string, string> = {
     ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
     ...((options?.headers as Record<string, string>) || {}),

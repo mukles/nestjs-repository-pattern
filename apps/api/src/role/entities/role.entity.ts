@@ -1,4 +1,3 @@
-import { Role as RoleEnum } from "@repo/shared-types";
 import type { Relation } from "typeorm";
 import {
   BaseEntity,
@@ -20,11 +19,10 @@ export class RoleEntity extends BaseEntity {
   id: number;
 
   @Column({
-    type: "enum",
-    enum: RoleEnum,
+    type: "varchar",
     unique: true,
   })
-  name: RoleEnum;
+  name: string;
 
   @Column({
     type: "boolean",

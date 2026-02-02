@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { Role } from "@repo/shared-types";
 
 import { ApiResponse } from "../common/response";
 import { UserResponseDto } from "./dto/user-response.dto";
@@ -31,7 +32,7 @@ export class UserController {
       firstName: user.firstName,
       lastName: user.lastName,
       avatar: user.avatar,
-      roles: user.roles.map((role) => role.name),
+      roles: user.roles.map((role) => role.name) as Role[],
     };
     return userResponse;
   }

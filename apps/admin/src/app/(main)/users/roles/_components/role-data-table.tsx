@@ -1,8 +1,7 @@
 "use client";
 
-import { PermissionData, Role } from "@/actions/roles";
+import { PermissionDto, RoleDto } from "@repo/shared-types";
 import { DataTable } from "@repo/ui/components/data-table/data-table";
-import { DataTablePagination } from "@repo/ui/components/data-table/data-table-pagination";
 import {
   Card,
   CardContent,
@@ -14,8 +13,8 @@ import { useDataTableInstance } from "@repo/ui/hooks/use-data-table-instance";
 import { getRoleTableColumns } from "./columns-role";
 
 interface RoleDataTableProps {
-  data: Role[];
-  permissions: PermissionData[];
+  data: RoleDto[];
+  permissions: PermissionDto[];
 }
 
 export function RoleDataTable({ data, permissions }: RoleDataTableProps) {
@@ -39,7 +38,6 @@ export function RoleDataTable({ data, permissions }: RoleDataTableProps) {
           <div className="overflow-hidden rounded-md border">
             <DataTable table={table} columns={columns} />
           </div>
-          <DataTablePagination table={table} />
         </CardContent>
       </Card>
     </div>
