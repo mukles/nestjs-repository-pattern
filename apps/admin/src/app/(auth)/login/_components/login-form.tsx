@@ -16,6 +16,7 @@ import { Input } from "@repo/ui/components/ui-kit/input";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 export function LoginForm() {
@@ -29,7 +30,15 @@ export function LoginForm() {
   });
 
   const { action, isPending } = useMutation(loginUser, {
+    onError({ error }) {
+      if (error.type === "VALIDATION_ERROR") {
+        form.trigger();
+        toast.error("Invalid input. Please check your data and try again.");
+        return;
+      }
+    },
     onSuccess() {
+      toast.success("Login successful!");
       router.refresh();
     },
   });

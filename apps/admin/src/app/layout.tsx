@@ -1,11 +1,12 @@
-import { APP_CONFIG } from '@/config/app-config';
-import { fontVars } from '@/lib/fonts/registry';
-import { PREFERENCE_DEFAULTS } from '@/lib/preferences/preferences-config';
-import { ThemeBootScript } from '@/scripts/theme-boot';
-import { PreferencesStoreProvider } from '@/stores/preferences/preferences-provider';
-import '@/styles/globals.css';
-import { TwSizeIndicator } from '@repo/ui/components/tw-size-indicator';
-import type { Metadata } from 'next';
+import { APP_CONFIG } from "@/config/app-config";
+import { fontVars } from "@/lib/fonts/registry";
+import { PREFERENCE_DEFAULTS } from "@/lib/preferences/preferences-config";
+import { ThemeBootScript } from "@/scripts/theme-boot";
+import { PreferencesStoreProvider } from "@/stores/preferences/preferences-provider";
+import "@/styles/globals.css";
+import { TwSizeIndicator } from "@repo/ui/components/tw-size-indicator";
+import type { Metadata } from "next";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: APP_CONFIG.meta.title,
@@ -44,6 +45,8 @@ export default function RootLayout({
       </head>
       <body className={`${fontVars} min-h-screen antialiased`}>
         <TwSizeIndicator />
+        <Toaster />
+
         <PreferencesStoreProvider
           themeMode={theme_mode}
           themePreset={theme_preset}

@@ -1,4 +1,3 @@
-import { Toaster } from "@repo/ui/components/ui-kit/sonner";
 import type { ReactNode } from "react";
 
 import { cookies } from "next/headers";
@@ -52,7 +51,6 @@ export default async function Layout({
 
   return (
     <>
-      <Toaster />
       <SidebarProvider defaultOpen={defaultOpen}>
         <AppSidebar
           user={userResponse.data}

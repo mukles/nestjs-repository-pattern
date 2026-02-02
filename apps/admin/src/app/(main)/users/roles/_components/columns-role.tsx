@@ -8,10 +8,12 @@ export const getRoleTableColumns = (
   permissions: PermissionDto[],
 ): ColumnDef<RoleDto>[] => [
   {
-    id: "serial",
+    id: "id",
     header: "Serial",
-    cell: ({ row }) => (
-      <span className="font-medium text-neutral-700">{row.index + 1}</span>
+    cell: ({ row, table }) => (
+      <span className="text-neutral-700">
+        {table.getRowModel().rows.indexOf(row) + 1}
+      </span>
     ),
   },
   {
