@@ -51,7 +51,7 @@ export function AccountSwitcher({ user }: { readonly user: User }) {
           <div className="grid flex-1 text-left text-sm leading-tight">
             <span className="truncate font-semibold">{`${user.firstName} ${user.lastName}`}</span>
             <span className="truncate text-xs capitalize">
-              {user.roles.map((r) => r.name).join(", ")}
+              {user?.roles?.map((r) => r).join(", ")}
             </span>
           </div>
         </div>
