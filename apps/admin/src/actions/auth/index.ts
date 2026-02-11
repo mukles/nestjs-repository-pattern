@@ -15,6 +15,7 @@ export const loginUser = async (
   return safeAction(async () => {
     const data = Object.fromEntries(formData);
     const validatedData = loginUserSchema.parse(data);
+    console.log("Validated login data:", validatedData);
     const response = await apiAction<AuthResponse>("/auth/login", {
       method: "POST",
       headers: {
@@ -22,6 +23,8 @@ export const loginUser = async (
       },
       body: JSON.stringify(validatedData),
     });
+
+    console.log("Login response:", response);
 
     await createSession(response.accessToken, response.refreshToken);
 
