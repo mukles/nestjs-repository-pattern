@@ -9,6 +9,7 @@ import { AuthGuard } from "./auth/guards/auth.guard";
 import { BatchModule } from "./batch/batch.module";
 import { CourseModule } from "./course/course.module";
 import { EnrollmentModule } from "./enrollment/enrollment.module";
+import { ParentModule } from "./parent/parent.module";
 import { DataServiceModule } from "./repositories/dataservice.module";
 import { ResultModule } from "./result/result.module";
 import { RoleModule } from "./role/role.module";
@@ -31,6 +32,7 @@ import { UserModule } from "./user/user.module";
     ResultModule,
     BatchModule,
     SessionModule,
+    ParentModule,
   ],
   controllers: [AppController],
   providers: [
