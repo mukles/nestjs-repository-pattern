@@ -10,6 +10,8 @@ import {
 } from "typeorm";
 
 import { EnrollmentEntity } from "../../enrollment/entities/enrollment.entity";
+import { ParentEntity } from "../../parent/entities/parent.entity";
+import type { StudentAttachmentEntity } from "./student-attachment.entity";
 
 @Entity("students")
 export class StudentEntity extends BaseEntity {
@@ -42,6 +44,15 @@ export class StudentEntity extends BaseEntity {
 
   @OneToMany(() => EnrollmentEntity, (enrollment) => enrollment.student)
   enrollments: EnrollmentEntity[];
+
+  @OneToMany(() => ParentEntity, (parent) => parent.student)
+  parents: ParentEntity[];
+
+  @OneToMany(
+    "StudentAttachmentEntity",
+    (attachment: StudentAttachmentEntity) => attachment.student,
+  )
+  attachments: StudentAttachmentEntity[];
 
   @Column({
     type: "enum",
