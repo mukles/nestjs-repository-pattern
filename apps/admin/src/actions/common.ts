@@ -29,6 +29,7 @@ export async function safeAction<T>(
       success: true,
     };
   } catch (error: unknown) {
+    console.error("Error in safeAction:", error);
     if (error instanceof z.ZodError) {
       return {
         success: false,

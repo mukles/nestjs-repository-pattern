@@ -36,6 +36,9 @@ export function LoginForm() {
         toast.error("Invalid input. Please check your data and try again.");
         return;
       }
+      toast.error(
+        error.message || "An error occurred during login. Please try again.",
+      );
     },
     onSuccess() {
       toast.success("Login successful!");
