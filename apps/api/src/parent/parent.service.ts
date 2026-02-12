@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
+import { ParentType } from "@repo/shared-types";
 
 import { DocumentType, ParentAttachmentEntity, ParentEntity } from "./entities";
-import { ParentType } from "./enum/parent-type.enum";
 
 @Injectable()
 export class ParentService {

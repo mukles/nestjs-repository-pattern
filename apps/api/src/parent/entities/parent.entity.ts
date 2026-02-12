@@ -1,4 +1,4 @@
-import { ParentType } from "parent/enum/parent-type.enum";
+import { ParentType } from "@repo/shared-types";
 import {
   BaseEntity,
   Column,

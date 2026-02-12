@@ -1,6 +1,14 @@
 "use client";
 
 import {
+  ParentFormValues,
+  parentSchema,
+  SingleParentValues,
+} from "@/lib/validation/parent.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ParentType } from "@repo/shared-types";
+import { Button } from "@repo/ui/components/ui-kit/button";
+import {
   Field,
   FieldError,
   FieldLabel,
@@ -13,259 +21,132 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@repo/ui/components/ui-kit/select";
-import { Controller, useFormContext } from "react-hook-form";
-import {
-  Guardian,
-  GUARDIAN_LABELS,
-  type StudentFormValues,
-} from "./student-form-schema";
+import { useStepperContext } from "@repo/ui/components/ui-kit/stepper";
+import { Plus, Trash2 } from "lucide-react";
+import { useCallback, useEffect } from "react";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 
-export function ParentForm() {
-  const form = useFormContext<StudentFormValues>();
+const PARENT_TYPE_LABELS: Record<ParentType, string> = {
+  [ParentType.FATHER]: "Father",
+  [ParentType.MOTHER]: "Mother",
+  [ParentType.GUARDIAN]: "Guardian",
+};
+
+const DEFAULT_PARENT: SingleParentValues = {
+  name: "",
+  email: "",
+  phone: "",
+  occupation: "",
+  type: ParentType.FATHER,
+};
+
+interface ParentFormProps {
+  stepNumber: number;
+  onStepValid?: (values: ParentFormValues) => void;
+  defaultValues?: Partial<ParentFormValues>;
+}
+
+export function ParentForm({
+  stepNumber,
+  onStepValid,
+  defaultValues,
+}: ParentFormProps) {
+  const { registerStepValidator } = useStepperContext();
+
+  const parentForm = useForm<ParentFormValues>({
+    resolver: zodResolver(parentSchema),
+    mode: "onChange",
+    defaultValues: {
+      parents: defaultValues?.parents ?? [DEFAULT_PARENT],
+    },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control: parentForm.control,
+    name: "parents",
+  });
+
+  const handleValidation = useCallback(async () => {
+    const isValid = await parentForm.trigger();
+    if (isValid && onStepValid) {
+      onStepValid(parentForm.getValues());
+    }
+    return isValid;
+  }, [parentForm, onStepValid]);
+
+  useEffect(() => {
+    return registerStepValidator(stepNumber, handleValidation);
+  }, [handleValidation, registerStepValidator, stepNumber]);
+
+  useEffect(() => {
+    if (defaultValues) {
+      parentForm.reset(defaultValues);
+    }
+  }, [defaultValues, parentForm]);
+
+  const addParent = () => {
+    append(DEFAULT_PARENT);
+  };
 
   return (
     <div className="space-y-6">
-      {/* Guardian Selection */}
-      <Controller
-        name="guardian"
-        control={form.control}
-        render={({ field, fieldState }) => (
-          <Field data-invalid={fieldState.invalid}>
-            <FieldLabel htmlFor={field.name}>Guardian</FieldLabel>
-            <Select onValueChange={field.onChange} value={field.value}>
-              <SelectTrigger id={field.name} aria-invalid={fieldState.invalid}>
-                <SelectValue placeholder="Select guardian" />
-              </SelectTrigger>
-              <SelectContent>
-                {Object.values(Guardian).map((guardian) => (
-                  <SelectItem key={guardian} value={guardian}>
-                    {GUARDIAN_LABELS[guardian]}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-          </Field>
-        )}
-      />
-
-      {/* Father's Information */}
-      <h3 className="text-lg font-semibold">Father&apos;s Information</h3>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <Controller
-          name="fatherName"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor={field.name}>Father&apos;s Name</FieldLabel>
-              <Input
-                {...field}
-                id={field.name}
-                aria-invalid={fieldState.invalid}
-                placeholder="Father's full name"
-              />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
-
-        <Controller
-          name="fatherEmail"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor={field.name}>Father&apos;s Email</FieldLabel>
-              <Input
-                {...field}
-                id={field.name}
-                type="email"
-                aria-invalid={fieldState.invalid}
-                placeholder="father@example.com"
-              />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <Controller
-          name="fatherPhone"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor={field.name}>Father&apos;s Phone</FieldLabel>
-              <Input
-                {...field}
-                id={field.name}
-                type="tel"
-                aria-invalid={fieldState.invalid}
-                placeholder="+1234567890"
-              />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
-
-        <Controller
-          name="fatherOccupation"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor={field.name}>
-                Father&apos;s Occupation
-              </FieldLabel>
-              <Input
-                {...field}
-                id={field.name}
-                aria-invalid={fieldState.invalid}
-                placeholder="Occupation"
-              />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
-      </div>
-
-      {/* Mother's Information */}
-      <h3 className="text-lg font-semibold">Mother&apos;s Information</h3>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <Controller
-          name="motherName"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor={field.name}>Mother&apos;s Name</FieldLabel>
-              <Input
-                {...field}
-                id={field.name}
-                aria-invalid={fieldState.invalid}
-                placeholder="Mother's full name"
-              />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
-
-        <Controller
-          name="motherEmail"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor={field.name}>Mother&apos;s Email</FieldLabel>
-              <Input
-                {...field}
-                id={field.name}
-                type="email"
-                aria-invalid={fieldState.invalid}
-                placeholder="mother@example.com"
-              />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <Controller
-          name="motherPhone"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor={field.name}>Mother&apos;s Phone</FieldLabel>
-              <Input
-                {...field}
-                id={field.name}
-                type="tel"
-                aria-invalid={fieldState.invalid}
-                placeholder="+1234567890"
-              />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
-
-        <Controller
-          name="motherOccupation"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor={field.name}>
-                Mother&apos;s Occupation
-              </FieldLabel>
-              <Input
-                {...field}
-                id={field.name}
-                aria-invalid={fieldState.invalid}
-                placeholder="Occupation"
-              />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
-      </div>
-
-      {/* Guardian Information (when OTHER is selected) */}
-      {form.watch("guardian") === Guardian.OTHER && (
-        <>
-          <h3 className="text-lg font-semibold">Guardian Information</h3>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <Controller
-              name="guardianName"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>
-                    Guardian&apos;s Name
-                  </FieldLabel>
-                  <Input
-                    {...field}
-                    id={field.name}
-                    aria-invalid={fieldState.invalid}
-                    placeholder="Guardian's full name"
-                  />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-
-            <Controller
-              name="guardianRelation"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>Relationship</FieldLabel>
-                  <Input
-                    {...field}
-                    id={field.name}
-                    aria-invalid={fieldState.invalid}
-                    placeholder="e.g., Uncle, Aunt, Grandparent"
-                  />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
+      {fields.map((field, index) => (
+        <div
+          key={field.id}
+          className="relative space-y-4 rounded-lg border p-4"
+        >
+          {/* Header with remove button */}
+          <div className="flex items-center justify-between">
+            <h4 className="font-medium">Parent {index + 1}</h4>
+            {fields.length > 1 && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={() => remove(index)}
+                className="text-destructive hover:text-destructive"
+              >
+                <Trash2 className="size-4" />
+              </Button>
+            )}
           </div>
 
+          {/* Name */}
+          <Controller
+            name={`parents.${index}.name`}
+            control={parentForm.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel htmlFor={field.name}>Name</FieldLabel>
+                <Input
+                  {...field}
+                  id={field.name}
+                  aria-invalid={fieldState.invalid}
+                  placeholder="Full name"
+                  autoComplete="name"
+                />
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
+            )}
+          />
+
+          {/* Email & Phone Row */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Controller
-              name="guardianEmail"
-              control={form.control}
+              name={`parents.${index}.email`}
+              control={parentForm.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>
-                    Guardian&apos;s Email
-                  </FieldLabel>
+                  <FieldLabel htmlFor={field.name}>Email</FieldLabel>
                   <Input
                     {...field}
                     id={field.name}
                     type="email"
                     aria-invalid={fieldState.invalid}
-                    placeholder="guardian@example.com"
+                    placeholder="email@example.com"
+                    autoComplete="email"
                   />
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
@@ -275,19 +156,18 @@ export function ParentForm() {
             />
 
             <Controller
-              name="guardianPhone"
-              control={form.control}
+              name={`parents.${index}.phone`}
+              control={parentForm.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>
-                    Guardian&apos;s Phone
-                  </FieldLabel>
+                  <FieldLabel htmlFor={field.name}>Phone</FieldLabel>
                   <Input
                     {...field}
                     id={field.name}
                     type="tel"
                     aria-invalid={fieldState.invalid}
                     placeholder="+1234567890"
+                    autoComplete="tel"
                   />
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
@@ -297,15 +177,14 @@ export function ParentForm() {
             />
           </div>
 
+          {/* Occupation & Type Row */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Controller
-              name="guardianOccupation"
-              control={form.control}
+              name={`parents.${index}.occupation`}
+              control={parentForm.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>
-                    Guardian&apos;s Occupation
-                  </FieldLabel>
+                  <FieldLabel htmlFor={field.name}>Occupation</FieldLabel>
                   <Input
                     {...field}
                     id={field.name}
@@ -320,19 +199,27 @@ export function ParentForm() {
             />
 
             <Controller
-              name="guardianAddress"
-              control={form.control}
+              name={`parents.${index}.type`}
+              control={parentForm.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>
-                    Guardian&apos;s Address
-                  </FieldLabel>
-                  <Input
-                    {...field}
-                    id={field.name}
-                    aria-invalid={fieldState.invalid}
-                    placeholder="Full address"
-                  />
+                  <FieldLabel htmlFor={field.name}>Parent Type</FieldLabel>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger
+                      id={field.name}
+                      className="w-full"
+                      aria-invalid={fieldState.invalid}
+                    >
+                      <SelectValue placeholder="Select parent type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.values(ParentType).map((type) => (
+                        <SelectItem key={type} value={type}>
+                          {PARENT_TYPE_LABELS[type]}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
                   )}
@@ -340,8 +227,19 @@ export function ParentForm() {
               )}
             />
           </div>
-        </>
-      )}
+        </div>
+      ))}
+
+      {/* Add More Button */}
+      <Button
+        type="button"
+        variant="outline"
+        onClick={addParent}
+        className="w-full"
+      >
+        <Plus className="mr-2 size-4" />
+        Add More Parent
+      </Button>
     </div>
   );
 }

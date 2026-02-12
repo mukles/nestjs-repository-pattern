@@ -35,7 +35,6 @@ export function StudentForm({
   defaultValues,
 }: StudentFormProps) {
   const { registerStepValidator } = useStepperContext();
-
   const studentForm = useForm<StudentFormValues>({
     resolver: zodResolver(studentSchema),
     mode: "onChange",
@@ -62,12 +61,12 @@ export function StudentForm({
     return registerStepValidator(stepNumber, handleValidation);
   }, [handleValidation, registerStepValidator, stepNumber]);
 
-  // Reset form with initial data when editing
   useEffect(() => {
     if (defaultValues) {
       studentForm.reset(defaultValues);
     }
   }, [defaultValues, studentForm]);
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

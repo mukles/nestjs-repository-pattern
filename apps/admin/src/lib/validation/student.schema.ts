@@ -1,3 +1,4 @@
+import { Gender, StudentStatus } from "@repo/shared-types";
 import { z } from "zod";
 
 export const studentSchema = z.object({
@@ -10,11 +11,11 @@ export const studentSchema = z.object({
     return !isNaN(parsedDate) && parsedDate < Date.now();
   }, "Invalid date of birth"),
 
-  gender: z.enum(["Male", "Female", "Other"], {
+  gender: z.enum(Gender, {
     message: "Gender is required",
   }),
 
-  status: z.enum(["Active", "Inactive"], {
+  status: z.enum(StudentStatus, {
     message: "Status is required",
   }),
 });
