@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "@repo/ui/components/ui-kit/button";
 import {
   Dialog,
@@ -10,18 +9,20 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@repo/ui/components/ui-kit/dialog";
+import {
+  StepContent,
+  StepItem,
+  Stepper,
+  StepperActions,
+  StepperContent,
+  StepperIndicator,
+} from "@repo/ui/components/ui-kit/stepper";
 import { Plus } from "lucide-react";
+import { useState } from "react";
 import { StudentForm } from "./student-form";
-import { useRouter } from "next/navigation";
 
 export function CreateStudentModal() {
   const [open, setOpen] = useState(false);
-  const router = useRouter();
-
-  const handleSuccess = () => {
-    setOpen(false);
-    router.refresh();
-  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -34,7 +35,7 @@ export function CreateStudentModal() {
           Add Student
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-h-[90vh] overflow-hidden sm:max-w-3xl">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">
             Add New Student
@@ -43,8 +44,64 @@ export function CreateStudentModal() {
             Fill in the details below to register a new student to the system.
           </DialogDescription>
         </DialogHeader>
-        <div className="py-4">
-          <StudentForm onSuccess={handleSuccess} />
+        <div className="max-h-[calc(90vh-120px)] overflow-y-auto pt-4">
+          <Stepper clickable={false}>
+            <StepperIndicator>
+              <StepItem name="Student Info" />
+              <StepItem name="Parents Info" />
+              <StepItem name="Attachments" />
+            </StepperIndicator>
+
+            <StepperContent>
+              <StepContent>
+                <StudentForm stepNumber={1} />
+              </StepContent>
+              <StepContent>
+                <div>Parents Info (Coming soon)</div>
+              </StepContent>
+              <StepContent>
+                <div>Attachments (Coming soon)</div>
+              </StepContent>
+            </StepperContent>
+
+            <StepperActions className="bg-background sticky bottom-0 mt-4 border-t pt-4 pb-2">
+              {({
+                validateAndGoNext,
+                goToPreviousStep,
+                isFirstStep,
+                isLastStep,
+                isValidating,
+              }) => (
+                <>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={isFirstStep}
+                    onClick={goToPreviousStep}
+                  >
+                    Previous
+                  </Button>
+                  {isLastStep ? (
+                    <Button
+                      type="button"
+                      onClick={() => validateAndGoNext()}
+                      disabled={isValidating}
+                    >
+                      {isValidating ? "Validating..." : "Submit"}
+                    </Button>
+                  ) : (
+                    <Button
+                      type="button"
+                      onClick={() => validateAndGoNext()}
+                      disabled={isValidating}
+                    >
+                      {isValidating ? "Validating..." : "Next"}
+                    </Button>
+                  )}
+                </>
+              )}
+            </StepperActions>
+          </Stepper>
         </div>
       </DialogContent>
     </Dialog>
