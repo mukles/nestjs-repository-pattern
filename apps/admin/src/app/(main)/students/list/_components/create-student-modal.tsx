@@ -19,6 +19,7 @@ import {
 } from "@repo/ui/components/ui-kit/stepper";
 import { Plus } from "lucide-react";
 import { useState } from "react";
+import { AttachmentsForm } from "./attachments-form";
 import { ParentForm } from "./parent-form";
 import { StudentForm } from "./student-form";
 
@@ -61,7 +62,7 @@ export function CreateStudentModal() {
                 <ParentForm stepNumber={2} />
               </StepContent>
               <StepContent>
-                <div>Attachments (Coming soon)</div>
+                <AttachmentsForm stepNumber={3} />
               </StepContent>
             </StepperContent>
 

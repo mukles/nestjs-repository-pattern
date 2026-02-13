@@ -1,20 +1,66 @@
 "use client";
 
-import { Button } from "@repo/ui/components/ui-kit/button";
-import { Input } from "@repo/ui/components/ui-kit/input";
-import { FileText, Trash2, Upload, User, Users } from "lucide-react";
-import { useState } from "react";
 import {
+  AttachmentsFormValues,
+  attachmentsSchema,
   DOCUMENT_CATEGORY_LABELS,
   DOCUMENT_TYPE_LABELS,
   DOCUMENT_TYPES_BY_CATEGORY,
   DocumentCategory,
+  StudentAttachment,
   StudentDocumentType,
-  type StudentAttachment,
-} from "./student-form-schema";
+} from "@/lib/validation/attachments.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@repo/ui/components/ui-kit/button";
+import { Input } from "@repo/ui/components/ui-kit/input";
+import { useStepperContext } from "@repo/ui/components/ui-kit/stepper";
+import { FileText, Trash2, Upload, User, Users } from "lucide-react";
+import { useCallback, useEffect } from "react";
+import { useForm, useWatch } from "react-hook-form";
 
-export function AttachmentsForm() {
-  const [attachments, setAttachments] = useState<StudentAttachment[]>([]);
+interface AttachmentsFormProps {
+  stepNumber: number;
+  onStepValid?: (values: AttachmentsFormValues) => void;
+  defaultValues?: Partial<AttachmentsFormValues>;
+}
+
+export function AttachmentsForm({
+  stepNumber,
+  onStepValid,
+  defaultValues,
+}: AttachmentsFormProps) {
+  const { registerStepValidator } = useStepperContext();
+
+  const attachmentsForm = useForm<AttachmentsFormValues>({
+    resolver: zodResolver(attachmentsSchema),
+    mode: "onChange",
+    defaultValues: {
+      attachments: defaultValues?.attachments ?? [],
+    },
+  });
+
+  const attachments = useWatch({
+    control: attachmentsForm.control,
+    name: "attachments",
+  });
+
+  const handleValidation = useCallback(async () => {
+    const isValid = await attachmentsForm.trigger();
+    if (isValid && onStepValid) {
+      onStepValid(attachmentsForm.getValues());
+    }
+    return isValid;
+  }, [attachmentsForm, onStepValid]);
+
+  useEffect(() => {
+    return registerStepValidator(stepNumber, handleValidation);
+  }, [handleValidation, registerStepValidator, stepNumber]);
+
+  useEffect(() => {
+    if (defaultValues) {
+      attachmentsForm.reset(defaultValues);
+    }
+  }, [defaultValues, attachmentsForm]);
 
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -24,26 +70,38 @@ export function AttachmentsForm() {
     if (files && files.length > 0) {
       const file = files[0];
       if (file) {
+        const currentAttachments = attachmentsForm.getValues("attachments");
         // Remove existing attachment of same type if exists
-        const filtered = attachments.filter(
+        const filtered = currentAttachments.filter(
           (a) => a.documentType !== documentType,
         );
         const newAttachment: StudentAttachment = {
           file,
           documentType,
         };
-        setAttachments([...filtered, newAttachment]);
+        attachmentsForm.setValue("attachments", [...filtered, newAttachment], {
+          shouldValidate: true,
+        });
       }
       e.target.value = "";
     }
   };
 
   const handleRemove = (documentType: StudentDocumentType) => {
-    setAttachments(attachments.filter((a) => a.documentType !== documentType));
+    const currentAttachments = attachmentsForm.getValues("attachments");
+    attachmentsForm.setValue(
+      "attachments",
+      currentAttachments.filter((a) => a.documentType !== documentType),
+      { shouldValidate: true },
+    );
   };
 
   const getAttachment = (documentType: StudentDocumentType) => {
     return attachments.find((a) => a.documentType === documentType);
+  };
+
+  const clearAllAttachments = () => {
+    attachmentsForm.setValue("attachments", [], { shouldValidate: true });
   };
 
   const getCategoryIcon = (category: DocumentCategory) => {
@@ -101,7 +159,7 @@ export function AttachmentsForm() {
               type="button"
               variant="ghost"
               size="sm"
-              onClick={() => setAttachments([])}
+              onClick={clearAllAttachments}
               className="text-destructive hover:text-destructive"
             >
               Clear All
