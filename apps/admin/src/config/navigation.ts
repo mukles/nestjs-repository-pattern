@@ -9,6 +9,7 @@ import {
   type LucideIcon,
   Megaphone,
   MessageSquare,
+  School,
   Shield,
   UserCheck,
   Users,
@@ -110,6 +111,21 @@ export const sidebarItems: NavGroup[] = [
     id: 3,
     label: "Academic",
     items: [
+      {
+        title: "Classes",
+        url: "/classes",
+        icon: School,
+        subItems: [
+          { title: "All Classes", url: "/classes/list" },
+          { title: "Archived Classes", url: "/classes/archived" },
+        ],
+      },
+      {
+        title: "Subjects",
+        url: "/subjects",
+        icon: BookOpen,
+        subItems: [{ title: "All Subjects", url: "/subjects/list" }],
+      },
       {
         title: "Courses",
         url: "/courses",
