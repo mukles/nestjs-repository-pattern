@@ -1,0 +1,188 @@
+import { Gender, StudentDto, StudentStatus } from "@repo/shared-types";
+
+// Extended student type with enrollment info for internal use
+export interface StudentWithEnrollment extends StudentDto {
+  classId: number;
+  className: string;
+  sectionId: number;
+  sectionName: string;
+  rollNumber: string;
+}
+
+// ============ FAKE STUDENTS ============
+export const fakeStudents: StudentWithEnrollment[] = [
+  {
+    id: 1,
+    firstName: "Ahmed",
+    lastName: "Rahman",
+    email: "ahmed.rahman@student.school.edu",
+    dateOfBirth: new Date("2015-03-15"),
+    gender: Gender.MALE,
+    status: StudentStatus.ACTIVE,
+    createdAt: new Date("2024-01-15"),
+    updatedAt: new Date("2024-01-15"),
+    classId: 1,
+    className: "Class 1",
+    sectionId: 1,
+    sectionName: "Section A",
+    rollNumber: "1A-001",
+  },
+  {
+    id: 2,
+    firstName: "Fatima",
+    lastName: "Khan",
+    email: "fatima.khan@student.school.edu",
+    dateOfBirth: new Date("2015-06-22"),
+    gender: Gender.FEMALE,
+    status: StudentStatus.ACTIVE,
+    createdAt: new Date("2024-01-15"),
+    updatedAt: new Date("2024-01-15"),
+    classId: 1,
+    className: "Class 1",
+    sectionId: 1,
+    sectionName: "Section A",
+    rollNumber: "1A-002",
+  },
+  {
+    id: 3,
+    firstName: "Ali",
+    lastName: "Hassan",
+    email: "ali.hassan@student.school.edu",
+    dateOfBirth: new Date("2015-01-10"),
+    gender: Gender.MALE,
+    status: StudentStatus.ACTIVE,
+    createdAt: new Date("2024-01-16"),
+    updatedAt: new Date("2024-01-16"),
+    classId: 1,
+    className: "Class 1",
+    sectionId: 2,
+    sectionName: "Section B",
+    rollNumber: "1B-001",
+  },
+  {
+    id: 4,
+    firstName: "Aisha",
+    lastName: "Begum",
+    email: "aisha.begum@student.school.edu",
+    dateOfBirth: new Date("2014-08-05"),
+    gender: Gender.FEMALE,
+    status: StudentStatus.ACTIVE,
+    createdAt: new Date("2024-01-16"),
+    updatedAt: new Date("2024-01-16"),
+    classId: 2,
+    className: "Class 2",
+    sectionId: 3,
+    sectionName: "Section A",
+    rollNumber: "2A-001",
+  },
+  {
+    id: 5,
+    firstName: "Omar",
+    lastName: "Siddique",
+    email: "omar.siddique@student.school.edu",
+    dateOfBirth: new Date("2014-11-30"),
+    gender: Gender.MALE,
+    status: StudentStatus.ACTIVE,
+    createdAt: new Date("2024-01-17"),
+    updatedAt: new Date("2024-01-17"),
+    classId: 2,
+    className: "Class 2",
+    sectionId: 3,
+    sectionName: "Section A",
+    rollNumber: "2A-002",
+  },
+  {
+    id: 6,
+    firstName: "Mariam",
+    lastName: "Akter",
+    email: "mariam.akter@student.school.edu",
+    dateOfBirth: new Date("2013-04-18"),
+    gender: Gender.FEMALE,
+    status: StudentStatus.ACTIVE,
+    createdAt: new Date("2024-01-17"),
+    updatedAt: new Date("2024-01-17"),
+    classId: 3,
+    className: "Class 3",
+    sectionId: 5,
+    sectionName: "Section A",
+    rollNumber: "3A-001",
+  },
+  {
+    id: 7,
+    firstName: "Yusuf",
+    lastName: "Islam",
+    email: "yusuf.islam@student.school.edu",
+    dateOfBirth: new Date("2012-07-25"),
+    gender: Gender.MALE,
+    status: StudentStatus.ACTIVE,
+    createdAt: new Date("2024-01-18"),
+    updatedAt: new Date("2024-01-18"),
+    classId: 4,
+    className: "Class 4",
+    sectionId: 6,
+    sectionName: "Section A",
+    rollNumber: "4A-001",
+  },
+  {
+    id: 8,
+    firstName: "Zainab",
+    lastName: "Chowdhury",
+    email: "zainab.chowdhury@student.school.edu",
+    dateOfBirth: new Date("2011-09-12"),
+    gender: Gender.FEMALE,
+    status: StudentStatus.ACTIVE,
+    createdAt: new Date("2024-01-18"),
+    updatedAt: new Date("2024-01-18"),
+    classId: 5,
+    className: "Class 5",
+    sectionId: 7,
+    sectionName: "Section A",
+    rollNumber: "5A-001",
+  },
+  {
+    id: 9,
+    firstName: "Ibrahim",
+    lastName: "Hossain",
+    email: "ibrahim.hossain@student.school.edu",
+    dateOfBirth: new Date("2010-02-28"),
+    gender: Gender.MALE,
+    status: StudentStatus.SUSPENDED,
+    createdAt: new Date("2024-01-19"),
+    updatedAt: new Date("2024-02-01"),
+    classId: 6,
+    className: "Class 6",
+    sectionId: 8,
+    sectionName: "Section A",
+    rollNumber: "6A-001",
+  },
+  {
+    id: 10,
+    firstName: "Khadija",
+    lastName: "Ahmed",
+    email: "khadija.ahmed@student.school.edu",
+    dateOfBirth: new Date("2009-12-03"),
+    gender: Gender.FEMALE,
+    status: StudentStatus.ACTIVE,
+    createdAt: new Date("2024-01-19"),
+    updatedAt: new Date("2024-01-19"),
+    classId: 7,
+    className: "Class 7",
+    sectionId: 9,
+    sectionName: "Section A",
+    rollNumber: "7A-001",
+  },
+];
+
+// Get students by section
+export function getStudentsBySection(
+  sectionId: number,
+): StudentWithEnrollment[] {
+  return fakeStudents.filter((s) => s.sectionId === sectionId);
+}
+
+// Get student by ID
+export function getStudentById(
+  studentId: number,
+): StudentWithEnrollment | undefined {
+  return fakeStudents.find((s) => s.id === studentId);
+}

@@ -1,13 +1,23 @@
 import { StudentDto, StudentStatus } from "@repo/shared-types";
 import { Badge } from "@repo/ui/components/ui-kit/badge";
+import { Button } from "@repo/ui/components/ui-kit/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
+import { Calendar, Eye } from "lucide-react";
+import Link from "next/link";
 
 export const studentTableColumns: ColumnDef<StudentDto>[] = [
   {
     accessorKey: "id",
     header: "ID",
-    cell: ({ row }) => row.original.id,
+    cell: ({ row }) => (
+      <Link
+        href={`/students/${row.original.id}`}
+        className="text-primary font-medium hover:underline"
+      >
+        #{row.original.id}
+      </Link>
+    ),
   },
   {
     accessorKey: "firstName",
@@ -65,5 +75,25 @@ export const studentTableColumns: ColumnDef<StudentDto>[] = [
       // @ts-ignore
       return <Badge variant={variant}>{row.original.status}</Badge>;
     },
+  },
+  {
+    id: "actions",
+    header: "Actions",
+    cell: ({ row }) => (
+      <div className="flex items-center gap-2">
+        <Button variant="ghost" size="sm" asChild>
+          <Link href={`/students/${row.original.id}`}>
+            <Eye className="mr-1 size-4" />
+            View
+          </Link>
+        </Button>
+        <Button variant="outline" size="sm" asChild>
+          <Link href={`/students/${row.original.id}`}>
+            <Calendar className="mr-1 size-4" />
+            Routine
+          </Link>
+        </Button>
+      </div>
+    ),
   },
 ];
