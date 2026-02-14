@@ -10,25 +10,6 @@ import {
 
 // Using fake data for now - replace with actual API calls later
 
-export async function getTeachers(): Promise<
-  | {
-      success: true;
-      data: TeacherDto[];
-    }
-  | {
-      success: false;
-      error: { message: string };
-    }
-> {
-  // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 50));
-
-  return {
-    success: true,
-    data: fakeTeachers,
-  };
-}
-
 export async function getSectionsByClassId(classId: number): Promise<
   | {
       success: true;
@@ -154,7 +135,7 @@ export async function createSection(
     capacity: data.capacity,
     currentStudentCount: 0,
     classTeacher: data.classTeacherId
-      ? fakeTeachers.find((t) => t.id === data.classTeacherId)
+      ? fakeTeachers.find((t: TeacherDto) => t.id === data.classTeacherId)
       : undefined,
     subjectTeachers: [],
     createdAt: new Date(),
@@ -245,7 +226,7 @@ export async function updateSection(
     name: data.name ?? section.name,
     capacity: data.capacity ?? section.capacity,
     classTeacher: data.classTeacherId
-      ? fakeTeachers.find((t) => t.id === data.classTeacherId)
+      ? fakeTeachers.find((t: TeacherDto) => t.id === data.classTeacherId)
       : section.classTeacher,
     updatedAt: new Date(),
   };

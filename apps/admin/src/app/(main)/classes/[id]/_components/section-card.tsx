@@ -19,6 +19,7 @@ import {
 } from "@repo/ui/components/ui-kit/dropdown-menu";
 import {
   BookOpen,
+  Calendar,
   GraduationCap,
   MoreVertical,
   Pencil,
@@ -188,12 +189,18 @@ export function SectionCard({ section, classId }: SectionCardProps) {
             )}
           </div>
 
-          {/* Students Link */}
-          <div className="border-t pt-3">
-            <Button variant="outline" size="sm" className="w-full" asChild>
+          {/* Action Buttons */}
+          <div className="flex gap-2 border-t pt-3">
+            <Button variant="outline" size="sm" className="flex-1" asChild>
+              <a href={`/classes/${classId}/sections/${section.id}`}>
+                <Calendar className="mr-2 size-4" />
+                Routine
+              </a>
+            </Button>
+            <Button variant="outline" size="sm" className="flex-1" asChild>
               <a href={`/students/list?sectionId=${section.id}`}>
                 <GraduationCap className="mr-2 size-4" />
-                View Students
+                Students
               </a>
             </Button>
           </div>
