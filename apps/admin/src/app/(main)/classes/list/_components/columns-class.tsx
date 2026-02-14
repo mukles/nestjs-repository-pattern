@@ -12,7 +12,8 @@ import {
 } from "@repo/ui/components/ui-kit/dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
-import { Archive, MoreHorizontal, Pencil, Users } from "lucide-react";
+import { Archive, Eye, MoreHorizontal, Pencil, Users } from "lucide-react";
+import Link from "next/link";
 
 const levelLabels: Record<ClassLevel, string> = {
   [ClassLevel.NURSERY]: "Nursery",
@@ -39,6 +40,12 @@ function ColumnActions({ row, onEdit, onArchive }: ColumnActionsProps) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
+        <DropdownMenuItem asChild>
+          <Link href={`/classes/${row.id}`}>
+            <Eye className="mr-2 size-4" />
+            View Sections
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuItem onClick={() => onEdit(row)}>
           <Pencil className="mr-2 size-4" />
           Edit
@@ -86,9 +93,14 @@ export function createClassTableColumns(
       cell: ({ row }) => {
         const sections = row.original.sections || [];
         return (
-          <Badge variant="outline">
-            {sections.length} {sections.length === 1 ? "Section" : "Sections"}
-          </Badge>
+          <Link
+            href={`/classes/${row.original.id}`}
+            className="hover:underline"
+          >
+            <Badge variant="outline" className="cursor-pointer">
+              {sections.length} {sections.length === 1 ? "Section" : "Sections"}
+            </Badge>
+          </Link>
         );
       },
     },
