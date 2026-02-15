@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "@repo/ui/components/ui-kit/button";
 import {
   Dialog,
@@ -11,8 +10,9 @@ import {
   DialogTrigger,
 } from "@repo/ui/components/ui-kit/dialog";
 import { Plus } from "lucide-react";
-import { StudentForm } from "./student-form";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { StudentForm } from "./student-form";
 
 export function CreateStudentModal() {
   const [open, setOpen] = useState(false);
@@ -34,7 +34,7 @@ export function CreateStudentModal() {
           Add Student
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">
             Add New Student
