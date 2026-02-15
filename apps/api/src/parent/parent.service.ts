@@ -1,10 +1,13 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { ParentType } from "@repo/shared-types";
 
-import { DocumentType, ParentAttachmentEntity, ParentEntity } from "./entities";
+import { IDataService } from "../repositories/interfaces/dataservice.interface";
+import { ParentAttachmentEntity, ParentEntity } from "./entities";
 
 @Injectable()
 export class ParentService {
+  constructor(private readonly dataService: IDataService) {}
+
   async createParent(data: {
     name: string;
     email?: string;
@@ -13,10 +16,10 @@ export class ParentService {
     type: ParentType;
     studentId: number;
   }): Promise<ParentEntity> {
-    const parent = ParentEntity.create({
+    const parent = this.dataService.parents.create({
       ...data,
     });
-    return parent.save();
+    return this.dataService.parents.save(parent);
   }
 
   async addAttachment(
@@ -24,37 +27,42 @@ export class ParentService {
     data: {
       fileName: string;
       fileUrl: string;
-      documentType: DocumentType;
+      documentType: string;
     },
   ): Promise<ParentAttachmentEntity> {
-    const attachment = ParentAttachmentEntity.create({
-      ...data,
-      parentId,
+    const parent = await this.dataService.parents.findOne({
+      where: { id: parentId },
     });
-    return attachment.save();
+    if (!parent) throw new NotFoundException("Parent not found");
+    const attachment = this.dataService.parentAttachments.create({
+      ...data,
+      parent,
+    });
+    return this.dataService.parentAttachments.save(attachment);
   }
 
   async findByStudentId(studentId: number): Promise<ParentEntity[]> {
-    return ParentEntity.find({
-      where: { studentId },
-      relations: ["attachments"],
+    return this.dataService.parents.find({
+      where: { students: { id: studentId } },
+      relations: ["attachments", "students"],
     });
   }
 
   async findOne(id: number): Promise<ParentEntity | null> {
-    return ParentEntity.findOne({
+    return this.dataService.parents.findOne({
       where: { id },
       relations: ["attachments"],
     });
   }
 
   async getAttachments(parentId: number): Promise<ParentAttachmentEntity[]> {
-    return ParentAttachmentEntity.find({
-      where: { parentId },
+    return this.dataService.parentAttachments.find({
+      where: { parent: { id: parentId } },
+      relations: ["parent"],
     });
   }
 
   async removeAttachment(attachmentId: number): Promise<void> {
-    await ParentAttachmentEntity.delete(attachmentId);
+    await this.dataService.parentAttachments.delete(attachmentId);
   }
 }

@@ -1,73 +1,46 @@
-import { ParentType } from "@repo/shared-types";
 import {
   BaseEntity,
   Column,
-  CreateDateColumn,
   Entity,
-  JoinColumn,
-  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from "typeorm";
 
 import { StudentEntity } from "../../student/entities/student.entity";
-import type { ParentAttachmentEntity } from "./parent-attachment.entity";
+import { ParentAttachmentEntity } from "./parent-attachment.entity";
 
 @Entity("parents")
 export class ParentEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({
-    type: "varchar",
-    length: 100,
-  })
+  @Column()
   name: string;
 
-  @Column({
-    type: "varchar",
-    length: 100,
-    nullable: true,
-  })
-  email: string;
+  @Column({ nullable: true })
+  relationship: string;
 
-  @Column({
-    type: "varchar",
-    length: 20,
-    nullable: true,
-  })
-  phone: string;
-
-  @Column({
-    type: "varchar",
-    length: 100,
-    nullable: true,
-  })
+  @Column({ nullable: true })
   occupation: string;
 
-  @Column({
-    type: "enum",
-    enum: ParentType,
-  })
-  type: ParentType;
+  @Column({ nullable: true })
+  phone: string;
 
-  @ManyToOne(() => StudentEntity, { onDelete: "CASCADE" })
-  @JoinColumn({ name: "studentId" })
-  student: StudentEntity;
+  @Column({ nullable: true })
+  email: string;
 
-  @Column()
-  studentId: number;
+  @Column({ nullable: true })
+  nid: string;
 
-  @OneToMany(
-    "ParentAttachmentEntity",
-    (attachment: ParentAttachmentEntity) => attachment.parent,
-  )
+  @OneToMany(() => StudentEntity, (student) => student.father)
+  students: StudentEntity[];
+
+  @OneToMany(() => ParentAttachmentEntity, (attachment) => attachment.parent)
   attachments: ParentAttachmentEntity[];
 
-  @CreateDateColumn({ type: "timestamp" })
+  @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   createdAt: Date;
 
-  @UpdateDateColumn({ type: "timestamp" })
+  @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   updatedAt: Date;
 }

@@ -37,7 +37,7 @@ export async function getSubjects(
     return {
       success: false,
       error: {
-        type: "UNKNOWN_ERROR",
+        type: "SERVER_ERROR",
         message: error instanceof Error ? error.message : "Unknown error",
       },
     };

@@ -70,12 +70,11 @@ export function createArchivedClassTableColumns(
       cell: ({ row }) => row.original.academicYear,
     },
     {
-      accessorKey: "capacity",
+      accessorKey: "totalCapacity",
       header: "Capacity",
       cell: ({ row }) => {
-        const current = row.original.currentStudentCount || 0;
-        const capacity = row.original.capacity;
-
+        const current = row.original.totalStudentCount || 0;
+        const capacity = row.original.totalCapacity || 0;
         return (
           <div className="flex items-center gap-2">
             <Users className="text-muted-foreground size-4" />
@@ -89,13 +88,7 @@ export function createArchivedClassTableColumns(
     {
       accessorKey: "classTeacher",
       header: "Class Teacher",
-      cell: ({ row }) => {
-        const teacher = row.original.classTeacher;
-        if (!teacher) {
-          return <span className="text-muted-foreground">Not assigned</span>;
-        }
-        return `${teacher.firstName} ${teacher.lastName}`;
-      },
+      cell: () => <span className="text-muted-foreground">Not assigned</span>,
     },
     {
       accessorKey: "status",

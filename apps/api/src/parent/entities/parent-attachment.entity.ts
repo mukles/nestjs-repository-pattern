@@ -1,27 +1,17 @@
 import {
   BaseEntity,
   Column,
-  CreateDateColumn,
   Entity,
-  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
 
-import type { ParentEntity } from "./parent.entity";
-
-export enum DocumentType {
-  NID = "NID",
-  PASSPORT = "PASSPORT",
-  BIRTH_CERTIFICATE = "BIRTH_CERTIFICATE",
-  OCCUPATION_PROOF = "OCCUPATION_PROOF",
-  OTHER = "OTHER",
-}
+import { ParentEntity } from "./parent.entity";
 
 @Entity("parent_attachments")
 export class ParentAttachmentEntity extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @Column({
     type: "varchar",
@@ -36,20 +26,19 @@ export class ParentAttachmentEntity extends BaseEntity {
   fileUrl: string;
 
   @Column({
-    type: "enum",
-    enum: DocumentType,
+    type: "varchar",
+    length: 100,
   })
-  documentType: DocumentType;
+  documentType: string;
 
-  @ManyToOne("ParentEntity", (parent: ParentEntity) => parent.attachments, {
+  @ManyToOne(() => ParentEntity, (parent) => parent.attachments, {
     onDelete: "CASCADE",
   })
-  @JoinColumn({ name: "parentId" })
   parent: ParentEntity;
 
-  @Column()
-  parentId: number;
+  @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
+  createdAt: Date;
 
-  @CreateDateColumn({ type: "timestamp" })
-  uploadedAt: Date;
+  @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
+  updateAt: Date;
 }

@@ -4,14 +4,16 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
 
 import { EnrollmentEntity } from "../../enrollment/entities/enrollment.entity";
 import { ParentEntity } from "../../parent/entities/parent.entity";
-import type { StudentAttachmentEntity } from "./student-attachment.entity";
+import { StudentAttachmentEntity } from "./student.attachment.entity";
 
 @Entity("students")
 export class StudentEntity extends BaseEntity {
@@ -37,6 +39,9 @@ export class StudentEntity extends BaseEntity {
   })
   email: string;
 
+  @Column({ nullable: true })
+  photo: string;
+
   @Column({
     type: "timestamp",
   })
@@ -44,9 +49,6 @@ export class StudentEntity extends BaseEntity {
 
   @OneToMany(() => EnrollmentEntity, (enrollment) => enrollment.student)
   enrollments: EnrollmentEntity[];
-
-  @OneToMany(() => ParentEntity, (parent) => parent.student)
-  parents: ParentEntity[];
 
   @OneToMany(
     "StudentAttachmentEntity",
@@ -66,6 +68,17 @@ export class StudentEntity extends BaseEntity {
     default: StudentStatus.ACTIVE,
   })
   status: StudentStatus;
+
+  @ManyToOne(() => ParentEntity, (parent) => parent.students)
+  father: ParentEntity;
+
+  @ManyToOne(() => ParentEntity, (parent) => parent.students)
+  mother: ParentEntity;
+
+  @OneToOne(() => StudentAttachmentEntity, (attachment) => attachment.student, {
+    cascade: true,
+  })
+  attachment: StudentAttachmentEntity;
 
   @CreateDateColumn({ type: "timestamp" })
   createdAt: Date;
