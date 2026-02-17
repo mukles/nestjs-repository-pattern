@@ -88,6 +88,7 @@ export function StudentForm({
 
   return (
     <div className="space-y-6">
+      {/* Photo Upload Section - Redesigned */}
       <Controller
         name="photo"
         control={studentForm.control}
@@ -97,6 +98,7 @@ export function StudentForm({
             <ImageUploader
               fileSetting={fileSetting}
               image={studentForm.getValues(field.name) as string}
+              variant="form"
               onChange={(file) => {
                 field.onChange(file);
               }}
@@ -111,7 +113,9 @@ export function StudentForm({
           control={studentForm.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor={field.name}>First Name</FieldLabel>
+              <FieldLabel htmlFor={field.name}>
+                First Name <span className="text-destructive ml-1">*</span>
+              </FieldLabel>
               <Input
                 {...field}
                 id={field.name}
@@ -128,7 +132,9 @@ export function StudentForm({
           control={studentForm.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor={field.name}>Last Name</FieldLabel>
+              <FieldLabel htmlFor={field.name}>
+                Last Name <span className="text-destructive ml-1">*</span>
+              </FieldLabel>
               <Input
                 {...field}
                 id={field.name}
@@ -147,7 +153,9 @@ export function StudentForm({
         control={studentForm.control}
         render={({ field, fieldState }) => (
           <Field data-invalid={fieldState.invalid}>
-            <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+            <FieldLabel htmlFor={field.name}>
+              Email <span className="text-destructive ml-1">*</span>
+            </FieldLabel>
             <Input
               {...field}
               id={field.name}
@@ -167,7 +175,9 @@ export function StudentForm({
           control={studentForm.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor={field.name}>Date of Birth</FieldLabel>
+              <FieldLabel htmlFor={field.name}>
+                Date of Birth <span className="text-destructive ml-1">*</span>
+              </FieldLabel>
               <Input
                 {...field}
                 id={field.name}
@@ -183,7 +193,9 @@ export function StudentForm({
           control={studentForm.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor={field.name}>Gender</FieldLabel>
+              <FieldLabel htmlFor={field.name}>
+                Gender <span className="text-destructive ml-1">*</span>
+              </FieldLabel>
               <Select value={field.value} onValueChange={field.onChange}>
                 <SelectTrigger
                   id={field.name}
@@ -209,7 +221,9 @@ export function StudentForm({
         control={studentForm.control}
         render={({ field, fieldState }) => (
           <Field data-invalid={fieldState.invalid}>
-            <FieldLabel htmlFor={field.name}>Status</FieldLabel>
+            <FieldLabel htmlFor={field.name}>
+              Status <span className="text-destructive ml-1">*</span>
+            </FieldLabel>
             <Select value={field.value} onValueChange={field.onChange}>
               <SelectTrigger
                 id={field.name}
