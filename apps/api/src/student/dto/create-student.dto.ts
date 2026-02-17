@@ -9,7 +9,7 @@ import {
   MinLength,
 } from "class-validator";
 
-export class CreateStudentDto {
+export class CreateStudentDto implements CreateStudentDto {
   @ApiProperty()
   @IsNotEmpty()
   firstName: string;
@@ -39,4 +39,28 @@ export class CreateStudentDto {
   @IsOptional()
   @IsEnum(StudentStatus)
   status?: StudentStatus;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  photo?: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  fatherId?: number;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  motherId?: number;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  guardianId?: number;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  guardianRelation?: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  isOrphan?: boolean;
 }

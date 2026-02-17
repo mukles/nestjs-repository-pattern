@@ -7,7 +7,7 @@ import { ResultEntity } from "../../result/entities/result.entity";
 import { PermissionEntity } from "../../role/entities/permission.entity";
 import { RoleEntity } from "../../role/entities/role.entity";
 import { SessionEntry } from "../../session/entities/session.entry";
-import { StudentAttachmentEntity } from "../../student/entities/student.attachment.entity";
+import { StudentAttachmentEntity } from "../../student/entities";
 import { StudentEntity } from "../../student/entities/student.entity";
 import { TeacherEntity } from "../../teacher/entities/teacher.entity";
 import { UserEntity } from "../../user/entities/user.entity";

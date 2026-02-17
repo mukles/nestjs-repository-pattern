@@ -1,17 +1,17 @@
 import { Injectable, OnApplicationBootstrap } from "@nestjs/common";
 import { InjectEntityManager, InjectRepository } from "@nestjs/typeorm";
-import { ParentAttachmentEntity } from "parent/entities";
 import { EntityManager } from "typeorm";
 
 import { BatchEntity } from "../../batch/entities/batch.entity";
 import { CourseEntity } from "../../course/entities/course.entity";
 import { EnrollmentEntity } from "../../enrollment/entities/enrollment.entity";
+import { ParentAttachmentEntity } from "../../parent/entities";
 import { ParentEntity } from "../../parent/entities/parent.entity";
 import { ResultEntity } from "../../result/entities/result.entity";
 import { PermissionEntity } from "../../role/entities/permission.entity";
 import { RoleEntity } from "../../role/entities/role.entity";
 import { SessionEntry } from "../../session/entities/session.entry";
-import { StudentAttachmentEntity } from "../../student/entities/student.attachment.entity";
+import { StudentAttachmentEntity } from "../../student/entities";
 import { StudentEntity } from "../../student/entities/student.entity";
 import { TeacherEntity } from "../../teacher/entities/teacher.entity";
 import { UserEntity } from "../../user/entities/user.entity";

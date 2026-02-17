@@ -17,10 +17,10 @@ export class R2Storage implements StorageProvider {
     private readonly cdnUrl?: string,
   ) {
     this.client = new S3Client({
-      region,
+      region: this.region,
       credentials: {
-        accessKeyId,
-        secretAccessKey,
+        accessKeyId: this.accessKeyId,
+        secretAccessKey: this.secretAccessKey,
       },
       endpoint: `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
       forcePathStyle: false,

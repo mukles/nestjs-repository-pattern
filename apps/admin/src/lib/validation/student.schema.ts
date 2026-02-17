@@ -2,22 +2,20 @@ import { Gender, StudentStatus } from "@repo/shared-types";
 import { z } from "zod";
 
 export const studentSchema = z.object({
-  firstName: z.string().min(2, "First name must be at least 2 characters"),
-  lastName: z.string().min(2, "Last name must be at least 2 characters"),
-  email: z.email("Invalid email address"),
+  firstName: z.string(),
+  lastName: z.string(),
+  email: z.string().email(),
+  dateOfBirth: z.string(),
+  gender: z.enum(Gender),
+  status: z.enum(StudentStatus),
 
-  dateOfBirth: z.string().refine((date) => {
-    const parsedDate = Date.parse(date);
-    return !isNaN(parsedDate) && parsedDate < Date.now();
-  }, "Invalid date of birth"),
+  fatherId: z.string().optional(),
+  motherId: z.string().optional(),
+  guardianId: z.string().optional(),
 
-  gender: z.enum(Gender, {
-    message: "Gender is required",
-  }),
-
-  status: z.enum(StudentStatus, {
-    message: "Status is required",
-  }),
+  photo: z.string().optional(),
+  guardianRelation: z.string().optional(),
+  isOrphan: z.boolean().optional(),
 });
 
 export type StudentFormValues = z.infer<typeof studentSchema>;

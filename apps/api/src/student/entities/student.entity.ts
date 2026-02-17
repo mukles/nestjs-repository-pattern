@@ -6,14 +6,13 @@ import {
   Entity,
   ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
 
 import { EnrollmentEntity } from "../../enrollment/entities/enrollment.entity";
 import { ParentEntity } from "../../parent/entities/parent.entity";
-import { StudentAttachmentEntity } from "./student.attachment.entity";
+import { StudentAttachmentEntity } from "./student-attachment.entity";
 
 @Entity("students")
 export class StudentEntity extends BaseEntity {
@@ -75,10 +74,14 @@ export class StudentEntity extends BaseEntity {
   @ManyToOne(() => ParentEntity, (parent) => parent.students)
   mother: ParentEntity;
 
-  @OneToOne(() => StudentAttachmentEntity, (attachment) => attachment.student, {
-    cascade: true,
-  })
-  attachment: StudentAttachmentEntity;
+  @ManyToOne(() => ParentEntity, { nullable: true })
+  guardian: ParentEntity;
+
+  @Column({ type: "varchar", length: 50, nullable: true })
+  guardianRelation: string;
+
+  @Column({ type: "boolean", default: false })
+  isOrphan: boolean;
 
   @CreateDateColumn({ type: "timestamp" })
   createdAt: Date;

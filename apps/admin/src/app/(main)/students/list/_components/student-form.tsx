@@ -6,6 +6,7 @@ import {
 } from "@/lib/validation/student.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Gender, StudentStatus } from "@repo/shared-types";
+import { ImageUploader } from "@repo/ui/components/image-uploader";
 import {
   Field,
   FieldError,
@@ -29,6 +30,19 @@ interface StudentFormProps {
   defaultValues?: Partial<StudentFormValues>;
 }
 
+export const fileSetting = {
+  acceptedImageTypes: {
+    "image/jpg": [".jpeg", ".jpg"],
+    "image/png": [".png"],
+  },
+  errorMessages: {
+    maxUploadSize: "Max file size is 3MB",
+    acceptedImageTypes: "Only JPG and PNG files are allowed",
+  },
+  description: "JPG or PNG. Max file size 3MB. Aspect ratio 4:4",
+  maxUploadSize: 3 * 1024 * 1024,
+};
+
 export function StudentForm({
   stepNumber,
   onStepValid,
@@ -45,7 +59,12 @@ export function StudentForm({
       dateOfBirth: "",
       gender: undefined,
       status: undefined,
-      ...defaultValues,
+      photo: "",
+      fatherId: undefined,
+      motherId: undefined,
+      guardianId: undefined,
+      guardianRelation: "",
+      isOrphan: false,
     },
   });
 
@@ -69,6 +88,23 @@ export function StudentForm({
 
   return (
     <div className="space-y-6">
+      <Controller
+        name="photo"
+        control={studentForm.control}
+        render={({ field, fieldState }) => (
+          <Field data-invalid={fieldState.invalid}>
+            <FieldLabel htmlFor={field.name}>Photo</FieldLabel>
+            <ImageUploader
+              fileSetting={fileSetting}
+              image={studentForm.getValues(field.name) as string}
+              onChange={(file) => {
+                field.onChange(file);
+              }}
+            />
+            {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+          </Field>
+        )}
+      />
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Controller
           name="firstName"
@@ -87,7 +123,6 @@ export function StudentForm({
             </Field>
           )}
         />
-
         <Controller
           name="lastName"
           control={studentForm.control}
@@ -106,7 +141,6 @@ export function StudentForm({
           )}
         />
       </div>
-
       {/* Email */}
       <Controller
         name="email"
@@ -126,7 +160,6 @@ export function StudentForm({
           </Field>
         )}
       />
-
       {/* Date of Birth & Gender Row */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Controller
@@ -145,7 +178,6 @@ export function StudentForm({
             </Field>
           )}
         />
-
         <Controller
           name="gender"
           control={studentForm.control}
@@ -171,7 +203,6 @@ export function StudentForm({
           )}
         />
       </div>
-
       {/* Status */}
       <Controller
         name="status"
@@ -197,6 +228,21 @@ export function StudentForm({
             </Select>
             {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
           </Field>
+        )}
+      />
+      <Controller
+        name="isOrphan"
+        control={studentForm.control}
+        render={({ field }) => (
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="isOrphan"
+              checked={!!field.value}
+              onChange={(e) => field.onChange(e.target.checked)}
+            />
+            <FieldLabel htmlFor="isOrphan">Is Orphan?</FieldLabel>
+          </div>
         )}
       />
     </div>

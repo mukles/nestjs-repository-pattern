@@ -17,7 +17,7 @@ export interface Step {
 const stepperVariants = cva("flex items-center", {
   variants: {
     orientation: {
-      horizontal: "flex-row justify-center",
+      horizontal: "group/stepper-item w-full flex-row justify-center",
       vertical: "flex-col items-start",
     },
     size: {
@@ -59,7 +59,7 @@ const stepCircleVariants = cva(
 const stepConnectorVariants = cva("transition-colors duration-300", {
   variants: {
     orientation: {
-      horizontal: "mx-3 h-0.5 w-12",
+      horizontal: "h-0.5 w-full flex-1",
       vertical: "my-1 ml-4 h-8 w-0.5",
     },
     state: {
@@ -501,12 +501,21 @@ function StepItem({
     size === "sm" ? "size-3" : size === "lg" ? "size-5" : "size-4";
 
   return (
-    <div className={cn("flex items-center", className)} {...props}>
+    <div
+      className={cn(
+        "relative flex min-w-0 flex-1 items-center",
+        orientation === "horizontal" && "justify-center",
+        className,
+      )}
+      {...props}
+    >
+      {/* Step circle with connector using ::before and ::after */}
       <div
         className={cn(
-          "flex items-center gap-2",
-          orientation === "vertical" && "flex-row",
+          "flex min-w-0 flex-col items-center",
+          orientation === "horizontal" && "gap-2",
           clickable && "cursor-pointer",
+          "relative w-full",
         )}
         onClick={handleClick}
         role={clickable ? "button" : undefined}
@@ -520,55 +529,84 @@ function StepItem({
               }
             : undefined
         }
+        style={{ zIndex: 2 }}
       >
-        <div className="flex flex-col items-center gap-1.5">
-          <div className={cn(stepCircleVariants({ size, state }))}>
+        <div
+          className={cn(
+            "relative mb-2 flex w-full items-center justify-center",
+            orientation === "horizontal" && "w-full",
+          )}
+        >
+          {/* Connector before (not for first step) */}
+          {orientation === "horizontal" && stepNumber !== 1 && (
+            <span
+              className={cn(
+                "absolute top-1/2 left-0 h-0.5 -translate-y-1/2",
+                isCompleted || isCurrent ? "bg-primary" : "bg-[#e0e0e0]",
+              )}
+              style={{ width: "calc(50% - 1.25rem)", zIndex: 1 }}
+            />
+          )}
+          {/* Outer ring for active step */}
+          {isCurrent && (
+            <span
+              className="pointer-events-none absolute inset-0 rounded-full"
+              style={{ boxSizing: "border-box", zIndex: 2 }}
+            />
+          )}
+          <div
+            className={cn(
+              stepCircleVariants({ size, state }),
+              "z-10 border-2 bg-[#f5f5f5] text-black",
+              isCurrent && "border-black",
+            )}
+            style={{ position: "relative" }}
+          >
             {isCompleted ? (
-              <Check className={iconSize} />
+              <Check className={iconSize + " text-black"} />
             ) : icon ? (
               icon
             ) : (
               stepNumber
             )}
           </div>
-          <div className="flex flex-col items-center">
+          {/* Connector after (not for last step) */}
+          {orientation === "horizontal" && !isLast && (
             <span
               className={cn(
-                "font-medium whitespace-nowrap transition-colors duration-300",
-                size === "sm" && "text-xs",
-                size === "default" && "text-xs",
-                size === "lg" && "text-sm",
-                state === "upcoming" ? "text-muted-foreground" : "text-primary",
+                "absolute top-1/2 right-0 h-0.5 -translate-y-1/2",
+                currentStep > stepNumber ? "bg-primary" : "bg-[#e0e0e0]",
               )}
-            >
-              {name}
-            </span>
-            {description && (
-              <span
-                className={cn(
-                  "whitespace-nowrap text-muted-foreground",
-                  size === "sm" && "text-[10px]",
-                  size === "default" && "text-[11px]",
-                  size === "lg" && "text-xs",
-                )}
-              >
-                {description}
-              </span>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {!isLast && (
-        <div
-          className={cn(
-            stepConnectorVariants({
-              orientation,
-              state: isCompleted ? "completed" : "incomplete",
-            }),
+              style={{ width: "calc(50% - 1.25rem)", zIndex: 1 }}
+            />
           )}
-        />
-      )}
+        </div>
+        <span
+          className={cn(
+            "text-center font-medium whitespace-nowrap transition-colors duration-300",
+            size === "sm" && "text-xs",
+            size === "default" && "text-xs",
+            size === "lg" && "text-sm",
+            state === "upcoming" ? "text-muted-foreground" : "text-black",
+            "mt-0.5",
+          )}
+        >
+          {name}
+        </span>
+        {description && (
+          <span
+            className={cn(
+              "text-center whitespace-nowrap text-muted-foreground",
+              size === "sm" && "text-[10px]",
+              size === "default" && "text-[11px]",
+              size === "lg" && "text-xs",
+              "mt-0.5",
+            )}
+          >
+            {description}
+          </span>
+        )}
+      </div>
     </div>
   );
 }

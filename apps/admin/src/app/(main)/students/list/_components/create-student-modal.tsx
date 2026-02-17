@@ -52,6 +52,7 @@ export function CreateStudentModal() {
               <StepItem name="Student Info" />
               <StepItem name="Parents Info" />
               <StepItem name="Attachments" />
+              <StepItem name="Review & Submit" />
             </StepperIndicator>
 
             <StepperContent>

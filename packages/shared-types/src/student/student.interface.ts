@@ -19,3 +19,33 @@ export interface GetStudentsParams extends Pagination {
   name?: string;
   sortBy?: keyof StudentDto;
 }
+
+export interface CreateStudentDto {
+  firstName: string;
+  lastName: string;
+  email: string;
+  dateOfBirth: Date;
+  gender: Gender;
+  status?: StudentStatus;
+  photo?: string;
+  fatherId?: number;
+  motherId?: number;
+  guardianId?: number;
+  guardianRelation?: string;
+  isOrphan?: boolean;
+}
+
+export interface UpdateStudentDto {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  dateOfBirth?: Date;
+  gender?: Gender;
+  status?: StudentStatus;
+  photo?: string;
+  fatherId?: number;
+  motherId?: number;
+  guardianId?: number;
+  guardianRelation?: string;
+  isOrphan?: boolean;
+}
