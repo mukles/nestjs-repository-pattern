@@ -131,6 +131,9 @@ interface StepperProps
   children: React.ReactNode;
 }
 
+// Exported validatorsRef for external access
+const validatorsRef = React.createRef<Map<number, StepValidator>>();
+
 function Stepper({
   currentStep: controlledStep,
   defaultStep = 1,
@@ -148,7 +151,10 @@ function Stepper({
   void _validateOnNext; // Reserved for future use
   const [internalStep, setInternalStep] = React.useState(defaultStep);
   const [isValidating, setIsValidating] = React.useState(false);
-  const validatorsRef = React.useRef<Map<number, StepValidator>>(new Map());
+  if (!validatorsRef.current) {
+    validatorsRef.current = new Map();
+  }
+  // ...existing code...
 
   const isControlled = controlledStep !== undefined;
   const currentStep = isControlled ? controlledStep : internalStep;
@@ -167,20 +173,26 @@ function Stepper({
   }, [children]);
 
   React.useEffect(() => {
-    validatorsRef.current.forEach((_, key) => {
-      if (key > totalSteps) {
-        validatorsRef.current.delete(key);
-      }
-    });
+    if (validatorsRef.current) {
+      validatorsRef.current.forEach((_, key) => {
+        if (key > totalSteps) {
+          validatorsRef.current!.delete(key);
+        }
+      });
+    }
   }, [totalSteps]);
 
   const registerStepValidator = React.useCallback<StepValidatorRegistration>(
     (stepNumber, validator) => {
-      validatorsRef.current.set(stepNumber, validator);
+      if (validatorsRef.current) {
+        validatorsRef.current.set(stepNumber, validator);
+      }
       return () => {
-        const stored = validatorsRef.current.get(stepNumber);
-        if (stored === validator) {
-          validatorsRef.current.delete(stepNumber);
+        if (validatorsRef.current) {
+          const stored = validatorsRef.current.get(stepNumber);
+          if (stored === validator) {
+            validatorsRef.current.delete(stepNumber);
+          }
         }
       };
     },
@@ -188,10 +200,10 @@ function Stepper({
   );
 
   const validateStep = React.useCallback(async (stepNumber: number) => {
-    const validator = validatorsRef.current.get(stepNumber);
-    console.log({
-      validator,
-    });
+    const validator = validatorsRef.current
+      ? validatorsRef.current.get(stepNumber)
+      : undefined;
+
     if (!validator) {
       return true;
     }
@@ -635,6 +647,7 @@ export {
   StepperIndicator,
   stepperVariants,
   useStepperContext,
+  validatorsRef,
   type StepContentProps,
   type StepItemProps,
   type StepperActionsProps,

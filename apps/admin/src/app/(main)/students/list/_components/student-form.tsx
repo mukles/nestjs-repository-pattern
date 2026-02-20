@@ -60,10 +60,6 @@ export function StudentForm({
       gender: undefined,
       status: undefined,
       photo: "",
-      fatherId: undefined,
-      motherId: undefined,
-      guardianId: undefined,
-      guardianRelation: "",
       isOrphan: false,
     },
   });
@@ -88,7 +84,6 @@ export function StudentForm({
 
   return (
     <div className="space-y-6">
-      {/* Photo Upload Section - Redesigned */}
       <Controller
         name="photo"
         control={studentForm.control}
@@ -147,7 +142,6 @@ export function StudentForm({
           )}
         />
       </div>
-      {/* Email */}
       <Controller
         name="email"
         control={studentForm.control}
@@ -168,7 +162,6 @@ export function StudentForm({
           </Field>
         )}
       />
-      {/* Date of Birth & Gender Row */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Controller
           name="dateOfBirth"
@@ -215,7 +208,6 @@ export function StudentForm({
           )}
         />
       </div>
-      {/* Status */}
       <Controller
         name="status"
         control={studentForm.control}
@@ -248,14 +240,22 @@ export function StudentForm({
         name="isOrphan"
         control={studentForm.control}
         render={({ field }) => (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5 rounded-lg border border-amber-100 bg-amber-50 p-3">
             <input
               type="checkbox"
               id="isOrphan"
               checked={!!field.value}
               onChange={(e) => field.onChange(e.target.checked)}
+              className="h-4 w-4 cursor-pointer rounded border-slate-300 accent-slate-900"
             />
-            <FieldLabel htmlFor="isOrphan">Is Orphan?</FieldLabel>
+            <div>
+              <FieldLabel htmlFor="isOrphan" className="cursor-pointer">
+                Mark as Orphan
+              </FieldLabel>
+              <p className="mt-0.5 text-xs text-slate-400">
+                Guardian information will be required in the next step
+              </p>
+            </div>
           </div>
         )}
       />

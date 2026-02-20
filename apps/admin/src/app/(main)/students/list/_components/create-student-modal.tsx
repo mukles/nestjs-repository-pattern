@@ -17,17 +17,18 @@ import {
   StepperContent,
   StepperIndicator,
 } from "@repo/ui/components/ui-kit/stepper";
+import { useDialog } from "@repo/ui/hooks/use-dialog";
 import { Plus } from "lucide-react";
-import { useState } from "react";
 import { AttachmentsForm } from "./attachments-form";
 import { ParentForm } from "./parent-form";
+import { ReviewStep } from "./review-step";
 import { StudentForm } from "./student-form";
 
 export function CreateStudentModal() {
-  const [open, setOpen] = useState(false);
+  const { isOpen, openChange } = useDialog();
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={isOpen} onOpenChange={openChange}>
       <DialogTrigger asChild>
         <Button
           size={"lg"}
@@ -64,6 +65,9 @@ export function CreateStudentModal() {
               </StepContent>
               <StepContent>
                 <AttachmentsForm stepNumber={3} />
+              </StepContent>
+              <StepContent>
+                <ReviewStep />
               </StepContent>
             </StepperContent>
 
