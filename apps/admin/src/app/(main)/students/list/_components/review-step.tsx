@@ -1,23 +1,11 @@
-import { AttachmentsFormValues } from "@/lib/validation/attachments.schema";
-import { ParentFormValues } from "@/lib/validation/parent.schema";
-import { StudentFormValues } from "@/lib/validation/student.schema";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "@repo/ui/components/ui-kit/card";
-import { useStepperContext } from "@repo/ui/components/ui-kit/stepper";
-
-interface ReviewStepProps {
-  student: StudentFormValues;
-  parent: ParentFormValues;
-  attachments: AttachmentsFormValues;
-}
 
 export function ReviewStep() {
-  const step = useStepperContext();
-  console.log({ step });
   return (
     <div className="space-y-6">
       <Card>

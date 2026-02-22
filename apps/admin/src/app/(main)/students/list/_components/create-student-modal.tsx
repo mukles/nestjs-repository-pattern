@@ -58,13 +58,13 @@ export function CreateStudentModal() {
 
             <StepperContent>
               <StepContent>
-                <StudentForm stepNumber={1} />
+                <StudentForm name={"student"} />
               </StepContent>
               <StepContent>
-                <ParentForm stepNumber={2} />
+                <ParentForm name={"parent"} />
               </StepContent>
               <StepContent>
-                <AttachmentsForm stepNumber={3} />
+                <AttachmentsForm name={"attachments"} />
               </StepContent>
               <StepContent>
                 <ReviewStep />

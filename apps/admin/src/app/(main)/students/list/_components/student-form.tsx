@@ -20,13 +20,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@repo/ui/components/ui-kit/select";
-import { useStepperContext } from "@repo/ui/components/ui-kit/stepper";
-import { useCallback, useEffect } from "react";
+import { useStepFormValidator } from "@repo/ui/components/ui-kit/stepper";
+import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 interface StudentFormProps {
-  stepNumber: number;
-  onStepValid?: (values: StudentFormValues) => void;
+  name: string;
   defaultValues?: Partial<StudentFormValues>;
 }
 
@@ -43,12 +42,7 @@ export const fileSetting = {
   maxUploadSize: 3 * 1024 * 1024,
 };
 
-export function StudentForm({
-  stepNumber,
-  onStepValid,
-  defaultValues,
-}: StudentFormProps) {
-  const { registerStepValidator } = useStepperContext();
+export function StudentForm({ name, defaultValues }: StudentFormProps) {
   const studentForm = useForm<StudentFormValues>({
     resolver: zodResolver(studentSchema),
     mode: "onChange",
@@ -64,17 +58,7 @@ export function StudentForm({
     },
   });
 
-  const handleValidation = useCallback(async () => {
-    const isValid = await studentForm.trigger();
-    if (isValid && onStepValid) {
-      onStepValid(studentForm.getValues());
-    }
-    return isValid;
-  }, [studentForm, onStepValid]);
-
-  useEffect(() => {
-    return registerStepValidator(stepNumber, handleValidation);
-  }, [handleValidation, registerStepValidator, stepNumber]);
+  useStepFormValidator(name, studentForm);
 
   useEffect(() => {
     if (defaultValues) {

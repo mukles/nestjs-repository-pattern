@@ -73,13 +73,22 @@ const stepConnectorVariants = cva("transition-colors duration-300", {
   },
 });
 
-/** Validator function that returns true if step is valid, false otherwise */
-type StepValidator = () => boolean | Promise<boolean>;
+// Internal entry stored per named step
+type StepFormEntry = {
+  validator: () => Promise<boolean>;
+  getValues: () => unknown;
+};
 
-/** Function to register a validator for a step, returns cleanup function */
+// What you pass into registerStepValidator — any RHF form (or compatible shape)
+type StepFormInput = {
+  trigger: (fields?: any) => Promise<boolean>;
+  getValues: () => unknown;
+};
+
 type StepValidatorRegistration = (
-  stepNumber: number,
-  validator: StepValidator,
+  stepName: string,
+  form: StepFormInput,
+  fields?: string[],
 ) => () => void;
 
 interface StepperContextValue {
@@ -93,13 +102,14 @@ interface StepperContextValue {
   goToPreviousStep: () => void;
   isFirstStep: boolean;
   isLastStep: boolean;
-  /** Register a validator for a specific step (1-indexed) */
+  // Register by name — ties a step name to its form
   registerStepValidator: StepValidatorRegistration;
-  /** Validate a specific step (1-indexed), returns true if valid */
+  // Validate by step number — resolves name → entry internally
   validateStep: (stepNumber: number) => Promise<boolean>;
-  /** Validate current step and go to next if valid */
   validateAndGoNext: () => Promise<boolean>;
-  /** Whether validation is currently in progress */
+  // Returns all values keyed by step name
+  // e.g. { student: { firstName, email }, address: { street, city } }
+  getStepValues: () => Record<string, unknown>;
   isValidating: boolean;
 }
 
@@ -113,26 +123,51 @@ function useStepperContext() {
   return context;
 }
 
+/**
+ * Register an RHF form as the validator + value source for a named step.
+ * The step name is used as the key in getStepValues().
+ * Automatically unregisters on unmount.
+ *
+ * @example
+ * const form = useForm<StudentFormValues>();
+ * useStepFormValidator("student", form);
+ *
+ * // Validate only specific fields:
+ * useStepFormValidator("student", form, ["firstName", "email"]);
+ *
+ * // In the review step pull all values by name:
+ * const { getStepValues } = useStepperContext();
+ * const { student, address } = getStepValues() as { student: StudentFormValues; address: AddressFormValues };
+ */
+function useStepFormValidator(
+  stepName: string,
+  form: StepFormInput,
+  fields?: string[],
+) {
+  const { registerStepValidator } = useStepperContext();
+
+  React.useEffect(() => {
+    return registerStepValidator(stepName, form, fields);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stepName, registerStepValidator]);
+}
+
 interface StepperProps
   extends
     React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof stepperVariants> {
-  /** Controlled current step (1-indexed) */
   currentStep?: number;
-  /** Default step for uncontrolled mode (1-indexed) */
   defaultStep?: number;
   onStepClick?: (step: number) => void;
   onStepChange?: (step: number) => void;
   clickable?: boolean;
-  /** If true, validates current step before allowing navigation to next */
-  validateOnNext?: boolean;
-  /** Called when validation fails */
   onValidationFail?: (stepNumber: number) => void;
+  // Map step number → step name so the stepper can resolve which
+  // named form to validate when the user clicks Next
+  // e.g. { 1: "student", 2: "address" }
+  stepNames?: Record<number, string>;
   children: React.ReactNode;
 }
-
-// Exported validatorsRef for external access
-const validatorsRef = React.createRef<Map<number, StepValidator>>();
 
 function Stepper({
   currentStep: controlledStep,
@@ -142,19 +177,17 @@ function Stepper({
   onStepClick,
   onStepChange,
   clickable = false,
-  validateOnNext: _validateOnNext,
   onValidationFail,
+  stepNames = {},
   className,
   children,
   ...props
 }: StepperProps) {
-  void _validateOnNext; // Reserved for future use
   const [internalStep, setInternalStep] = React.useState(defaultStep);
   const [isValidating, setIsValidating] = React.useState(false);
-  if (!validatorsRef.current) {
-    validatorsRef.current = new Map();
-  }
-  // ...existing code...
+
+  // Per-instance registry keyed by step name
+  const stepsRef = React.useRef<Map<string, StepFormEntry>>(new Map());
 
   const isControlled = controlledStep !== undefined;
   const currentStep = isControlled ? controlledStep : internalStep;
@@ -172,55 +205,51 @@ function Stepper({
     return count;
   }, [children]);
 
-  React.useEffect(() => {
-    if (validatorsRef.current) {
-      validatorsRef.current.forEach((_, key) => {
-        if (key > totalSteps) {
-          validatorsRef.current!.delete(key);
-        }
-      });
-    }
-  }, [totalSteps]);
-
   const registerStepValidator = React.useCallback<StepValidatorRegistration>(
-    (stepNumber, validator) => {
-      if (validatorsRef.current) {
-        validatorsRef.current.set(stepNumber, validator);
-      }
+    (stepName, form, fields) => {
+      const entry: StepFormEntry = {
+        validator: () => form.trigger(fields),
+        getValues: () => form.getValues(),
+      };
+      stepsRef.current.set(stepName, entry);
       return () => {
-        if (validatorsRef.current) {
-          const stored = validatorsRef.current.get(stepNumber);
-          if (stored === validator) {
-            validatorsRef.current.delete(stepNumber);
-          }
+        if (stepsRef.current.get(stepName) === entry) {
+          stepsRef.current.delete(stepName);
         }
       };
     },
     [],
   );
 
-  const validateStep = React.useCallback(async (stepNumber: number) => {
-    const validator = validatorsRef.current
-      ? validatorsRef.current.get(stepNumber)
-      : undefined;
+  // Resolves step number → name → entry, then runs the validator
+  const validateStep = React.useCallback(
+    async (stepNumber: number) => {
+      const stepName = stepNames[stepNumber];
+      if (!stepName) return true;
+      const entry = stepsRef.current.get(stepName);
+      if (!entry) return true;
+      try {
+        return Boolean(await entry.validator());
+      } catch (error) {
+        console.error("Step validation failed", error);
+        return false;
+      }
+    },
+    [stepNames],
+  );
 
-    if (!validator) {
-      return true;
-    }
-    try {
-      const result = await validator();
-      return Boolean(result);
-    } catch (error) {
-      console.error("Step validation failed", error);
-      return false;
-    }
+  // Returns all form values keyed by step name
+  const getStepValues = React.useCallback(() => {
+    const result: Record<string, unknown> = {};
+    stepsRef.current.forEach((entry, stepName) => {
+      result[stepName] = entry.getValues();
+    });
+    return result;
   }, []);
 
   const handleStepClick = React.useCallback(
     (step: number) => {
-      if (!isControlled) {
-        setInternalStep(step);
-      }
+      if (!isControlled) setInternalStep(step);
       onStepClick?.(step);
       onStepChange?.(step);
     },
@@ -228,12 +257,9 @@ function Stepper({
   );
 
   const goToNextStep = React.useCallback(() => {
-    console.log({ currentStep, totalSteps });
     if (currentStep < totalSteps) {
       const nextStep = currentStep + 1;
-      if (!isControlled) {
-        setInternalStep(nextStep);
-      }
+      if (!isControlled) setInternalStep(nextStep);
       onStepChange?.(nextStep);
     }
   }, [currentStep, totalSteps, isControlled, onStepChange]);
@@ -241,17 +267,13 @@ function Stepper({
   const goToPreviousStep = React.useCallback(() => {
     if (currentStep > 1) {
       const prevStep = currentStep - 1;
-      if (!isControlled) {
-        setInternalStep(prevStep);
-      }
+      if (!isControlled) setInternalStep(prevStep);
       onStepChange?.(prevStep);
     }
   }, [currentStep, isControlled, onStepChange]);
 
   const validateAndGoNext = React.useCallback(async () => {
-    if (currentStep >= totalSteps) {
-      return true;
-    }
+    if (currentStep >= totalSteps) return true;
     setIsValidating(true);
     try {
       const isValid = await validateStep(currentStep);
@@ -282,6 +304,7 @@ function Stepper({
       registerStepValidator,
       validateStep,
       validateAndGoNext,
+      getStepValues,
       isValidating,
     }),
     [
@@ -296,6 +319,7 @@ function Stepper({
       registerStepValidator,
       validateStep,
       validateAndGoNext,
+      getStepValues,
       isValidating,
     ],
   );
@@ -463,10 +487,10 @@ function StepperActions({
           ) : (
             <Button
               type="button"
-              onClick={goToNextStep}
-              disabled={nextDisabled}
+              onClick={validateAndGoNext}
+              disabled={nextDisabled || isValidating}
             >
-              {nextLabel}
+              {isValidating ? "Validating..." : nextLabel}
               <ChevronRight className="ml-1 size-4" />
             </Button>
           )}
@@ -521,7 +545,6 @@ function StepItem({
       )}
       {...props}
     >
-      {/* Step circle with connector using ::before and ::after */}
       <div
         className={cn(
           "flex min-w-0 flex-col items-center",
@@ -549,7 +572,6 @@ function StepItem({
             orientation === "horizontal" && "w-full",
           )}
         >
-          {/* Connector before (not for first step) */}
           {orientation === "horizontal" && stepNumber !== 1 && (
             <span
               className={cn(
@@ -559,7 +581,6 @@ function StepItem({
               style={{ width: "calc(50% - 1.25rem)", zIndex: 1 }}
             />
           )}
-          {/* Outer ring for active step */}
           {isCurrent && (
             <span
               className="pointer-events-none absolute inset-0 rounded-full"
@@ -582,7 +603,6 @@ function StepItem({
               stepNumber
             )}
           </div>
-          {/* Connector after (not for last step) */}
           {orientation === "horizontal" && !isLast && (
             <span
               className={cn(
@@ -623,7 +643,6 @@ function StepItem({
   );
 }
 
-/* StepContent - Wrapper for individual step content */
 interface StepContentProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
 }
@@ -646,15 +665,15 @@ export {
   StepperContent,
   StepperIndicator,
   stepperVariants,
+  useStepFormValidator,
   useStepperContext,
-  validatorsRef,
   type StepContentProps,
+  type StepFormInput,
   type StepItemProps,
   type StepperActionsProps,
   type StepperActionsRenderProps,
   type StepperContentProps,
   type StepperIndicatorProps,
   type StepperProps,
-  type StepValidator,
   type StepValidatorRegistration,
 };

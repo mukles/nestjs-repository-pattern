@@ -21,9 +21,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@repo/ui/components/ui-kit/select";
-import { useStepperContext } from "@repo/ui/components/ui-kit/stepper";
+import { useStepFormValidator } from "@repo/ui/components/ui-kit/stepper";
 import { Plus, Trash2 } from "lucide-react";
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 
 const PARENT_TYPE_LABELS: Record<ParentType, string> = {
@@ -41,18 +41,12 @@ const DEFAULT_PARENT: SingleParentValues = {
 };
 
 interface ParentFormProps {
-  stepNumber: number;
+  name: string;
   onStepValid?: (values: ParentFormValues) => void;
   defaultValues?: Partial<ParentFormValues>;
 }
 
-export function ParentForm({
-  stepNumber,
-  onStepValid,
-  defaultValues,
-}: ParentFormProps) {
-  const { registerStepValidator } = useStepperContext();
-
+export function ParentForm({ name, defaultValues }: ParentFormProps) {
   const parentForm = useForm<ParentFormValues>({
     resolver: zodResolver(parentSchema),
     mode: "onChange",
@@ -61,22 +55,12 @@ export function ParentForm({
     },
   });
 
+  useStepFormValidator(name, parentForm);
+
   const { fields, append, remove } = useFieldArray({
     control: parentForm.control,
     name: "parents",
   });
-
-  const handleValidation = useCallback(async () => {
-    const isValid = await parentForm.trigger();
-    if (isValid && onStepValid) {
-      onStepValid(parentForm.getValues());
-    }
-    return isValid;
-  }, [parentForm, onStepValid]);
-
-  useEffect(() => {
-    return registerStepValidator(stepNumber, handleValidation);
-  }, [handleValidation, registerStepValidator, stepNumber]);
 
   useEffect(() => {
     if (defaultValues) {
