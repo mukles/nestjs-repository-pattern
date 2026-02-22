@@ -206,9 +206,9 @@ function Stepper({
   }, [children]);
 
   const registerStepValidator = React.useCallback<StepValidatorRegistration>(
-    (stepName, form, fields) => {
+    (stepName, form) => {
       const entry: StepFormEntry = {
-        validator: () => form.trigger(fields),
+        validator: () => form.trigger(),
         getValues: () => form.getValues(),
       };
       stepsRef.current.set(stepName, entry);
