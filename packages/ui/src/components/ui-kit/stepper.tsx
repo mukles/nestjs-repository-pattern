@@ -162,9 +162,6 @@ interface StepperProps
   onStepChange?: (step: number) => void;
   clickable?: boolean;
   onValidationFail?: (stepNumber: number) => void;
-  // Map step number → step name so the stepper can resolve which
-  // named form to validate when the user clicks Next
-  // e.g. { 1: "student", 2: "address" }
   stepNames?: Record<number, string>;
   children: React.ReactNode;
 }
@@ -277,6 +274,7 @@ function Stepper({
     setIsValidating(true);
     try {
       const isValid = await validateStep(currentStep);
+
       if (isValid) {
         goToNextStep();
         return true;

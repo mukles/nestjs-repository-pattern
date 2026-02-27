@@ -20,7 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@repo/ui/components/ui-kit/select";
-import { useStepFormValidator } from "@repo/ui/components/ui-kit/stepper";
+import { useStepperContext } from "@repo/ui/components/ui-kit/stepper";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 
@@ -43,6 +43,8 @@ export const fileSetting = {
 };
 
 export function StudentForm({ name, defaultValues }: StudentFormProps) {
+  const { registerStepValidator } = useStepperContext();
+
   const studentForm = useForm<StudentFormValues>({
     resolver: zodResolver(studentSchema),
     mode: "onChange",
@@ -58,7 +60,9 @@ export function StudentForm({ name, defaultValues }: StudentFormProps) {
     },
   });
 
-  useStepFormValidator(name, studentForm);
+  useEffect(() => {
+    registerStepValidator(name, studentForm);
+  }, [name, registerStepValidator, studentForm]);
 
   useEffect(() => {
     if (defaultValues) {
