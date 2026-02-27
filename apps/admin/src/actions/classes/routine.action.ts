@@ -118,7 +118,8 @@ export async function createRoutinePeriod(
   const routine = initializeRoutine(sectionId);
 
   // Generate new ID
-  const newId = Math.max(...routine.periods.map((p: RoutinePeriodDto) => p.id), 0) + 1;
+  const newId =
+    Math.max(...routine.periods.map((p: RoutinePeriodDto) => p.id), 0) + 1;
 
   const newPeriod: RoutinePeriodDto = {
     id: newId,
@@ -130,7 +131,10 @@ export async function createRoutinePeriod(
   };
 
   routine.periods.push(newPeriod);
-  routine.periods.sort((a: RoutinePeriodDto, b: RoutinePeriodDto) => a.periodNumber - b.periodNumber);
+  routine.periods.sort(
+    (a: RoutinePeriodDto, b: RoutinePeriodDto) =>
+      a.periodNumber - b.periodNumber,
+  );
 
   return {
     success: true,
@@ -149,7 +153,9 @@ export async function updateRoutinePeriod(
   await new Promise((resolve) => setTimeout(resolve, 100));
 
   const routine = initializeRoutine(sectionId);
-  const periodIndex = routine.periods.findIndex((p: RoutinePeriodDto) => p.id === periodId);
+  const periodIndex = routine.periods.findIndex(
+    (p: RoutinePeriodDto) => p.id === periodId,
+  );
 
   if (periodIndex === -1) {
     return {
@@ -180,7 +186,9 @@ export async function deleteRoutinePeriod(
   await new Promise((resolve) => setTimeout(resolve, 100));
 
   const routine = initializeRoutine(sectionId);
-  const periodIndex = routine.periods.findIndex((p: RoutinePeriodDto) => p.id === periodId);
+  const periodIndex = routine.periods.findIndex(
+    (p: RoutinePeriodDto) => p.id === periodId,
+  );
 
   if (periodIndex === -1) {
     return {
@@ -190,7 +198,9 @@ export async function deleteRoutinePeriod(
   }
 
   // Remove all slots for this period
-  routine.slots = routine.slots.filter((s: RoutineSlotDto) => s.periodId !== periodId);
+  routine.slots = routine.slots.filter(
+    (s: RoutineSlotDto) => s.periodId !== periodId,
+  );
   routine.periods.splice(periodIndex, 1);
 
   return { success: true };
@@ -236,7 +246,8 @@ export async function createRoutineSlot(
     };
   }
 
-  const newId = Math.max(...routine.slots.map((s: RoutineSlotDto) => s.id), 0) + 1;
+  const newId =
+    Math.max(...routine.slots.map((s: RoutineSlotDto) => s.id), 0) + 1;
 
   const newSlot: RoutineSlotDto = {
     id: newId,
@@ -267,7 +278,9 @@ export async function updateRoutineSlot(
   await new Promise((resolve) => setTimeout(resolve, 100));
 
   const routine = initializeRoutine(sectionId);
-  const slotIndex = routine.slots.findIndex((s: RoutineSlotDto) => s.id === slotId);
+  const slotIndex = routine.slots.findIndex(
+    (s: RoutineSlotDto) => s.id === slotId,
+  );
 
   if (slotIndex === -1) {
     return {
@@ -322,7 +335,9 @@ export async function deleteRoutineSlot(
   await new Promise((resolve) => setTimeout(resolve, 100));
 
   const routine = initializeRoutine(sectionId);
-  const slotIndex = routine.slots.findIndex((s: RoutineSlotDto) => s.id === slotId);
+  const slotIndex = routine.slots.findIndex(
+    (s: RoutineSlotDto) => s.id === slotId,
+  );
 
   if (slotIndex === -1) {
     return {

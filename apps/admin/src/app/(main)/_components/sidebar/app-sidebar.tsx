@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useShallow } from 'zustand/react/shallow';
+import { useShallow } from "zustand/react/shallow";
 
-import { usePreferencesStore } from '@/stores/preferences/preferences-provider';
+import { usePreferencesStore } from "@/stores/preferences/preferences-provider";
 import {
   Sidebar,
   SidebarContent,
@@ -10,13 +10,13 @@ import {
   SidebarHeader,
   SidebarMenu,
   SidebarMenuItem,
-} from '@repo/ui/components/ui-kit/sidebar';
+} from "@repo/ui/components/ui-kit/sidebar";
 
-import { User } from '@/actions/auth/user/types';
-import { Logo } from '@/app/components/logo';
-import { sidebarItems } from '@/config/navigation';
-import { NavMain } from './nav-main';
-import { NavUser } from './nav-user';
+import { User } from "@/actions/auth/user/types";
+import { Logo } from "@/app/components/logo";
+import { sidebarItems } from "@/config/navigation";
+import { NavMain } from "./nav-main";
+import { NavUser } from "./nav-user";
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   user: User;

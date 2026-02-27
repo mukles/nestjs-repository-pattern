@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   CircleUser,
@@ -6,16 +6,16 @@ import {
   EllipsisVertical,
   LogOut,
   MessageSquareDot,
-} from 'lucide-react';
+} from "lucide-react";
 
-import { logout } from '@/actions/auth';
-import { User } from '@/actions/auth/user/types';
-import { getInitials } from '@/lib/utils';
+import { logout } from "@/actions/auth";
+import { User } from "@/actions/auth/user/types";
+import { getInitials } from "@/lib/utils";
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from '@repo/ui/components/ui-kit/avatar';
+} from "@repo/ui/components/ui-kit/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,13 +24,13 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@repo/ui/components/ui-kit/dropdown-menu';
+} from "@repo/ui/components/ui-kit/dropdown-menu";
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from '@repo/ui/components/ui-kit/sidebar';
+} from "@repo/ui/components/ui-kit/sidebar";
 
 export function NavUser({ user }: { readonly user: User }) {
   const { isMobile } = useSidebar();
@@ -64,7 +64,7 @@ export function NavUser({ user }: { readonly user: User }) {
           </DropdownMenuTrigger>
           <DropdownMenuContent
             className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
-            side={isMobile ? 'bottom' : 'right'}
+            side={isMobile ? "bottom" : "right"}
             align="end"
             sideOffset={4}
           >
