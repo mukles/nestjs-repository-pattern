@@ -48,10 +48,7 @@ export function CreateStudentModal() {
           </DialogDescription>
         </DialogHeader>
         <div className="max-h-[calc(90vh-120px)] overflow-y-auto pt-4">
-          <Stepper
-            clickable={false}
-            stepNames={{ 1: "student", 2: "parent", 3: "attachments" }}
-          >
+          <Stepper clickable={false}>
             <StepperIndicator>
               <StepItem name="Student Info" />
               <StepItem name="Parents Info" />
@@ -61,13 +58,13 @@ export function CreateStudentModal() {
 
             <StepperContent>
               <StepContent>
-                <StudentForm name={"student"} />
+                <StudentForm />
               </StepContent>
               <StepContent>
-                <ParentForm name={"parent"} />
+                <ParentForm />
               </StepContent>
               <StepContent>
-                <AttachmentsForm name={"attachments"} />
+                <AttachmentsForm />
               </StepContent>
               <StepContent>
                 <ReviewStep />

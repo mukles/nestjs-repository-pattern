@@ -41,12 +41,10 @@ const DEFAULT_PARENT: SingleParentValues = {
 };
 
 interface ParentFormProps {
-  name: string;
-  onStepValid?: (values: ParentFormValues) => void;
   defaultValues?: Partial<ParentFormValues>;
 }
 
-export function ParentForm({ name, defaultValues }: ParentFormProps) {
+export function ParentForm({ defaultValues }: ParentFormProps) {
   const parentForm = useForm<ParentFormValues>({
     resolver: zodResolver(parentSchema),
     mode: "onChange",
@@ -55,7 +53,7 @@ export function ParentForm({ name, defaultValues }: ParentFormProps) {
     },
   });
 
-  useStepFormValidator(name, parentForm);
+  useStepFormValidator<ParentFormValues>(2, parentForm);
 
   const { fields, append, remove } = useFieldArray({
     control: parentForm.control,

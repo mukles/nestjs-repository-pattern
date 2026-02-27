@@ -7,32 +7,58 @@ import * as React from "react";
 import { cn } from "@repo/ui/lib/utils";
 import { Button } from "./button";
 
-export interface Step {
-  id: number;
-  name: string;
-  description?: string;
-  component?: React.ReactNode;
-}
+// =============================================================================
+// TYPES
+// =============================================================================
 
-const stepperVariants = cva("flex items-center", {
+/**
+ * Define a map of step number → form values for full TypeScript inference.
+ *
+ * @example
+ * type MyStepsMap = {
+ *   1: { firstName: string; lastName: string };
+ *   2: { email: string; phone: string };
+ *   3: { plan: "free" | "pro" };
+ * };
+ *
+ * // Then in your parent component:
+ * const { getStepValues } = useStepperContext<MyStepsMap>();
+ * const step1 = getStepValues(1); // → { firstName: string; lastName: string } | undefined
+ * const step2 = getStepValues(2); // → { email: string; phone: string } | undefined
+ */
+export type StepValuesMap = Record<number, unknown>;
+
+/**
+ * A typed form adapter — compatible with react-hook-form's `useForm()` return value.
+ * T = the shape of values for this particular step's form.
+ */
+export type StepFormInput<T = unknown> = {
+  trigger: (fields?: (keyof T & string)[]) => Promise<boolean>;
+  getValues: () => T;
+};
+
+/** @internal */
+type StepFormEntry<T = unknown> = {
+  validator: () => Promise<boolean>;
+  getValues: () => T;
+};
+
+// =============================================================================
+// VARIANTS
+// =============================================================================
+
+export const stepperVariants = cva("flex items-center", {
   variants: {
     orientation: {
-      horizontal: "group/stepper-item w-full flex-row justify-center",
+      horizontal: "w-full flex-row justify-center",
       vertical: "flex-col items-start",
     },
-    size: {
-      sm: "",
-      default: "",
-      lg: "",
-    },
+    size: { sm: "", default: "", lg: "" },
   },
-  defaultVariants: {
-    orientation: "horizontal",
-    size: "default",
-  },
+  defaultVariants: { orientation: "horizontal", size: "default" },
 });
 
-const stepCircleVariants = cva(
+export const stepCircleVariants = cva(
   "flex items-center justify-center rounded-full border-2 font-semibold transition-all duration-300",
   {
     variants: {
@@ -49,14 +75,11 @@ const stepCircleVariants = cva(
           "border-muted-foreground/30 bg-background text-muted-foreground",
       },
     },
-    defaultVariants: {
-      size: "default",
-      state: "upcoming",
-    },
+    defaultVariants: { size: "default", state: "upcoming" },
   },
 );
 
-const stepConnectorVariants = cva("transition-colors duration-300", {
+export const stepConnectorVariants = cva("transition-colors duration-300", {
   variants: {
     orientation: {
       horizontal: "h-0.5 w-full flex-1",
@@ -67,106 +90,154 @@ const stepConnectorVariants = cva("transition-colors duration-300", {
       incomplete: "bg-muted-foreground/20",
     },
   },
-  defaultVariants: {
-    orientation: "horizontal",
-    state: "incomplete",
-  },
+  defaultVariants: { orientation: "horizontal", state: "incomplete" },
 });
 
-// Internal entry stored per named step
-type StepFormEntry = {
-  validator: () => Promise<boolean>;
-  getValues: () => unknown;
-};
+// =============================================================================
+// CONTEXT
+// =============================================================================
 
-// What you pass into registerStepValidator — any RHF form (or compatible shape)
-type StepFormInput = {
-  trigger: (fields?: any) => Promise<boolean>;
-  getValues: () => unknown;
-};
-
-type StepValidatorRegistration = (
-  stepName: string,
-  form: StepFormInput,
-  fields?: string[],
-) => () => void;
-
-interface StepperContextValue {
+interface StepperContextValue<TMap extends StepValuesMap = StepValuesMap> {
   currentStep: number;
   totalSteps: number;
   orientation: "horizontal" | "vertical";
   size: "sm" | "default" | "lg";
   onStepClick?: (step: number) => void;
   clickable: boolean;
-  goToNextStep: () => void;
-  goToPreviousStep: () => void;
   isFirstStep: boolean;
   isLastStep: boolean;
-  // Register by name — ties a step name to its form
-  registerStepValidator: StepValidatorRegistration;
-  // Validate by step number — resolves name → entry internally
+  isValidating: boolean;
+  goToNextStep: () => void;
+  goToPreviousStep: () => void;
   validateStep: (stepNumber: number) => Promise<boolean>;
   validateAndGoNext: () => Promise<boolean>;
-  // Returns all values keyed by step name
-  // e.g. { student: { firstName, email }, address: { street, city } }
-  getStepValues: () => Record<string, unknown>;
-  isValidating: boolean;
+  /**
+   * Get typed values for a specific step by its number.
+   * Return type flows from TMap — no casting needed at the call site.
+   *
+   * @example
+   * getStepValues(1)  // → { firstName: string; lastName: string } | undefined
+   * getStepValues(2)  // → { email: string } | undefined
+   */
+  getStepValues: <N extends keyof TMap & number>(
+    stepNumber: N,
+  ) => TMap[N] | undefined;
+  /**
+   * Get all collected step values, typed as a partial of TMap.
+   */
+  getAllStepValues: () => Partial<{ [N in keyof TMap & number]: TMap[N] }>;
+  /** @internal — called by useStepFormValidator */
+  _registerValidator: (stepNumber: number, entry: StepFormEntry) => () => void;
 }
 
-const StepperContext = React.createContext<StepperContextValue | null>(null);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const StepperContext = React.createContext<StepperContextValue<any> | null>(
+  null,
+);
 
-function useStepperContext() {
-  const context = React.useContext(StepperContext);
+/**
+ * Access the stepper context with full type inference for `getStepValues`.
+ *
+ * @example
+ * // Without generic (values typed as `unknown`):
+ * const ctx = useStepperContext();
+ *
+ * // With generic (values are fully typed):
+ * type MyStepsMap = { 1: Step1Values; 2: Step2Values };
+ * const { getStepValues } = useStepperContext<MyStepsMap>();
+ * const v = getStepValues(1); // → Step1Values | undefined
+ */
+export function useStepperContext<
+  TMap extends StepValuesMap = StepValuesMap,
+>() {
+  const context = React.useContext(
+    StepperContext,
+  ) as StepperContextValue<TMap> | null;
   if (!context) {
-    throw new Error("Stepper components must be used within a Stepper");
+    throw new Error("Stepper components must be used within a <Stepper />");
   }
   return context;
 }
 
+// =============================================================================
+// useStepFormValidator
+// =============================================================================
+
 /**
- * Register an RHF form as the validator + value source for a named step.
- * The step name is used as the key in getStepValues().
- * Automatically unregisters on unmount.
+ * Register a react-hook-form (or any compatible form) for a specific step number.
+ *
+ * - Clicking "Next" on this step will call `form.trigger(fields)` before advancing.
+ * - `getStepValues(stepNumber)` will return `form.getValues()` typed as `T`.
+ *
+ * @param stepNumber  The 1-based step number this form belongs to.
+ * @param form        RHF-compatible form — `trigger` + `getValues`.
+ * @param fields      Optional subset of fields to validate (validates all if omitted).
  *
  * @example
- * const form = useForm<StudentFormValues>();
- * useStepFormValidator("student", form);
+ * // Step 1 component:
+ * const form = useForm<Step1Values>();
+ * useStepFormValidator(1, form);
  *
- * // Validate only specific fields:
- * useStepFormValidator("student", form, ["firstName", "email"]);
- *
- * // In the review step pull all values by name:
- * const { getStepValues } = useStepperContext();
- * const { student, address } = getStepValues() as { student: StudentFormValues; address: AddressFormValues };
+ * // Parent — collect all data on submit:
+ * type MyMap = { 1: Step1Values; 2: Step2Values };
+ * const { getAllStepValues } = useStepperContext<MyMap>();
+ * const all = getAllStepValues(); // → { 1?: Step1Values; 2?: Step2Values }
  */
-function useStepFormValidator(
-  stepName: string,
-  form: StepFormInput,
-  fields?: string[],
+export function useStepFormValidator<T>(
+  stepNumber: number,
+  form: StepFormInput<T>,
+  fields?: (keyof T & string)[],
 ) {
-  const { registerStepValidator } = useStepperContext();
+  const { _registerValidator } = useStepperContext();
 
-  React.useEffect(() => {
-    return registerStepValidator(stepName, form, fields);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stepName, registerStepValidator]);
+  // Keep stable refs so the registered entry never holds a stale closure.
+  // This matters when `form` or `fields` change identity between renders.
+  const formRef = React.useRef(form);
+  formRef.current = form;
+
+  const fieldsRef = React.useRef(fields);
+  fieldsRef.current = fields;
+
+  // useLayoutEffect instead of useEffect so the form is registered
+  // SYNCHRONOUSLY before the browser paints — and crucially before any
+  // sibling useEffect (e.g. in StudentForm) that calls getStepValues(n).
+  //
+  // Execution order on mount:
+  //   render → useLayoutEffect (register) → useEffect (read values) ✅
+  //
+  // With useEffect it would be:
+  //   render → useEffect (read values — not registered yet!) → useEffect (register) ❌
+  React.useLayoutEffect(() => {
+    const entry: StepFormEntry<T> = {
+      validator: () => formRef.current.trigger(fieldsRef.current),
+      getValues: () => formRef.current.getValues(),
+    };
+    return _registerValidator(stepNumber, entry as StepFormEntry);
+    // _registerValidator is stable (useCallback with no deps).
+    // stepNumber is expected to be a stable literal — warn if it changes.
+  }, [stepNumber, _registerValidator]);
 }
 
-interface StepperProps
+// =============================================================================
+// Stepper (root)
+// =============================================================================
+
+export interface StepperProps
   extends
     React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof stepperVariants> {
+  /** Controlled current step (1-based). Pair with `onStepChange`. */
   currentStep?: number;
+  /** Starting step for uncontrolled usage (default: 1). */
   defaultStep?: number;
   onStepClick?: (step: number) => void;
   onStepChange?: (step: number) => void;
   clickable?: boolean;
   onValidationFail?: (stepNumber: number) => void;
-  stepNames?: Record<number, string>;
   children: React.ReactNode;
 }
 
-function Stepper({
+export function Stepper({
   currentStep: controlledStep,
   defaultStep = 1,
   orientation = "horizontal",
@@ -175,7 +246,6 @@ function Stepper({
   onStepChange,
   clickable = false,
   onValidationFail,
-  stepNames = {},
   className,
   children,
   ...props
@@ -183,110 +253,117 @@ function Stepper({
   const [internalStep, setInternalStep] = React.useState(defaultStep);
   const [isValidating, setIsValidating] = React.useState(false);
 
-  // Per-instance registry keyed by step name
-  const stepsRef = React.useRef<Map<string, StepFormEntry>>(new Map());
+  // Registry: stepNumber → StepFormEntry (validator + getValues)
+  const stepsRef = React.useRef<Map<number, StepFormEntry>>(new Map());
 
   const isControlled = controlledStep !== undefined;
   const currentStep = isControlled ? controlledStep : internalStep;
 
+  // Count total steps from StepperIndicator or StepperContent children
   const totalSteps = React.useMemo(() => {
     let count = 0;
     React.Children.forEach(children, (child) => {
-      if (React.isValidElement(child)) {
-        if (child.type === StepperIndicator || child.type === StepperContent) {
-          const childProps = child.props as { children?: React.ReactNode };
-          count = React.Children.count(childProps.children);
-        }
+      if (!React.isValidElement(child)) return;
+      const type = child.type as React.ComponentType;
+      if (type === StepperIndicator || type === StepperContent) {
+        const { children: inner } = child.props as {
+          children?: React.ReactNode;
+        };
+        const n = React.Children.count(inner);
+        if (n > count) count = n;
       }
     });
     return count;
   }, [children]);
 
-  const registerStepValidator = React.useCallback<StepValidatorRegistration>(
-    (stepName, form) => {
-      const entry: StepFormEntry = {
-        validator: () => form.trigger(),
-        getValues: () => form.getValues(),
-      };
-      stepsRef.current.set(stepName, entry);
+  // ── _registerValidator ────────────────────────────────────────────────────
+  const _registerValidator = React.useCallback(
+    (stepNumber: number, entry: StepFormEntry): (() => void) => {
+      stepsRef.current.set(stepNumber, entry);
       return () => {
-        if (stepsRef.current.get(stepName) === entry) {
-          stepsRef.current.delete(stepName);
+        if (stepsRef.current.get(stepNumber) === entry) {
+          stepsRef.current.delete(stepNumber);
         }
       };
     },
     [],
   );
 
-  // Resolves step number → name → entry, then runs the validator
+  // ── validateStep ──────────────────────────────────────────────────────────
   const validateStep = React.useCallback(
-    async (stepNumber: number) => {
-      const stepName = stepNames[stepNumber];
-      if (!stepName) return true;
-      const entry = stepsRef.current.get(stepName);
-      if (!entry) return true;
+    async (stepNumber: number): Promise<boolean> => {
+      const entry = stepsRef.current.get(stepNumber);
+      if (!entry) return true; // no form registered → implicitly valid
       try {
         return Boolean(await entry.validator());
-      } catch (error) {
-        console.error("Step validation failed", error);
+      } catch (err) {
+        console.error(`[Stepper] Step ${stepNumber} validation threw:`, err);
         return false;
       }
     },
-    [stepNames],
+    [],
   );
 
-  // Returns all form values keyed by step name
-  const getStepValues = React.useCallback(() => {
-    const result: Record<string, unknown> = {};
-    stepsRef.current.forEach((entry, stepName) => {
-      result[stepName] = entry.getValues();
+  // ── getStepValues / getAllStepValues ───────────────────────────────────────
+  //
+  // The implementation is untyped internally (Map<number, unknown>),
+  // but the public API surface is fully generic via the context type.
+  //
+  const getStepValues = React.useCallback(
+    (stepNumber: number) => stepsRef.current.get(stepNumber)?.getValues(),
+    [],
+  ) as StepperContextValue["getStepValues"];
+
+  const getAllStepValues = React.useCallback((): Record<number, unknown> => {
+    const result: Record<number, unknown> = {};
+    stepsRef.current.forEach((entry, num) => {
+      result[num] = entry.getValues();
     });
     return result;
-  }, []);
+  }, []) as StepperContextValue["getAllStepValues"];
+
+  // ── Navigation ────────────────────────────────────────────────────────────
+  const handleStepChange = React.useCallback(
+    (step: number) => {
+      if (!isControlled) setInternalStep(step);
+      onStepChange?.(step);
+    },
+    [isControlled, onStepChange],
+  );
 
   const handleStepClick = React.useCallback(
     (step: number) => {
-      if (!isControlled) setInternalStep(step);
+      handleStepChange(step);
       onStepClick?.(step);
-      onStepChange?.(step);
     },
-    [isControlled, onStepClick, onStepChange],
+    [handleStepChange, onStepClick],
   );
 
   const goToNextStep = React.useCallback(() => {
-    if (currentStep < totalSteps) {
-      const nextStep = currentStep + 1;
-      if (!isControlled) setInternalStep(nextStep);
-      onStepChange?.(nextStep);
-    }
-  }, [currentStep, totalSteps, isControlled, onStepChange]);
+    if (currentStep < totalSteps) handleStepChange(currentStep + 1);
+  }, [currentStep, totalSteps, handleStepChange]);
 
   const goToPreviousStep = React.useCallback(() => {
-    if (currentStep > 1) {
-      const prevStep = currentStep - 1;
-      if (!isControlled) setInternalStep(prevStep);
-      onStepChange?.(prevStep);
-    }
-  }, [currentStep, isControlled, onStepChange]);
+    if (currentStep > 1) handleStepChange(currentStep - 1);
+  }, [currentStep, handleStepChange]);
 
-  const validateAndGoNext = React.useCallback(async () => {
+  const validateAndGoNext = React.useCallback(async (): Promise<boolean> => {
     if (currentStep >= totalSteps) return true;
     setIsValidating(true);
     try {
-      const isValid = await validateStep(currentStep);
-
-      if (isValid) {
+      const valid = await validateStep(currentStep);
+      if (valid) {
         goToNextStep();
         return true;
-      } else {
-        onValidationFail?.(currentStep);
-        return false;
       }
+      onValidationFail?.(currentStep);
+      return false;
     } finally {
       setIsValidating(false);
     }
   }, [currentStep, totalSteps, validateStep, goToNextStep, onValidationFail]);
 
+  // ── Context ───────────────────────────────────────────────────────────────
   const contextValue = React.useMemo<StepperContextValue>(
     () => ({
       currentStep,
@@ -295,15 +372,16 @@ function Stepper({
       size: size ?? "default",
       onStepClick: handleStepClick,
       clickable,
-      goToNextStep,
-      goToPreviousStep,
       isFirstStep: currentStep === 1,
       isLastStep: currentStep === totalSteps,
-      registerStepValidator,
+      isValidating,
+      goToNextStep,
+      goToPreviousStep,
       validateStep,
       validateAndGoNext,
       getStepValues,
-      isValidating,
+      getAllStepValues,
+      _registerValidator,
     }),
     [
       currentStep,
@@ -312,13 +390,14 @@ function Stepper({
       size,
       handleStepClick,
       clickable,
+      isValidating,
       goToNextStep,
       goToPreviousStep,
-      registerStepValidator,
       validateStep,
       validateAndGoNext,
       getStepValues,
-      isValidating,
+      getAllStepValues,
+      _registerValidator,
     ],
   );
 
@@ -331,17 +410,19 @@ function Stepper({
   );
 }
 
-type StepperIndicatorProps = React.HTMLAttributes<HTMLDivElement>;
+// =============================================================================
+// StepperIndicator
+// =============================================================================
 
-function StepperIndicator({
+export type StepperIndicatorProps = React.HTMLAttributes<HTMLDivElement>;
+
+export function StepperIndicator({
   className,
   children,
   ...props
 }: StepperIndicatorProps) {
   const { orientation, size } = useStepperContext();
-
   const childArray = React.Children.toArray(children);
-  const totalSteps = childArray.length;
 
   return (
     <div
@@ -350,41 +431,51 @@ function StepperIndicator({
       {...props}
     >
       {React.Children.map(children, (child, index) => {
-        if (React.isValidElement(child)) {
-          return React.cloneElement(
-            child as React.ReactElement<StepItemProps>,
-            {
-              stepNumber: index + 1,
-              isLast: index === totalSteps - 1,
-            },
-          );
-        }
-        return child;
+        if (!React.isValidElement(child)) return child;
+        return React.cloneElement(child as React.ReactElement<StepItemProps>, {
+          stepNumber: index + 1,
+          isLast: index === childArray.length - 1,
+        });
       })}
     </div>
   );
 }
 
-type StepperContentProps = React.HTMLAttributes<HTMLDivElement>;
+// =============================================================================
+// StepperContent
+// =============================================================================
 
-function StepperContent({
+export type StepperContentProps = React.HTMLAttributes<HTMLDivElement>;
+
+export function StepperContent({
   className,
   children,
   ...props
 }: StepperContentProps) {
   const { currentStep } = useStepperContext();
 
-  const childArray = React.Children.toArray(children);
-  const currentChild = childArray[currentStep - 1];
-
   return (
     <div className={cn("min-h-0 px-2", className)} {...props}>
-      {currentChild}
+      {React.Children.map(children, (child, index) => (
+        // Keep every step mounted so form state (useForm, useStepFormValidator)
+        // is never destroyed. Only the active step is visible.
+        <div
+          key={index}
+          hidden={index + 1 !== currentStep}
+          aria-hidden={index + 1 !== currentStep}
+        >
+          {child}
+        </div>
+      ))}
     </div>
   );
 }
 
-interface StepperActionsRenderProps {
+// =============================================================================
+// StepperActions
+// =============================================================================
+
+export interface StepperActionsRenderProps {
   goToNextStep: () => void;
   goToPreviousStep: () => void;
   validateAndGoNext: () => Promise<boolean>;
@@ -395,7 +486,7 @@ interface StepperActionsRenderProps {
   isValidating: boolean;
 }
 
-interface StepperActionsProps extends Omit<
+export interface StepperActionsProps extends Omit<
   React.HTMLAttributes<HTMLDivElement>,
   "children"
 > {
@@ -412,7 +503,7 @@ interface StepperActionsProps extends Omit<
     | ((props: StepperActionsRenderProps) => React.ReactNode);
 }
 
-function StepperActions({
+export function StepperActions({
   className,
   previousLabel = "Previous",
   nextLabel = "Next",
@@ -425,38 +516,26 @@ function StepperActions({
   children,
   ...props
 }: StepperActionsProps) {
-  const {
-    goToNextStep,
-    goToPreviousStep,
-    validateAndGoNext,
-    isFirstStep,
-    isLastStep,
-    currentStep,
-    totalSteps,
-    isValidating,
-  } = useStepperContext();
+  const ctx = useStepperContext();
 
-  if (typeof children === "function") {
+  const renderProps: StepperActionsRenderProps = {
+    goToNextStep: ctx.goToNextStep,
+    goToPreviousStep: ctx.goToPreviousStep,
+    validateAndGoNext: ctx.validateAndGoNext,
+    isFirstStep: ctx.isFirstStep,
+    isLastStep: ctx.isLastStep,
+    currentStep: ctx.currentStep,
+    totalSteps: ctx.totalSteps,
+    isValidating: ctx.isValidating,
+  };
+
+  const content =
+    typeof children === "function" ? children(renderProps) : children;
+
+  if (content) {
     return (
       <div className={cn("flex justify-between", className)} {...props}>
-        {children({
-          goToNextStep,
-          goToPreviousStep,
-          validateAndGoNext,
-          isFirstStep,
-          isLastStep,
-          currentStep,
-          totalSteps,
-          isValidating,
-        })}
-      </div>
-    );
-  }
-
-  if (children) {
-    return (
-      <div className={cn("flex justify-between", className)} {...props}>
-        {children}
+        {content}
       </div>
     );
   }
@@ -467,8 +546,8 @@ function StepperActions({
         <Button
           type="button"
           variant="outline"
-          onClick={goToPreviousStep}
-          disabled={isFirstStep || previousDisabled}
+          onClick={ctx.goToPreviousStep}
+          disabled={ctx.isFirstStep || previousDisabled}
         >
           <ChevronLeft className="mr-1 size-4" />
           {previousLabel}
@@ -476,63 +555,62 @@ function StepperActions({
       ) : (
         <div />
       )}
-      {showNext && (
-        <>
-          {isLastStep ? (
-            <Button type="submit" onClick={onSubmit} disabled={nextDisabled}>
-              {submitLabel}
-            </Button>
-          ) : (
-            <Button
-              type="button"
-              onClick={validateAndGoNext}
-              disabled={nextDisabled || isValidating}
-            >
-              {isValidating ? "Validating..." : nextLabel}
-              <ChevronRight className="ml-1 size-4" />
-            </Button>
-          )}
-        </>
-      )}
+
+      {showNext &&
+        (ctx.isLastStep ? (
+          <Button type="submit" onClick={onSubmit} disabled={nextDisabled}>
+            {submitLabel}
+          </Button>
+        ) : (
+          <Button
+            type="button"
+            onClick={ctx.validateAndGoNext}
+            disabled={nextDisabled || ctx.isValidating}
+          >
+            {ctx.isValidating ? "Validating…" : nextLabel}
+            <ChevronRight className="ml-1 size-4" />
+          </Button>
+        ))}
     </div>
   );
 }
 
-interface StepItemProps extends React.HTMLAttributes<HTMLDivElement> {
+// =============================================================================
+// StepItem
+// =============================================================================
+
+export interface StepItemProps extends React.HTMLAttributes<HTMLDivElement> {
+  /** Auto-injected by StepperIndicator — do not pass manually. */
   stepNumber?: number;
+  /** Auto-injected by StepperIndicator — do not pass manually. */
   isLast?: boolean;
   name: string;
   description?: string;
   icon?: React.ReactNode;
-  children?: React.ReactNode;
 }
 
-function StepItem({
+export function StepItem({
   stepNumber = 1,
   isLast = false,
   name,
   description,
   icon,
   className,
-  children: _children,
+  children: _children, // discarded — content lives in StepperContent
   ...props
 }: StepItemProps) {
-  void _children;
   const { currentStep, orientation, size, onStepClick, clickable } =
     useStepperContext();
 
   const isCompleted = currentStep > stepNumber;
   const isCurrent = currentStep === stepNumber;
   const state = isCompleted ? "completed" : isCurrent ? "current" : "upcoming";
-
-  const handleClick = () => {
-    if (clickable && onStepClick) {
-      onStepClick(stepNumber);
-    }
-  };
-
   const iconSize =
     size === "sm" ? "size-3" : size === "lg" ? "size-5" : "size-4";
+
+  const handleClick = () => {
+    if (clickable && onStepClick) onStepClick(stepNumber);
+  };
 
   return (
     <div
@@ -543,12 +621,24 @@ function StepItem({
       )}
       {...props}
     >
+      {/* Vertical connector above (except first step) */}
+      {orientation === "vertical" && stepNumber !== 1 && (
+        <span
+          className={cn(
+            stepConnectorVariants({
+              orientation: "vertical",
+              state: isCompleted || isCurrent ? "completed" : "incomplete",
+            }),
+            "absolute -top-8 left-4",
+          )}
+        />
+      )}
+
       <div
         className={cn(
-          "flex min-w-0 flex-col items-center",
+          "relative flex w-full min-w-0 flex-col items-center",
           orientation === "horizontal" && "gap-2",
           clickable && "cursor-pointer",
-          "relative w-full",
         )}
         onClick={handleClick}
         role={clickable ? "button" : undefined}
@@ -556,81 +646,70 @@ function StepItem({
         onKeyDown={
           clickable
             ? (e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  handleClick();
-                }
+                if (e.key === "Enter" || e.key === " ") handleClick();
               }
             : undefined
         }
-        style={{ zIndex: 2 }}
+        aria-current={isCurrent ? "step" : undefined}
       >
-        <div
-          className={cn(
-            "relative mb-2 flex w-full items-center justify-center",
-            orientation === "horizontal" && "w-full",
-          )}
-        >
+        {/* Circle row with connectors */}
+        <div className="relative flex w-full items-center justify-center">
           {orientation === "horizontal" && stepNumber !== 1 && (
             <span
               className={cn(
-                "absolute top-1/2 left-0 h-0.5 -translate-y-1/2",
+                "absolute top-1/2 left-0 z-[1] h-0.5 -translate-y-1/2",
                 isCompleted || isCurrent ? "bg-primary" : "bg-[#e0e0e0]",
               )}
-              style={{ width: "calc(50% - 1.25rem)", zIndex: 1 }}
+              style={{ width: "calc(50% - 1.25rem)" }}
             />
           )}
-          {isCurrent && (
-            <span
-              className="pointer-events-none absolute inset-0 rounded-full"
-              style={{ boxSizing: "border-box", zIndex: 2 }}
-            />
-          )}
+
           <div
             className={cn(
               stepCircleVariants({ size, state }),
               "z-10 border-2 bg-[#f5f5f5] text-black",
               isCurrent && "border-black",
             )}
-            style={{ position: "relative" }}
           >
             {isCompleted ? (
-              <Check className={iconSize + " text-black"} />
+              <Check className={cn(iconSize, "text-black")} />
             ) : icon ? (
               icon
             ) : (
               stepNumber
             )}
           </div>
+
           {orientation === "horizontal" && !isLast && (
             <span
               className={cn(
-                "absolute top-1/2 right-0 h-0.5 -translate-y-1/2",
+                "absolute top-1/2 right-0 z-[1] h-0.5 -translate-y-1/2",
                 currentStep > stepNumber ? "bg-primary" : "bg-[#e0e0e0]",
               )}
-              style={{ width: "calc(50% - 1.25rem)", zIndex: 1 }}
+              style={{ width: "calc(50% - 1.25rem)" }}
             />
           )}
         </div>
+
         <span
           className={cn(
-            "text-center font-medium whitespace-nowrap transition-colors duration-300",
+            "mt-0.5 text-center font-medium whitespace-nowrap transition-colors duration-300",
             size === "sm" && "text-xs",
             size === "default" && "text-xs",
             size === "lg" && "text-sm",
             state === "upcoming" ? "text-muted-foreground" : "text-black",
-            "mt-0.5",
           )}
         >
           {name}
         </span>
+
         {description && (
           <span
             className={cn(
-              "text-center whitespace-nowrap text-muted-foreground",
+              "mt-0.5 text-center whitespace-nowrap text-muted-foreground",
               size === "sm" && "text-[10px]",
               size === "default" && "text-[11px]",
               size === "lg" && "text-xs",
-              "mt-0.5",
             )}
           >
             {description}
@@ -641,37 +720,22 @@ function StepItem({
   );
 }
 
-interface StepContentProps extends React.HTMLAttributes<HTMLDivElement> {
+// =============================================================================
+// StepContent  (thin wrapper — place inside StepperContent)
+// =============================================================================
+
+export interface StepContentProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
 }
 
-function StepContent({ className, children, ...props }: StepContentProps) {
+export function StepContent({
+  className,
+  children,
+  ...props
+}: StepContentProps) {
   return (
     <div className={cn("w-full", className)} {...props}>
       {children}
     </div>
   );
 }
-
-export {
-  stepCircleVariants,
-  stepConnectorVariants,
-  StepContent,
-  StepItem,
-  Stepper,
-  StepperActions,
-  StepperContent,
-  StepperIndicator,
-  stepperVariants,
-  useStepFormValidator,
-  useStepperContext,
-  type StepContentProps,
-  type StepFormInput,
-  type StepItemProps,
-  type StepperActionsProps,
-  type StepperActionsRenderProps,
-  type StepperContentProps,
-  type StepperIndicatorProps,
-  type StepperProps,
-  type StepValidatorRegistration,
-};

@@ -19,16 +19,10 @@ import { useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 
 interface AttachmentsFormProps {
-  name: string;
-  onStepValid?: (values: AttachmentsFormValues) => void;
   defaultValues?: Partial<AttachmentsFormValues>;
 }
 
-export function AttachmentsForm({
-  name,
-  onStepValid,
-  defaultValues,
-}: AttachmentsFormProps) {
+export function AttachmentsForm({ defaultValues }: AttachmentsFormProps) {
   const attachmentsForm = useForm<AttachmentsFormValues>({
     resolver: zodResolver(attachmentsSchema),
     mode: "onChange",
@@ -37,7 +31,7 @@ export function AttachmentsForm({
     },
   });
 
-  useStepFormValidator(name, attachmentsForm);
+  useStepFormValidator<AttachmentsFormValues>(3, attachmentsForm);
 
   const attachments = useWatch({
     control: attachmentsForm.control,

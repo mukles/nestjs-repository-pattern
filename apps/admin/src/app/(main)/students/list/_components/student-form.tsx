@@ -1,5 +1,6 @@
 "use client";
 
+import { StepperValues } from "@/app/types/stepper-values";
 import {
   StudentFormValues,
   studentSchema,
@@ -20,14 +21,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@repo/ui/components/ui-kit/select";
-import { useStepperContext } from "@repo/ui/components/ui-kit/stepper";
-import { useEffect } from "react";
+import {
+  useStepFormValidator,
+  useStepperContext,
+} from "@repo/ui/components/ui-kit/stepper";
+import { useEffect, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
-
-interface StudentFormProps {
-  name: string;
-  defaultValues?: Partial<StudentFormValues>;
-}
 
 export const fileSetting = {
   acceptedImageTypes: {
@@ -42,33 +41,36 @@ export const fileSetting = {
   maxUploadSize: 3 * 1024 * 1024,
 };
 
-export function StudentForm({ name, defaultValues }: StudentFormProps) {
-  const { registerStepValidator } = useStepperContext();
+export function StudentForm() {
+  const { getStepValues } = useStepperContext<StepperValues>();
+
+  const defaultValues = useMemo(
+    () => (getStepValues(1) || {}) as StudentFormValues,
+    [getStepValues],
+  );
 
   const studentForm = useForm<StudentFormValues>({
     resolver: zodResolver(studentSchema),
     mode: "onChange",
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      dateOfBirth: "",
-      gender: undefined,
-      status: undefined,
-      photo: "",
+      firstName: defaultValues.firstName || "",
+      lastName: defaultValues.lastName || "",
+      email: defaultValues.email || "",
+      dateOfBirth: defaultValues.dateOfBirth || "",
+      gender: defaultValues.gender || Gender.MALE,
+      status: defaultValues.status || StudentStatus.ACTIVE,
+      photo: defaultValues.photo || "",
       isOrphan: false,
     },
   });
 
-  useEffect(() => {
-    registerStepValidator(name, studentForm);
-  }, [name, registerStepValidator, studentForm]);
+  useStepFormValidator<StudentFormValues>(1, studentForm);
 
   useEffect(() => {
     if (defaultValues) {
       studentForm.reset(defaultValues);
     }
-  }, [defaultValues, studentForm]);
+  }, [defaultValues, studentForm, getStepValues]);
 
   return (
     <div className="space-y-6">
